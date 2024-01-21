@@ -4,12 +4,6 @@
 /public/hot
 /public/storage
 /storage/*.key
-<<<<<<< HEAD
-
-=======
-/vendor
-/npm-node
->>>>>>> origin/main
 
 # .env
 .env.backup
