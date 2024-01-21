@@ -4,8 +4,7 @@
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
-/npm-node
+
 
 # .env
 .env.backup
