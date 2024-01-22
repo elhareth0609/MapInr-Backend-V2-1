@@ -18,6 +18,16 @@ class BearerTokenMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
+        $allowedRoutes = [
+            'login-api'
+        ];
+
+        // Check if the route is in the allowed list
+        $currentRouteName = $request->route()->getName();
+        if (in_array($currentRouteName, $allowedRoutes)) {
+            return $next($request);
+        }
+
         if (!$request->hasHeader('Authorization')) {
             return response()->json([
                 'error' => 'Unauthorized'
