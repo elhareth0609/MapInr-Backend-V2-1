@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);
-            $table->binary('picture');
+            $table->binary('picture')->nullable();
             $table->text('note')->nullable();
             $table->string('phone')->nullable();
             $table->enum('status', ['1', '0'])->default('0');  // 1 => ACCEPTED, 0 => IN PROGRESS

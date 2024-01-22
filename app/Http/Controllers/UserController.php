@@ -89,26 +89,42 @@ class UserController extends Controller
     }
   }
 
-  public function addPalceWorker($id, $placeId) {
-    $placeWorker = new Place_Worker;
-    $placeWorker->worker_id = $id;
-    $placeWorker->place_id = $placeId;
-    $placeWorker->save();
+  public function addPlaceWorker($id, $placeId) {
 
+    try {
+      $placeWorker = new Place_Worker;
+      $placeWorker->worker_id = $id;
+      $placeWorker->place_id = $placeId;
+      $placeWorker->save();
+
+      return response()->json([
+        'status' => 1,
+        'message' => 'Add Place To Worker Is Successfull.',
+      ]);
+  } catch (\Exception $e) {
     return response()->json([
       'status' => 1,
-      'message' => 'Add Place TO Worker Is Successfull.',
-    ]);
+      'error' => $e->getMessage(),
+    ], [$e->getCode()]);
+  }
   }
 
-  public function removePalceWorker($id, $placeId) {
-    $placeWorker = Place_Worker::where('worker_id', $id)->where('place_id', $placeId)->first();
-    $placeWorker->delete();
+  public function removePlaceWorker($id, $placeId) {
+    try {
+      $placeWorker = Place_Worker::where('worker_id', $id)->where('place_id', $placeId)->first();
+      $placeWorker->delete();
 
-    return response()->json([
-      'status' => 1,
-      'message' => 'Remove Place From Worker Successfully.',
-    ]);
+      return response()->json([
+        'status' => 1,
+        'message' => 'Remove Place From Worker Successfully.',
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 1,
+        'error' => $e->getMessage(),
+      ], [$e->getCode()]);
+    }
+
   }
 
   public function user_places($id) {

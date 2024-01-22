@@ -8,7 +8,7 @@
       <span class="text-muted fw-light">{{__('Pages')}} /</span> {{__('All Places')}}
     </h4>
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
-      <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12">
+      <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12"  data-bs-toggle="modal" data-bs-target="#importFile">
         <span class="tf-icons mdi mdi-upload me-1"></span>{{__('Import')}}
       </button>
       {{-- <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12">
@@ -16,6 +16,37 @@
       </button> --}}
     </div>
   </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="importFile" data-bs-backdrop="static" tabindex="-1">
+      <div class="modal-dialog">
+        <form class="modal-content" id="uploadForm" action="{{ route('upload.file') }}" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h4 class="modal-title" id="backDropModalTitle">{{__('Import File')}}</h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="container-upload-file w-100">
+              <div class="card-upload-file w-100">
+                <div class="drop_box-upload-file w-100">
+                    <h4>{{__('Select File here')}}</h4>
+                  <p>Files Supported: Excel</p>
+                  <input type="file" hidden accept=".xlsx,.xls" id="fileID" name="excelFile[]" style="display:none;" multiple>
+                  <div class="btn btn-outline-primary" id="button-upload-file" >{{__('Choose File')}}</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{__('Close')}}</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">{{__('Submit')}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
 <!-- Responsive Table -->
   <div class="card">
     <div class="row w-100">
@@ -85,6 +116,46 @@
   td , tr{
     text-align: center;
   }
+
+
+
+.container-upload-file {
+
+  display: flex;
+  justify-content: center;
+}
+
+
+.card-upload-file h3 {
+  font-size: 22px;
+  font-weight: 600;
+
+}
+
+.drop_box-upload-file {
+  margin: 10px 0;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 3px dotted #a3a3a3;
+  border-radius: 5px;
+}
+
+.drop_box-upload-file h4 {
+  font-size: 16px;
+  font-weight: 400;
+  color: #2e2e2e;
+}
+
+.drop_box-upload-file p {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
 </style>
 <script>
 $(document).ready( function () {
@@ -93,7 +164,56 @@ $(document).ready( function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $('#button-upload-file').on('click', function () {
+      $('#fileID').click();
+    });
+
+    $('#fileID').on('change', function (e) {
+      var files = e.target.files;
+      var fileNames = Array.from(files).map(file => file.name);
+
+    });
+
     var placesdataTable;
+
+    $(document).on('submit', '#uploadForm', function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        // Manually append file data to FormData
+        formData.append('excelFile', $('#fileID')[0].files);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Files Upload It successfully!',
+                });
+                placesdataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
+            }
+        });
+    });
+
+
+
     $.noConflict();
     var dataTable = $('#places').DataTable({
       processing: true,
@@ -106,7 +226,6 @@ $(document).ready( function () {
       },
       ajax: '{{ route("places-table") }}',
       columns: [
-        // { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
         { data: 'id', title: '#' },
         { data: 'place_id', title: 'Place ID' },
         { data: 'longitude', title: 'longitude' },
@@ -168,20 +287,28 @@ $(document).ready( function () {
         dataTable.page(page).draw(false);
     };
 
-    $('#checkbox_all').change(function() {
-      $('.checkbox-row').prop('checked', $(this).prop('checked'));
-    });
+    $(document).on('click', '.download-btn', function() {
+        var placeId = $(this).data('place-id');
 
-    // Handle individual row checkboxes
-    $('.checkbox-row').change(function() {
-      if (!$(this).prop('checked')) {
-        $('#checkbox_all').prop('checked', false);
-      } else {
-        // Check if all row checkboxes are checked
-        if ($('.checkbox-row:checked').length === $('.checkbox-row').length) {
-          $('#checkbox_all').prop('checked', true);
-        }
-      }
+        // Make an AJAX request to download Excel for the specific place
+        $.ajax({
+            url: '/exoprt-file/' + placeId, // Update the URL to your route for downloading Excel
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Important to set the responseType to 'blob'
+            },
+            success: function(response) {
+                // Create a Blob from the response
+                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Use FileSaver.js library to trigger the download
+                saveAs(blob,+ placeId + '.xlsx');
+            },
+            error: function(error) {
+                // Handle error
+                console.error(error);
+            }
+        });
     });
 
   });

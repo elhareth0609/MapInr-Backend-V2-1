@@ -8,9 +8,6 @@
     <span class="text-muted fw-light">{{__('Pages')}} /</span> {{__('All Users')}}
   </h4>
   <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
-    {{-- <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12">
-      <span class="tf-icons mdi mdi-upload me-1"></span>{{__('Import')}}
-    </button> --}}
     <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12" data-bs-toggle="modal" data-bs-target="#adduser">
       <span class="tf-icons mdi mdi-plus-outline me-1"></span>{{__('Add')}}
     </button>
@@ -20,20 +17,20 @@
       <div class="modal-dialog">
         <form class="modal-content" id="createNewUser">
           <div class="modal-header">
-            <h4 class="modal-title" id="backDropModalTitle">Modal title</h4>
+            <h4 class="modal-title" id="backDropModalTitle">{{__('Add User')}}</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row g-2">
               <div class="col mb-2">
                 <div class="form-floating form-floating-outline">
-                  <input type="text" id="nameBackdrop" class="form-control" placeholder="{{__('Enter First Name')}}" name="firstname">
+                  <input type="text" id="nameBackdrop" class="form-control" placeholder="{{__('Enter First Name')}}" name="firstname" required>
                   <label for="emailBackdrop">{{__('First Name')}}</label>
                 </div>
               </div>
               <div class="col mb-2">
                 <div class="form-floating form-floating-outline">
-                  <input type="text" id="nameBackdrop" class="form-control" placeholder="{{__('Enter Last Name')}}" name="lastname">
+                  <input type="text" id="nameBackdrop" class="form-control" placeholder="{{__('Enter Last Name')}}" name="lastname" required>
                   <label for="dobBackdrop">{{__('Last Name')}}</label>
                 </div>
               </div>
@@ -58,7 +55,7 @@
               <div class="col mb-4 mt-2">
                 <div class="form-floating form-floating-outline">
                   <div class="input-group">
-                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password">
+                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password" disabled>
                     <button class="btn btn-outline-primary" type="button" id="copyPassword" ><span class="mdi mdi-content-copy"></span></button>
                     <button class="btn btn-outline-primary" type="button" id="generatePassword">{{__('Generate')}}</button>
                   </div>

@@ -100,7 +100,8 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($place) {
           return '
-            <a href="' . url("/place/{$place->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
+          <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-magnify"></icon></a>
+          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->id . '"><icon class="mdi mdi-download"></icon></a>
           ';
         })
       ->rawColumns(['actions'])
@@ -178,27 +179,27 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($worker) {
           return $worker->created_at->format('Y-m-d');
       })
-      ->addColumn('actions', function($worker) {
+      ->addColumn('actions', function($worker) use ($id) {
         return '
         <a href="' . url("/user/{$worker->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-delete-modal-' . $worker->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $worker->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
-      <div class="modal fade" id="user-delete-modal-' . $worker->id . '" tabindex="-1" aria-hidden="true">
+      <div class="modal fade" id="worker-place-remove-modal-' . $worker->id . '" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" id="modalCenterTitle">' .  __("Place Delete") . '</h4>
+              <h4 class="modal-title" id="modalCenterTitle">' .  __("Worker Remove") . '</h4>
             </div>
             <div class="modal-body text-center">
               <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
               <div class="row justify-content-center text-wrap">
-                '. __("Do Your Really want to delete This Place.") .'
+                '. __("Do Your Really Want To Remove This Wokrker From Place.") .'
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary">'. __("Save changes") .'</button>
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemovePlaceWorker(' . $id .',' . $worker->id . ')">'. __("Submit") .'</button>
             </div>
           </div>
         </div>
@@ -274,9 +275,34 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($place) {
           return $place->created_at->format('Y-m-d');
       })
-      ->addColumn('actions', function($place) {
+      ->addColumn('actions', function($place) use ($id) {
           return '
             <a href="' . url("/place/{$place->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
+            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $place->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="worker-place-remove-modal-' . $place->id . '" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modalCenterTitle">' .  __("Place Remove") . '</h4>
+                  </div>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do Your Really Want To Remove This Place From Worker.") .'
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemovePlaceWorker(' . $place->id . ','. $id .')">'. __("Submit") .'</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
           ';
         })
       ->rawColumns(['actions'])

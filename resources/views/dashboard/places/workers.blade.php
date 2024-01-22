@@ -7,10 +7,16 @@
 @endsection
 
 @section('content')
-<h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">{{ __('Place Settings') }} /</span> {{ $place->name }}
-</h4>
-
+  <div class="row w-100 d-flex align-items-baseline mb-2">
+    <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
+      <span class="text-muted fw-light">{{ __('Place Settings') }} /</span> {{ $place->name }}
+    </h4>
+    <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
+      <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12" data-bs-toggle="modal" data-bs-target="#adduser">
+        <span class="tf-icons mdi mdi-plus-outline me-1"></span>{{__('Add')}}
+      </button>
+    </div>
+  </div>
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
@@ -102,7 +108,7 @@
 
 <script type="text/javascript">
     var placeWorkersDataTable;
-    function submitDistroyUser(placeid, userid) {
+    function submitRemovePlaceWorker(placeid, userid) {
 
         $.ajax({
             type: 'GET',
