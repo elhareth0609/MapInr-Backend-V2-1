@@ -22,7 +22,10 @@ class YourExcelImport implements ToCollection
       $fileNameWithoutExtension = pathinfo($this->fileName, PATHINFO_FILENAME);
       $placeId = (int)$fileNameWithoutExtension; // Assuming place_id is an integer
 
-      $search = Place::where('place_id',$placeId)->first()->delete();
+      $search = Place::where('place_id',$placeId)->first();
+      if ($search) {
+        $search->delete();
+      }
 
       $place = new Place;
       $place->place_id = $placeId;
