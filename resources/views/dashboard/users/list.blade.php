@@ -55,7 +55,7 @@
               <div class="col mb-4 mt-2">
                 <div class="form-floating form-floating-outline">
                   <div class="input-group">
-                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password" disabled>
+                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password">
                     <button class="btn btn-outline-primary" type="button" id="copyPassword" ><span class="mdi mdi-content-copy"></span></button>
                     <button class="btn btn-outline-primary" type="button" id="generatePassword">{{__('Generate')}}</button>
                   </div>
