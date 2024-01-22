@@ -98,8 +98,10 @@ Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
 Route::get('/user/add-place/{id}/{placeId}', [UserController::class, 'addPlaceWorker'])->name('user-add-place-worker');
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
+
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
 Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file');
+Route::get('/exoprt-file-zip', [ExelController::class, 'exportFileZip'])->name('export.file.zip');
 
 
 

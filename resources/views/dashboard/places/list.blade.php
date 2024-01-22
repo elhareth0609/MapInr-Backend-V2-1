@@ -80,8 +80,8 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6">
-          <span class="tf-icons mdi mdi-download me-1"></span>Export
+        <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
+          <span class="tf-icons mdi mdi-download me-1"></span>Export All
         </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
@@ -307,6 +307,34 @@ $(document).ready( function () {
             error: function(error) {
                 // Handle error
                 console.error(error);
+            }
+        });
+    });
+
+
+    $('#exportButton').click(function () {
+        $.ajax({
+            url: '/exoprt-file-zip',
+            method: 'GET',
+            responseType: 'blob', // This is important for handling binary data
+            success: function (data) {
+                // Create a Blob from the response data
+                const blob = new Blob([data], { type: 'application/zip' });
+
+                // Create a link element to trigger the download
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'file.zip';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
             }
         });
     });

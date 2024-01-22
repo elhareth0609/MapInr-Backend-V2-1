@@ -56,6 +56,11 @@ return [
             'throw' => false,
         ],
 
+        
+        'temp_export' => [
+          'driver' => 'local',
+          'root' => storage_path('app/temp_export'),
+      ],
     ],
 
     /*

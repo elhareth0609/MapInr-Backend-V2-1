@@ -18,20 +18,37 @@ class PlaceController extends Controller
 
   public function all_places(Request $request) {
     $workerPlaces = Place_Worker::where('worker_id', $request->user()->id)->get();
-    $workerPlaces->place->counters;
+    $isworker = $request->user() ? true : false;
+    // Initialize the response structure
+    $responseData = [
+        'status' => 1,
+        'message' => [
+            'is_worker' => $isworker, // Check if the workerPlaces collection is not empty
+            'place' => [],
+        ],
+    ];
 
-    $data = Place::select('id', 'place_id', 'longitude', 'latitude')
-        ->with([
-            'counters' => function ($query) {
-                $query->select('id', 'place_id', 'counter_id', 'name', 'longitude', 'latitude')
-                    ->where('status', 1);
-            }
-        ])
-        ->get();
-
+    foreach ($workerPlaces as $workerPlace) {
+        // Add place details to the response
+    $responseData['message']['place'][] = [
+        'id' => $workerPlace->place->id,
+        'place_id' => $workerPlace->place->place_id,
+        'latitude' => $workerPlace->place->latitude,
+        'longitude' => $workerPlace->place->longitude,
+        'counters' => $workerPlace->place->counters->map(function ($counter) {
+            return [
+                'id' => $counter->id,
+                'counter_id' => $counter->counter_id,
+                'name' => $counter->name,
+                'latitude' => $counter->latitude,
+                'longitude' => $counter->longitude,
+            ];
+        })->all(),
+    ];
+    }
         return response()->json([
       'status' => 1,
-      'message' => $workerPlaces
+      'data' => $responseData
     ]);
   }
 
