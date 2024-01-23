@@ -22,8 +22,8 @@ class PlaceController extends Controller
     $isworker = $request->user() ? true : false;
     // Initialize the response structure
     $responseData = [
-        'status' => 1,
         'data' => [
+            'status' => 1,
             'place' => [],
         ],
     ];
