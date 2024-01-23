@@ -96,7 +96,7 @@ Route::post('/user/create', [UserController::class, 'create'])->name('user-creat
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
-Route::get('/user/add-place/{id}/{placeId}', [UserController::class, 'addPlaceWorker'])->name('user-add-place-worker');
+Route::post('/user/add-place', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
 
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');

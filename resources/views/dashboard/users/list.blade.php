@@ -205,6 +205,7 @@ $(document).ready( function () {
         });
     });
 
+    
 
     $.noConflict();
     userDataTable = $('#users').DataTable({

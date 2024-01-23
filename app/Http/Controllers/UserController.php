@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 use App\Models\User;
+use App\Models\Place;
 use App\Models\Place_Worker;
 
 class UserController extends Controller
@@ -22,13 +23,10 @@ class UserController extends Controller
 
   public function generate_password()
   {
-      // Generate a random password (you can customize the length and characters)
       $generatedPassword = Str::random(12);
 
-      // Check if the generated password already exists in the database
       $passwordExists = User::where('password', Hash::make($generatedPassword))->exists();
 
-      // If the generated password already exists, generate a new one
       while ($passwordExists) {
           $generatedPassword = Str::random(12);
           $passwordExists = User::where('password', Hash::make($generatedPassword))->exists();
@@ -47,10 +45,8 @@ class UserController extends Controller
       'password' => 'required|string|min:8',
     ];
 
-    // Validate the request
     $validator = Validator::make($request->all(), $rules);
 
-      // Check if validation fails
     if ($validator->fails()) {
       return response()->json([
         'status' => 0,
@@ -89,23 +85,33 @@ class UserController extends Controller
     }
   }
 
-  public function addPlaceWorker($id, $placeId) {
+  public function addPlaceWorker(Request $request) {
 
     try {
-      $placeWorker = new Place_Worker;
-      $placeWorker->worker_id = $id;
-      $placeWorker->place_id = $placeId;
-      $placeWorker->save();
+      Place_Worker::where('place_id', $request->place_id)->delete();
+
+      $workerIds = $request->input('selectedWorkers',[]);
+      $placeId = $request->input('place_id');
+
+      foreach ($workerIds as $workerId) {
+          $placeWorker = new Place_Worker;
+          $placeWorker->worker_id = $workerId;
+          $placeWorker->place_id = $placeId;
+          $placeWorker->save();
+      }
 
       return response()->json([
         'status' => 1,
-        'message' => 'Add Place To Worker Is Successfull.',
-      ]);
+        'message' => 'Add Place To Worker Is Successful.',
+      ], 200);
+
+
   } catch (\Exception $e) {
     return response()->json([
-      'status' => 1,
+      'status' => 0,
       'error' => $e->getMessage(),
-    ], [$e->getCode()]);
+    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+
   }
   }
 

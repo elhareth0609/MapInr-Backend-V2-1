@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Place;
+use App\Models\User;
 use App\Models\Place_Worker;
 
 class PlaceController extends Controller
@@ -22,15 +23,14 @@ class PlaceController extends Controller
     // Initialize the response structure
     $responseData = [
         'status' => 1,
-        'message' => [
-            'is_worker' => $isworker, // Check if the workerPlaces collection is not empty
+        'data' => [
             'place' => [],
         ],
     ];
 
     foreach ($workerPlaces as $workerPlace) {
         // Add place details to the response
-    $responseData['message']['place'][] = [
+    $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
         'latitude' => $workerPlace->place->latitude,
@@ -46,16 +46,18 @@ class PlaceController extends Controller
         })->all(),
     ];
     }
-        return response()->json([
-      'status' => 1,
-      'data' => $responseData
-    ]);
+    return response()->json($responseData);
   }
 
   public function place_workers($id,Request $request) {
     $place = Place::where('id', $id)->first();
+    $workers = Place_Worker::where('place_id', $id)->pluck('worker_id');
+    $users = User::pluck('id', 'fullname');
+
     return view('dashboard.places.workers')
-    ->with('place', $place);
+    ->with('place', $place)
+    ->with('workers', $workers)
+    ->with('users', $users);
   }
 
   public function place_counters($id,Request $request) {
