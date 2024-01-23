@@ -20,7 +20,7 @@ class PlaceController extends Controller
   public function all_places(Request $request) {
     $workerPlaces = Place_Worker::where('worker_id', $request->user()->id)->get();
     $isworker = $request->user() ? true : false;
-    // Initialize the response structure
+
     $responseData = [
         'data' => [
             'status' => 1,
