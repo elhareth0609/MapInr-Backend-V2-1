@@ -49,7 +49,7 @@ class CounterController extends Controller
       $counter = new Counter();
       $counter->name = $request->name;
       $counter->place_id = $request->place_id;
-      $counter->counter_id = $place++;
+      $counter->counter_id = ++$place;
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;

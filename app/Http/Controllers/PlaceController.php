@@ -16,7 +16,13 @@ class PlaceController extends Controller
       return view('dashboard.places.index')
       ->with('place', $place);
   }
-
+  public function all_in_list(Request $request) {
+    $places = Place::select('id','place_id')->get();
+    return response()->json([
+      'status' => 1,
+      'data' => $places,
+    ]);
+  }
   public function all_places(Request $request) {
     $workerPlaces = Place_Worker::where('worker_id', $request->user()->id)->get();
     $isworker = $request->user() ? true : false;
@@ -33,8 +39,6 @@ class PlaceController extends Controller
     $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
-        'latitude' => $workerPlace->place->latitude,
-        'longitude' => $workerPlace->place->longitude,
         'counters' => $workerPlace->place->counters->map(function ($counter) {
             return [
                 'id' => $counter->id,

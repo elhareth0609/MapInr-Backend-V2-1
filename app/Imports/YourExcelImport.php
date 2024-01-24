@@ -38,8 +38,8 @@ class YourExcelImport implements ToCollection
           $counter = new Counter;
           $counter->counter_id = $row[0];
           $counter->place_id = $place->id;
-          $counter->longitude = $row[1];
-          $counter->latitude = $row[2];
+          $counter->longitude = $row[2];
+          $counter->latitude = $row[1];
           $counter->name = 'counter_' . $row[0];
           $counter->status = 1;
           $counter->save();
