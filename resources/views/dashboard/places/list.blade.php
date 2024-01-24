@@ -316,18 +316,10 @@ $(document).ready( function () {
         $.ajax({
             url: '/exoprt-file-zip',
             method: 'GET',
-            responseType: 'blob', // This is important for handling binary data
+            responseType: 'arraybuffer', // Use 'arraybuffer' for binary data
             success: function (data) {
-                // Create a Blob from the response data
-                const blob = new Blob([data], { type: 'application/zip' });
-
-                // Create a link element to trigger the download
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'file.zip';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+            // Redirect the user to the download link
+            window.location.href = data.url;
             },
             error: function (error) {
                 Swal.fire({

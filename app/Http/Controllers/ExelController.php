@@ -10,6 +10,7 @@ use App\Exports\PlacesExport;
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\File;
 
 use App\Models\Place;
 
@@ -60,7 +61,7 @@ class ExelController extends Controller
 
     public function exportFileZip(Excel $excel){
       try {
-        $placeIds = Place::pluck('place_id');
+        $placeIds = Place::pluck('id');
 
         // Create a temporary directory to store individual Excel files
         $tempDir = storage_path('app/temp_export');
@@ -92,6 +93,14 @@ class ExelController extends Controller
         }
 
         $zip->close();
+        File::cleanDirectory(public_path('files'));
+        $publicZipFilePath = public_path('files/file.zip');
+        File::move($zipFilePath, $publicZipFilePath);
+
+        File::cleanDirectory(storage_path('app/temp_export'));
+
+        return response()->json(['url' => asset('files/file.zip')]);
+
 
         // Stream the ZIP file contents directly to the response
         $response = response()->stream(
@@ -111,8 +120,8 @@ class ExelController extends Controller
                 unlink($excelFile);
             }
             // Move the deletion of the ZIP file here
-            Storage::disk('temp_export')->delete($zipFilePath);
-        });
+            unlink($zipFilePath);
+          });
 
         return $response;
 
