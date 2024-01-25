@@ -13,6 +13,11 @@ class CounterController extends Controller
 {
     public function create(Request $request) {
 
+      return response()->json([
+        'status' => 1,
+        'message' => 'try again',
+      ]);
+      
       $validator = Validator::make($request->all(), [
           'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
@@ -37,6 +42,7 @@ class CounterController extends Controller
       }
 
     try {
+
       $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
 
       $uniqueName = null;
