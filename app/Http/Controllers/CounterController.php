@@ -22,12 +22,11 @@ class CounterController extends Controller
             Rule::exists('places', 'id'),
           ],
           'latitude'  => 'required|numeric',
-          // 'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
+          'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
           'note'      => 'sometimes|string',
           'phone'     => 'sometimes|string'
         ]);
 
-        // Check if validation fails
       if ($validator->fails()) {
         return response()->json([
           'status' => 0,
@@ -41,6 +40,7 @@ class CounterController extends Controller
       $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
 
       $uniqueName = null;
+
       if ($request->has('photo')) {
           $timeName = time();
           $fileExtension = $request->file('photo')->getClientOriginalExtension();
