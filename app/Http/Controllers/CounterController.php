@@ -16,7 +16,7 @@ class CounterController extends Controller
       $validator = Validator::make($request->all(), [
           'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
-          'place_id' => [
+          'place_id'  => [
             'required',
             'numeric',
             Rule::exists('places', 'id'),
@@ -30,7 +30,7 @@ class CounterController extends Controller
       if ($validator->fails()) {
         return response()->json([
           'status' => 0,
-          'message' => $validator->errors()->first(),
+          'message' => $validator->errors(),
           'error' => $validator->errors()->first(),
         ], 422);
       }
