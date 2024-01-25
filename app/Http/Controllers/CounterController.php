@@ -13,11 +13,6 @@ class CounterController extends Controller
 {
     public function create(Request $request) {
 
-      return response()->json([
-        'status' => 1,
-        'message' => 'try again',
-      ]);
-      
       $validator = Validator::make($request->all(), [
           'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
