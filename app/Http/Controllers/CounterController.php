@@ -36,6 +36,7 @@ class CounterController extends Controller
         ], 422);
       }
 
+    try {
       $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
 
       $uniqueName = null;
@@ -62,5 +63,11 @@ class CounterController extends Controller
           'status' => 1,
           'message' => 'Created successfully',
       ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
     }
+  }
 }
