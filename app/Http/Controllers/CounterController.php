@@ -16,7 +16,7 @@ class CounterController extends Controller
       $validator = Validator::make($request->all(), [
           'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
-          'place_id'  => [
+          'place_id' => [
             'required',
             'numeric',
             Rule::exists('places', 'id'),
@@ -25,50 +25,50 @@ class CounterController extends Controller
           'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
           'note'      => 'sometimes|string',
           'phone'     => 'sometimes|string'
-        ]);
+      ]);
 
       if ($validator->fails()) {
         return response()->json([
           'status' => 0,
-          'message' => $validator->errors()->first(),
+          'message' => 'Validation failed',
           'error' => $validator->errors()->first(),
         ], 422);
       }
 
-    try {
+      try {
 
-      $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
+        $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
 
-      $uniqueName = null;
+        $uniqueName = null;
 
-      if ($request->has('photo')) {
-          $timeName = time();
-          $fileExtension = $request->file('photo')->getClientOriginalExtension();
-          $uniqueName = "{$timeName}_{$fileExtension}";
-          $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+        if ($request->has('photo')) {
+            $timeName = time();
+            $fileExtension = $request->file('photo')->getClientOriginalExtension();
+            $uniqueName = "{$timeName}_{$fileExtension}";
+            $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+        }
+
+        $counter = new Counter();
+        $counter->name = $request->name;
+        $counter->place_id = $request->place_id;
+        $counter->counter_id = ++$place;
+        $counter->longitude = $request->longitude;
+        $counter->latitude = $request->latitude;
+        $counter->picture = $uniqueName;
+        $counter->phone = $request->phone;
+        $counter->note = $request->note;
+        $counter->status = '0';
+        $counter->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Created successfully',
+        ]);
+      } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'message' => $e->getMessage(),
+        ]);
       }
-
-      $counter = new Counter();
-      $counter->name = $request->name;
-      $counter->place_id = $request->place_id;
-      $counter->counter_id = ++$place;
-      $counter->longitude = $request->longitude;
-      $counter->latitude = $request->latitude;
-      $counter->picture = $uniqueName;
-      $counter->phone = $request->phone;
-      $counter->note = $request->note;
-      $counter->status = '0';
-      $counter->save();
-
-      return response()->json([
-          'status' => 1,
-          'message' => 'Created successfully',
-      ]);
-    } catch (\Exception $e) {
-      return response()->json([
-        'status' => 0,
-        'message' => $e->getMessage(),
-      ]);
-    }
   }
 }
