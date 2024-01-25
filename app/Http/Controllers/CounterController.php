@@ -22,7 +22,7 @@ class CounterController extends Controller
             Rule::exists('places', 'id'),
           ],
           'latitude'  => 'required|numeric',
-          'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
+          // 'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
           'note'      => 'sometimes|string',
           'phone'     => 'sometimes|string'
         ]);
@@ -43,7 +43,7 @@ class CounterController extends Controller
       if ($request->has('photo')) {
           $timeName = time();
           $fileExtension = $request->file('photo')->getClientOriginalExtension();
-          $uniqueName = "{$timeName}.{$fileExtension}";
+          $uniqueName = "{$timeName}_{$fileExtension}";
           $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
       }
 
