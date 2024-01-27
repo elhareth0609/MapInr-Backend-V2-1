@@ -22,7 +22,7 @@ class CounterController extends Controller
             Rule::exists('places', 'id'),
           ],
           'latitude'  => 'required|numeric',
-          'photo'     => 'sometimes|image|mimes:jpeg,png,jpg,gif',
+          'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
           'note'      => 'sometimes|string',
           'phone'     => 'sometimes|string'
       ]);
