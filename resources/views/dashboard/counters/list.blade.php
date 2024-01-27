@@ -102,7 +102,9 @@ $(document).ready( function () {
       serverSide: true,
       pageLength: 100,
       responsive: true,
-
+      "order": [
+            [8, 'desc'] // Assuming 'created_at' is the 6th column (index 5)
+      ]
       language: {
         info: "_START_-_END_ of _TOTAL_",
       },
