@@ -14,7 +14,7 @@ class CounterController extends Controller
     public function create(Request $request) {
 
       $validator = Validator::make($request->all(), [
-          'nam'      => 'required|string|max:255',
+          'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
           'place_id' => [
             'required',
