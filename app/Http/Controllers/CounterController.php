@@ -40,13 +40,14 @@ class CounterController extends Controller
         $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
 
         $uniqueName = null;
-
         if ($request->has('photo')) {
           $timeName      = time();
+          $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
           $fileExtension = $request->file('photo')->getClientOriginalExtension();
-          $uniqueName    = "{$timeName}_{$fileExtension}";
+          $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
           $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
-      }
+        }
+
 
         $counter = new Counter();
         $counter->name = $request->name;
