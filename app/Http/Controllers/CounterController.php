@@ -42,11 +42,11 @@ class CounterController extends Controller
         $uniqueName = null;
 
         if ($request->has('photo')) {
-            $timeName = time();
-            $fileExtension = $request->file('photo')->getClientOriginalExtension();
-            $uniqueName = "{$timeName}_{$fileExtension}";
-            $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
-        }
+          $timeName      = time();
+          $fileExtension = $request->file('photo')->getClientOriginalExtension();
+          $uniqueName    = "{$timeName}_{$fileExtension}";
+          $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+      }
 
         $counter = new Counter();
         $counter->name = $request->name;
