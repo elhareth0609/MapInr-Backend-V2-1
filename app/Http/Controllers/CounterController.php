@@ -31,7 +31,7 @@ class CounterController extends Controller
         return response()->json([
           'status' => 0,
           'message' => 'Validation failed',
-          'error' => $validator->errors()->first(),
+          'error' => $validator->errors(),
         ], 422);
       }
 
