@@ -88,7 +88,9 @@ class CounterController extends Controller
         'counter_id' => [
           'required',
           'numeric',
-          Rule::exists('counters', 'id'),
+          Rule::exists('counters', 'id')->where(function ($query) {
+            $query->where('status', '1');
+          }),
         ],
         'latitude'  => 'required|numeric',
         'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
