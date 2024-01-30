@@ -232,7 +232,7 @@ $(document).ready( function () {
         { data: 'id', title: '#' },
         { data: 'place_id', title: '{{ __("Place Id")}}' },
         { data: 'place_name', title: '{{ __("Place Name")}}' },
-        { data: 'conters', title: '{{ __("Counters")}}' },
+        { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
         // { data: 'longitude', title: '{{ __("Longitude")}}' },
         // { data: 'latitude', title: '{{__("Latitude")}}' },
