@@ -32,8 +32,10 @@ class PlaceController extends Controller
         $query->where('status', '1');
       }])->where('worker_id', $request->user()->id)->get();
 
-    $workernotPlaces = Place_Worker::with(['place.counters' => function ($query) {
-        $query->where('status', '0');
+    $workernotPlaces = Place_Worker::with(['place.counters' => function ($query) use ($request){
+        $query->where('status', '0')
+              ->where('worker_id', $request->user()->id);
+
       }])->where('worker_id', $request->user()->id)->get();
 
     $isworker = $request->user() ? true : false;
