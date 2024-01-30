@@ -102,6 +102,36 @@ class UserController extends Controller
 
       return response()->json([
         'status' => 1,
+        'message' => 'Add Worker To Place Is Successful.',
+      ], 200);
+
+
+  } catch (\Exception $e) {
+    return response()->json([
+      'status' => 0,
+      'error' => $e->getMessage(),
+    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+
+  }
+  }
+
+  public function addWorkerPlace(Request $request) {
+
+    try {
+      Place_Worker::where('worker_id', $request->worker_id)->delete();
+
+      $placeIds = $request->input('selectedPlaces',[]);
+      $workerId = $request->input('worker_id');
+
+      foreach ($placeIds as $placeId) {
+          $placeWorker = new Place_Worker;
+          $placeWorker->worker_id = $workerId;
+          $placeWorker->place_id = $placeId;
+          $placeWorker->save();
+      }
+
+      return response()->json([
+        'status' => 1,
         'message' => 'Add Place To Worker Is Successful.',
       ], 200);
 
@@ -135,7 +165,11 @@ class UserController extends Controller
 
   public function user_places($id) {
       $user = User::find($id);
+      $places = Place_Worker::where('worker_id', $id)->pluck('place_id');
+      $allplaces = Place::pluck('id', 'place_name');
       return view('dashboard.users.places')
+      ->with('places', $places)
+      ->with('allplaces', $allplaces)
       ->with('user', $user);
   }
 

@@ -85,12 +85,16 @@ $navbarDetached = ($navbarDetached ?? '');
                   <span class="align-middle">{{__('My Profile')}}</span>
                 </a>
               </li>
-              {{-- <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+              @php
+                $currentLocale = app()->getLocale();
+                $switchLocale = ($currentLocale == 'en') ? 'ar' : 'en';
+              @endphp
+              <li>
+                <a class="dropdown-item" href="{{ route('switch.language', ['locale' => $switchLocale]) }}">
                   <i class='mdi mdi-cog-outline me-1 mdi-20px'></i>
-                  <span class="align-middle">Settings</span>
+                  <span class="align-middle">{{__('Switch Language')}}</span>
                 </a>
-              </li> --}}
+              </li>
               {{-- <li>
                 <a class="dropdown-item" href="javascript:void(0);">
                   <span class="d-flex align-items-center align-middle">
@@ -106,7 +110,7 @@ $navbarDetached = ($navbarDetached ?? '');
               <li>
                 <a class="dropdown-item" href="{{ route('auth-logout') }}">
                   <i class='mdi mdi-power me-1 mdi-20px'></i>
-                  <span class="align-middle">Log Out</span>
+                  <span class="align-middle">{{__('Log Out')}}</span>
                 </a>
               </li>
             </ul>

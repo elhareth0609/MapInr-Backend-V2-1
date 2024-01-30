@@ -5,7 +5,7 @@
 @section('content')
   <div class="row w-100 d-flex align-items-baseline mb-2">
     <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
-      <span class="text-muted fw-light">{{__('Pages')}} /</span> {{__('All Places')}}
+      <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Places')}}
     </h4>
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
       <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12"  data-bs-toggle="modal" data-bs-target="#importFile">
@@ -72,16 +72,19 @@
           <tr class="text-nowrap">
             <th>#</th>
             <th>{{__('Place Number')}}</th>
-            <th>{{__('Longitude')}}</th>
-            <th>{{__('Latitude')}}</th>
-            <th>{{__('created At')}}</th>
+            <th>{{__('Place Name')}}</th>
+            <th>{{__('Counters')}}</th>
+            <th>{{__('Workers')}}</th>
+            {{-- <th>{{__('Longitude')}}</th>
+            <th>{{__('Latitude')}}</th> --}}
+            <th>{{__('Created At')}}</th>
             <th>{{__('Actions')}}</th>
           </tr>
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
         <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
-          <span class="tf-icons mdi mdi-download me-1"></span>Export All
+          <span class="tf-icons mdi mdi-download me-1"></span>{{__('Export All')}}
         </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
@@ -227,11 +230,14 @@ $(document).ready( function () {
       ajax: '{{ route("places-table") }}',
       columns: [
         { data: 'id', title: '#' },
-        { data: 'place_id', title: 'Place ID' },
-        { data: 'longitude', title: 'longitude' },
-        { data: 'latitude', title: 'latitude' },
-        { data: 'created_at', title: 'Created At' },
-        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+        { data: 'place_id', title: '{{ __("Place Id")}}' },
+        { data: 'place_name', title: '{{ __("Place Name")}}' },
+        { data: 'conters', title: '{{ __("Counters")}}' },
+        { data: 'workers', title: '{{ __("Workers")}}' },
+        // { data: 'longitude', title: '{{ __("Longitude")}}' },
+        // { data: 'latitude', title: '{{__("Latitude")}}' },
+        { data: 'created_at', title: '{{ __("Created At") }}' },
+        { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
       "drawCallback": function () {
         updateCustomPagination();

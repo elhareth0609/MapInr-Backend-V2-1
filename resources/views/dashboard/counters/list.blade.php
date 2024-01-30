@@ -5,7 +5,7 @@
 @section('content')
   <div class="row w-100 d-flex align-items-baseline mb-2">
     <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
-      <span class="text-muted fw-light">{{__('Pages')}} /</span> {{__('All Counters')}}
+      <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Counters')}}
     </h4>
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
       {{-- <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12">
@@ -109,14 +109,15 @@ $(document).ready( function () {
       ajax: '{{ route("counters-table") }}',
       columns: [
         { data: 'id', title: '#' },
-        { data: 'counter_id', title: 'Counter ID' },
-        { data: 'place_id', title: 'Place ID' },
-        { data: 'name', title: 'Name' },
-        { data: 'longitude', title: 'longitude' },
-        { data: 'latitude', title: 'latitude' },
-        { data: 'status', title: 'Status' },
-        { data: 'created_at', title: 'Created At' }
+        { data: 'counter_id', title: '{{__("Counter Id")}}' },
+        { data: 'place_id', title: '{{__("Place Id")}}' },
+        { data: 'name', title: '{{__("Name")}}' },
+        { data: 'longitude', title: '{{__("Longitude")}}' },
+        { data: 'latitude', title: '{{__("Latitude")}}' },
+        { data: 'status', title: '{{__("Status")}}' },
+        { data: 'created_at', title: '{{__("Created At")}}' }
       ],
+      "order": [[7, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

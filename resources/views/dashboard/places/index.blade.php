@@ -14,7 +14,7 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Inforamtion')}}</a></li>
+      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/counters')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/workers')}}"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
     </ul>
@@ -36,7 +36,7 @@
                 <label for="lastName">{{ __('Place Name')}}</label>
               </div>
             </div>
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
               <div class="form-floating form-floating-outline">
                 <input class="form-control" type="text" id="longitude" name="longitude" value="{{ $place->longitude }}" placeholder="{{ __('Enter Your longitude')}}" />
                 <label for="email">{{ __('Longitude')}}</label>
@@ -48,7 +48,7 @@
                 <label for="organization">{{ __('Latitude')}}</label>
               </div>
             </div>
-
+ --}}
           </div>
           <div class="mt-4">
             <button type="submit" class="btn btn-primary me-2">{{ __('Save Changes')}}</button>

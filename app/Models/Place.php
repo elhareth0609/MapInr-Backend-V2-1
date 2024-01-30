@@ -10,11 +10,12 @@ class Place extends Model
     use HasFactory;
 
     protected $fillable = [
-        'place_id',
-        'latitude',
-        'longitude',
-        'phone',
-        'status',
+      'place_id',
+      'place_name',
+      'latitude',
+      'longitude',
+      'phone',
+      'status',
     ];
 
     public function counters()

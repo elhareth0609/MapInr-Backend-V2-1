@@ -8,7 +8,7 @@
 
 @section('content')
 <h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">{{__('Settings')}} /</span> {{__('Account')}}
+  <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir' : '' }}>{{__('Settings')}} / </span> {{__('Account')}}
 </h4>
 
 <div class="row">
@@ -28,7 +28,7 @@
           <div class="row mt-2 gy-4">
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="text" id="firstName" name="fullname" value="{{ $admin->fullname }}" autofocus />
+                <input class="form-control" type="text" id="firstName" name="fullname" value="{{ $admin->fullname }}" placeholder="{{__('Enter Full Name')}}"/>
                 <label for="firstName">{{__('Full Name')}}</label>
               </div>
             </div>
@@ -49,14 +49,14 @@
             </div>
           </div>
           <div class="mt-4">
-            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#updateAccountModel">{{__('Save changes')}}</button>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#updateAccountModel">{{__('Save Changes')}}</button>
           </div>
 
             <!-- Modal -->
             <div class="modal fade" id="updateAccountModel" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                  <div class="modal-header">
+                  <div class="modal-header" @if(app()->getLocale() === 'ar')  dir="rtl" @else  @endif>
                     <h4 class="modal-title" id="modalCenterTitle">{{  __("Update Information") }}</h4>
                   </div>
                   <div class="modal-body text-center">
@@ -65,7 +65,7 @@
                       {{ __("Do Your Really Want To Update Your Account Information.") }}
                     </div>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" @if(app()->getLocale() === 'ar')  dir="rtl" @else  @endif>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >{{ __("Close") }}</button>
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" >{{ __("Submit") }}</button>
                   </div>
@@ -87,33 +87,33 @@
           <div class="row mt-2 gy-4">
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="passord" name="passord" />
+                <input class="form-control" type="pasword" id="passord" name="passord" placeholder="{{__('Enter Past Password')}}"/>
                 <label for="firstName">{{__('Past Password')}}</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="newpassord" name="newpassord" />
+                <input class="form-control" type="pasword" id="newpassord" name="newpassord" placeholder="{{__('Enter New Password')}}"/>
                 <label for="firstName">{{__('New Password')}}</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="confirmnewpassord" name="confirmnewpassord" />
+                <input class="form-control" type="pasword" id="confirmnewpassord" name="confirmnewpassord" placeholder="{{__('Confirm New Password')}}"/>
                 <label for="firstName">{{__('Confirm New Password')}}</label>
               </div>
             </div>
           </div>
         <div class="mt-4">
-          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#changePasswordModel">{{__('Save changes')}}</button>
+          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#changePasswordModel">{{__('Save Changes')}}</button>
         </div>
 
           <!-- Modal -->
           <div class="modal fade" id="changePasswordModel" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="modalCenterTitle">{{  __("Change Password") }}</h4>
+                <div class="modal-header" @if(app()->getLocale() === 'ar')  dir="rtl" @else  @endif>
+                  <h4 class="modal-title" id="modalCenterTitle" >{{  __("Change Password") }}</h4>
                 </div>
                 <div class="modal-body text-center">
                   <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
@@ -121,7 +121,7 @@
                     {{ __("Do Your Really Want To Change Your Password.") }}
                   </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" @if(app()->getLocale() === 'ar')  dir="rtl" @else  @endif>
                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >{{ __("Close") }}</button>
                   <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" >{{ __("Submit") }}</button>
                 </div>

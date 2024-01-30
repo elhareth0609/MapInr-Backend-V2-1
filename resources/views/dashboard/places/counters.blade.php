@@ -14,7 +14,7 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Inforamtion')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/workers')}}"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
     </ul>
@@ -51,7 +51,7 @@
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Status')}}</th>
-                  <th>{{__('created At')}}</th>
+                  <th>{{__('Created At')}}</th>
                 </tr>
               </thead>
             </table>
@@ -119,15 +119,15 @@
         language: {
           info: "_START_-_END_ of _TOTAL_",
         },
-        ajax: '{{ route("counters-table") }}',
+        ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
         columns: [
           { data: 'id', title: '#' },
-          { data: 'counter_id', title: 'Counter ID' },
-          { data: 'name', title: 'Name' },
-          { data: 'longitude', title: 'longitude' },
-          { data: 'latitude', title: 'latitude' },
-          { data: 'status', title: 'Status' },
-          { data: 'created_at', title: 'Created At' }
+          { data: 'counter_id', title: '{{__("Counter Id")}}' },
+          { data: 'name', title: '{{__("Name")}}' },
+          { data: 'longitude', title: '{{__("Longitude")}}' },
+          { data: 'latitude', title: '{{__("Latitude")}}' },
+          { data: 'status', title: '{{__("Status")}}' },
+          { data: 'created_at', title: '{{__("Created At")}}' }
         ],
         "drawCallback": function () {
           updateCustomPagination();

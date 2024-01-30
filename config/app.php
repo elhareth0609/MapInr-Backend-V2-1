@@ -83,7 +83,7 @@ return [
     |
     */
 
-  'locale' => 'en',
+  'locale' => 'ar',
 
   /*
     |--------------------------------------------------------------------------
@@ -191,4 +191,9 @@ return [
 
   ])->toArray(),
 
+  'supported_locales' => [
+    'en' => 'English',
+    'ar' => 'Arabic',
+    // Add more locales as needed
+  ],
 ];

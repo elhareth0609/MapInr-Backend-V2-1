@@ -28,7 +28,7 @@
             </div>
             <div class="modal-body">
 
-              <select class="select-mult" multiple data-placeholder="Choose Places ..." name="selectedWorkers[]">
+              <select class="select-mult" multiple data-placeholder="Choose Workers ..." name="selectedWorkers[]">
                 @foreach ($users as $userName => $userId)
                     <option value="{{ $userId }}" {{ in_array($userId, $workers->toArray()) ? 'selected' : '' }}>
                         {{ $userName }}
@@ -48,7 +48,7 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Inforamtion')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/counters')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
     </ul>
@@ -85,7 +85,7 @@
                   <th>{{__('Email')}}</th>
                   <th>{{__('Phone')}}</th>
                   <th>{{__('Status')}}</th>
-                  <th>{{__('created At')}}</th>
+                  <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
@@ -626,12 +626,12 @@ $(document).ready( function () {
     ajax: '{{ url("place-workers/" . $place->id) }}',
     columns: [
       { data: 'id', name: '#' },
-      { data: 'fullname', name: 'fullname' },
-      { data: 'email', name: 'email' },
-      { data: 'phone', name: 'phone' },
-      { data: 'status', name: 'status' },
-      { data: 'created_at', name: 'created_at' },
-      { data: 'actions', name: 'actions', orderable: false, searchable: false },
+      { data: 'fullname', name: '{{ __("Full Name")}}' },
+      { data: 'email', name: '{{ __("Email")}}' },
+      { data: 'phone', name: '{{ __("Phone")}}' },
+      { data: 'status', name: '{{ __("Status")}}' },
+      { data: 'created_at', name: '{{ __("Created At")}}' },
+      { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
     ],
     "drawCallback": function () {
       updateCustomPagination();

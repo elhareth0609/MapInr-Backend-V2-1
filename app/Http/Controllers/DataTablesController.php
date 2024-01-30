@@ -88,6 +88,15 @@ class DataTablesController extends Controller
       ->editColumn('place_id', function($place) {
           return $place->place_id;
       })
+      ->editColumn('place_name', function($place) {
+        return $place->place_name;
+      })
+      ->editColumn('counters', function($place) {
+        return $place->counters->count();
+      })
+      ->editColumn('workers', function($place) {
+        return $place->workers->count();
+      })
       ->editColumn('longitude', function($place) {
           return $place->longitude;
       })
@@ -133,9 +142,9 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($counter) {
         if ($counter->status === '0') {
-            return '<span class="badge rounded-pill bg-label-danger me-1">In Progress</span>';
+            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-info">Active</span>';
+            return '<span class="badge rounded-pill bg-label-info">' . __("Active"). '</span>';
         }
       })
       ->editColumn('created_at', function($counter) {
@@ -237,9 +246,9 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($counter) {
         if ($counter->status === '0') {
-            return '<span class="badge rounded-pill bg-label-warning me-1">In Progress</span>';
+            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-info me-1">Active</span>';
+            return '<span class="badge rounded-pill bg-label-info me-1">' . __("Active"). '</span>';
         }
       })
       ->editColumn('created_at', function($counter) {
@@ -266,12 +275,21 @@ class DataTablesController extends Controller
       ->editColumn('place_id', function($place) {
           return $place->place_id;
       })
-      ->editColumn('longitude', function($place) {
-          return $place->longitude;
+      ->editColumn('place_name', function($place) {
+        return $place->place_name;
       })
-      ->editColumn('latitude', function($place) {
-          return $place->latitude;
+      ->editColumn('counters', function($place) {
+        return $place->counters->count();
       })
+      ->editColumn('workers', function($place) {
+        return $place->workers->count();
+      })
+      // ->editColumn('longitude', function($place) {
+      //     return $place->longitude;
+      // })
+      // ->editColumn('latitude', function($place) {
+      //     return $place->latitude;
+      // })
       ->editColumn('created_at', function($place) {
           return $place->created_at->format('Y-m-d');
       })

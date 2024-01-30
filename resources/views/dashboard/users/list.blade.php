@@ -5,7 +5,7 @@
 @section('content')
 <div class="row w-100 d-flex align-items-baseline mb-2">
   <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
-    <span class="text-muted fw-light">{{__('Pages')}} /</span> {{__('All Users')}}
+    <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Users')}}
   </h4>
   <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
     <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12" data-bs-toggle="modal" data-bs-target="#adduser">
@@ -102,7 +102,7 @@
             <th>{{__('Email')}}</th>
             <th>{{__('Phone')}}</th>
             <th>{{__('Status')}}</th>
-            <th>{{__('created At')}}</th>
+            <th>{{__('Created At')}}</th>
             <th>{{__('Actions')}}</th>
           </tr>
         </thead>
@@ -220,13 +220,14 @@ $(document).ready( function () {
       ajax: '{{ route("users-table") }}',
       columns: [
         { data: 'id', name: '#' },
-        { data: 'fullname', name: 'fullname' },
-        { data: 'email', name: 'email' },
-        { data: 'phone', name: 'phone' },
-        { data: 'status', name: 'status' },
-        { data: 'created_at', name: 'created_at' },
-        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+        { data: 'fullname', name: '{{__("Full Name")}}' },
+        { data: 'email', name: '{{__("Email")}}' },
+        { data: 'phone', name: '{{__("Phone")}}' },
+        { data: 'status', name: '{{__("Status")}}' },
+        { data: 'created_at', name: '{{__("Created At")}}' },
+        { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
       ],
+      "order": [[5, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

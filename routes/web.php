@@ -50,6 +50,7 @@ use App\Http\Controllers\CounterController;
 use App\Http\Controllers\DataTablesController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ExelController;
+use App\Http\Controllers\LanguageController;
 
 
 
@@ -83,7 +84,7 @@ Route::get('/users', [DataTablesController::class, 'users'])->name('users-table'
 Route::get('/places', [DataTablesController::class, 'places'])->name('places-table');
 Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
 Route::get('/place-workers/{id}', [DataTablesController::class, 'place_workers'])->name('place-workers-table');
-Route::get('/place-counters/{id}', [DataTablesController::class, 'place_couters'])->name('place-counters-table');
+Route::get('/place-counters/{id}', [DataTablesController::class, 'place_counters'])->name('place-counters-table');
 Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
 
 // Route::post('/user-places', [DataTablesController::class, 'user_places'])->name('user-places-table');
@@ -98,7 +99,8 @@ Route::post('/user/create', [UserController::class, 'create'])->name('user-creat
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
-Route::post('/user/add-place', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
+Route::post('/user/add-place-worker', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
+Route::post('/user/add-worker-place', [UserController::class, 'addWorkerPlace'])->name('add.worker.place');
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
 
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
@@ -165,6 +167,8 @@ Route::get('/form/layouts-horizontal', [HorizontalForm::class, 'index'])->name('
 // tables
 Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');
 
+
+Route::get('switch-language/{locale}', [LanguageController::class, 'switchLanguage'])->name('switch.language');
 
 
 });
