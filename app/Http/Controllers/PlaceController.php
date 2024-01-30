@@ -45,6 +45,24 @@ class PlaceController extends Controller
         ],
     ];
 
+
+    $responseData['data']['place'][] = [
+      'id' => 0,
+      'place_id' => 0,
+      'My Counters' => $workernotPlaces->flatMap(function ($place_worker) {
+          return $place_worker->place->counters->map(function ($counter) {
+              return [
+                  'id' => $counter->id,
+                  'counter_id' => $counter->counter_id,
+                  'name' => $counter->name,
+                  'latitude' => $counter->latitude,
+                  'longitude' => $counter->longitude,
+              ];
+          });
+      })->all(),
+  ];
+
+
     foreach ($workerPlaces as $workerPlace) {
       // Add place details to the response
       $responseData['data']['place'][] = [
@@ -62,7 +80,7 @@ class PlaceController extends Controller
       ];
     }
 
-    // foreach ($workernotPlaces as $workernotPlace) {
+      // foreach ($workernotPlaces as $workernotPlace) {
     //     // Add place details to the response
     // $responseData['data']['place']['notcounter'][] = [
     //     'id' => $workernotPlace->place->id,
