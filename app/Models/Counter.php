@@ -11,6 +11,7 @@ class Counter extends Model
 
     protected $fillable = [
         'counter_id',
+        'worker_id',
         'place_id',
         'name',
         'latitude',
