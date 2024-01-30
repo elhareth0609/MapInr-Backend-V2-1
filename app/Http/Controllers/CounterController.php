@@ -121,7 +121,6 @@ class CounterController extends Controller
       $counter->picture = $uniqueName;
       $counter->phone = $request->input('phone', $counter->phone);
       $counter->note = $request->input('note', $counter->note);
-      $counter->status = '0';
       $counter->save();
 
       return response()->json([
