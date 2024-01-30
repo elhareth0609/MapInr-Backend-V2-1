@@ -49,7 +49,7 @@ class PlaceController extends Controller
     $responseData['data']['place'][] = [
       'id' => 0,
       'place_id' => 0,
-      'My Counters' => $workernotPlaces->flatMap(function ($place_worker) {
+      'counters' => $workernotPlaces->flatMap(function ($place_worker) {
           return $place_worker->place->counters->map(function ($counter) {
               return [
                   'id' => $counter->id,
