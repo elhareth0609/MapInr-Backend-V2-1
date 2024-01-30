@@ -89,7 +89,7 @@ class CounterController extends Controller
           'required',
           'numeric',
           Rule::exists('counters', 'id')->where(function ($query) {
-            $query->where('status', '1');
+            $query->where('status', '0');
           }),
         ],
         'latitude'  => 'required|numeric',
