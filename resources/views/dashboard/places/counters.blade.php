@@ -129,6 +129,7 @@
           { data: 'status', title: '{{__("Status")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' }
         ],
+        "order": [[6, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();

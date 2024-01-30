@@ -234,11 +234,10 @@ $(document).ready( function () {
         { data: 'place_name', title: '{{ __("Place Name")}}' },
         { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
-        // { data: 'longitude', title: '{{ __("Longitude")}}' },
-        // { data: 'latitude', title: '{{__("Latitude")}}' },
         { data: 'created_at', title: '{{ __("Created At") }}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
+      order: [[5, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

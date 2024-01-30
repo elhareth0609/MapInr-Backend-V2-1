@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-  
+
         <!-- Modal -->
         <div class="modal fade" id="addPlace" data-bs-backdrop="static" tabindex="-1">
           <div class="modal-dialog">
@@ -28,7 +28,7 @@
                 <h4 class="modal-title" id="backDropModalTitle">{{__('Add Worker')}}</h4>
               </div>
               <div class="modal-body">
-  
+
                 <select class="select-mult" multiple data-placeholder="Choose Places ..." name="selectedPlaces[]">
                   @foreach ($allplaces as $placeName => $placeId)
                       <option value="{{ $placeId }}" {{ in_array($placeId, $places->toArray()) ? 'selected' : '' }}>
@@ -606,17 +606,15 @@ var select = $('select[multiple]');
         },
         ajax: '{{ url("worker-places/" . $user->id) }}',
         columns: [
-          // { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
           { data: 'id', title: '#' },
           { data: 'place_id', title: '{{__("Place Id")}}' },
           { data: 'place_name', title: '{{__("Place Name")}}' },
           { data: 'counters', title: '{{__("Counters")}}' },
           { data: 'workers', title: '{{__("Workers")}}' },
-          // { data: 'longitude', title: '{{__("Longitude")}}' },
-          // { data: 'latitude', title: '{{__("Latitude")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
         ],
+        "order": [[5, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();

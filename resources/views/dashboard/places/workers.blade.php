@@ -633,6 +633,7 @@ $(document).ready( function () {
       { data: 'created_at', name: '{{ __("Created At")}}' },
       { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
     ],
+    "order": [[5, "desc"]],
     "drawCallback": function () {
       updateCustomPagination();
       var pageInfo = this.api().page.info();
