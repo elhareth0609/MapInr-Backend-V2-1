@@ -2,12 +2,11 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeWriting;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Maatwebsite\Excel\Facades\Excel;
-
 use App\Models\Counter;
 
 class YourExcelExport implements FromCollection, WithEvents
@@ -20,8 +19,8 @@ class YourExcelExport implements FromCollection, WithEvents
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $counters = Counter::where('place_id', $this->placeId)->get();
@@ -36,12 +35,13 @@ class YourExcelExport implements FromCollection, WithEvents
                 'Status' => $counter->status,
                 'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
                 'Updated At' => $counter->updated_at->format('Y-m-d H:i:s'),
+                'Picture' => $counter->picture, // Use the "picture" field to access the storage name of the photo
             ];
         });
 
         // Add headers to the collection
         $headers = [
-            'Counter ID', 'Longitude', 'Latitude', 'Name', 'Status', 'Picture', 'Created At', 'Updated At',
+            'Counter ID', 'Longitude', 'Latitude', 'Name', 'Status', 'Created At', 'Updated At', 'Picture',
         ];
 
         // Prepend headers to the data collection
@@ -53,38 +53,39 @@ class YourExcelExport implements FromCollection, WithEvents
     public function registerEvents(): array
     {
         return [
-            BeforeWriting::class => function (BeforeWriting $event) {
-                $this->beforeWriting($event->getWriter());
+            AfterSheet::class => function (AfterSheet $event) {
+                $this->insertPictures($event->sheet);
             },
         ];
     }
 
-    private function beforeWriting($excel)
+    private function insertPictures($sheet)
     {
-        $activeSheet = $excel->getActiveSheet();
+        $counters = Counter::where('place_id', $this->placeId)->get();
 
         // Get the starting row for embedding images
         $imageRow = 2;
 
-        foreach ($this->collection() as $rowIndex => $rowData) {
-            // Assuming $rowData['Picture'] contains the image file name or path
-            $imagePath = public_path("images/{$rowData['Picture']}");
+        foreach ($counters as $counter) {
+          if($counter->$counter) {
+            $storagePath = 'public/assets/img/counters/' . $counter->picture;
+            $imageUrl = Storage::url($storagePath);
 
-            if (file_exists($imagePath)) {
-                $imageData = file_get_contents($imagePath);
-                $base64 = 'data:image/jpeg;base64,' . base64_encode($imageData);
+            if ($imageUrl) {
+                $tempImagePath = public_path("storage/{$storagePath}");
 
                 // Embed the image in the Excel file
                 $drawing = new Drawing();
-                $drawing->setPath($imagePath);
+                $drawing->setPath($tempImagePath);
                 $drawing->setCoordinates("G{$imageRow}");
                 $drawing->setWidth(100);
                 $drawing->setHeight(100);
-                $drawing->setWorksheet($activeSheet);
+                $drawing->setWorksheet($sheet);
 
                 // Increment the row index for the next image
                 $imageRow++;
             }
+          }
         }
     }
 }

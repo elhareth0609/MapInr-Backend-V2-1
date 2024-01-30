@@ -29,9 +29,7 @@ class YourExcelImport implements ToCollection
 
       $place = new Place;
       $place->place_id = $placeId;
-      $place->longitude = 23.0;
-      $place->latitude = 34.0;
-      // $place->name = 'counter_' . $row[0];
+      $place->place_name = 'place_' . $row[0];
       $place->save();
 
       $rows->skip(1)->each(function ($row) use($place){
