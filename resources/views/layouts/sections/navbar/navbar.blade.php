@@ -55,14 +55,14 @@ $navbarDetached = ($navbarDetached ?? '');
 
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
-            <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle hide-arrow p-0" href="{{ route('settings')}}" data-bs-toggle="dropdown">
               <div class="avatar avatar-online">
                 <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
               <li>
-                <a class="dropdown-item pb-2 mb-1" href="javascript:void(0);">
+                <a class="dropdown-item pb-2 mb-1" href="{{ route('settings')}}">
                   <div class="d-flex align-items-center">
                     <div class="flex-shrink-0 me-2 pe-1">
                       <div class="avatar avatar-online">
@@ -70,8 +70,8 @@ $navbarDetached = ($navbarDetached ?? '');
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0">John Doe</h6>
-                      <small class="text-muted">Admin</small>
+                      <h6 class="mb-0">{{ Auth::user()->fullname}}</h6>
+                      <small class="text-muted">{{ Auth::user()->role}}</small>
                     </div>
                   </div>
                 </a>
@@ -80,17 +80,17 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider my-1"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" href="{{ route('settings')}}">
                   <i class="mdi mdi-account-outline me-1 mdi-20px"></i>
-                  <span class="align-middle">My Profile</span>
+                  <span class="align-middle">{{__('My Profile')}}</span>
                 </a>
               </li>
-              <li>
+              {{-- <li>
                 <a class="dropdown-item" href="javascript:void(0);">
                   <i class='mdi mdi-cog-outline me-1 mdi-20px'></i>
                   <span class="align-middle">Settings</span>
                 </a>
-              </li>
+              </li> --}}
               {{-- <li>
                 <a class="dropdown-item" href="javascript:void(0);">
                   <span class="d-flex align-items-center align-middle">

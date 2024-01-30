@@ -27,5 +27,6 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::get('/v1/places/all', [PlaceController::class, 'all_places'])->name('all-places');
   Route::get('/v1/places/all_in_list', [PlaceController::class, 'all_in_list'])->name('all-in-list');
   Route::post('/v1/counters/create', [CounterController::class, 'create'])->name('counter.create');
+  Route::post('/v1/counters/update', [CounterController::class, 'update'])->name('counter.update');
 
 });

@@ -72,4 +72,67 @@ class CounterController extends Controller
         ]);
       }
   }
+
+
+  public function update(Request $request) {
+
+    $validator = Validator::make($request->all(), [
+        'name'      => 'required|string|max:255',
+        'longitude' => 'required|numeric',
+        'place_id' => [
+          'required',
+          'numeric',
+          Rule::exists('places', 'id'),
+        ],
+        'counter_id' => [
+          'required',
+          'numeric',
+          Rule::exists('counters', 'id'),
+        ],
+        'latitude'  => 'required|numeric',
+        'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+        'note'      => 'sometimes|string',
+        'phone'     => 'sometimes|string'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed',
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+
+      $counter = Counter::find($request->counter_id);
+
+      if ($request->has('photo')) {
+        $uniqueName = time() . '_' . $request->file('photo')->getClientOriginalName();
+        $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+      } else {
+          $uniqueName = $counter->picture;
+      }
+
+      $counter->name = $request->name;
+      $counter->longitude = $request->longitude;
+      $counter->latitude = $request->latitude;
+      $counter->picture = $uniqueName;
+      $counter->phone = $request->input('phone', $counter->phone);
+      $counter->note = $request->input('note', $counter->note);
+      $counter->status = '0';
+      $counter->save();
+
+      return response()->json([
+          'status' => 1,
+          'message' => 'Updated successfully',
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+}
+
 }

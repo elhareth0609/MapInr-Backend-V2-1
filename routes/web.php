@@ -74,7 +74,9 @@ Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard-analytics
 
 Route::get('/auth/logout', [LoginBasic::class, 'logout'])->name('auth-logout');
 
-Route::get('/setting', [SettingController::class, 'setting'])->name('setting');
+Route::get('/settings', [SettingController::class, 'settings'])->name('settings');
+Route::post('/change-password', [SettingController::class, 'change_password'])->name('settings.change.password');
+Route::post('/update-information', [SettingController::class, 'update_information'])->name('settings.update.information');
 
 
 Route::get('/users', [DataTablesController::class, 'users'])->name('users-table');
