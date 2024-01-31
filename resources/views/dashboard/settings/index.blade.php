@@ -87,19 +87,19 @@
           <div class="row mt-2 gy-4">
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="passord" name="passord" placeholder="{{__('Enter Past Password')}}"/>
+                <input class="form-control" type="pasword" id="passord" name="past_password" placeholder="{{__('Enter Past Password')}}"/>
                 <label for="firstName">{{__('Past Password')}}</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="newpassord" name="newpassord" placeholder="{{__('Enter New Password')}}"/>
+                <input class="form-control" type="pasword" id="new_password" name="new_password" placeholder="{{__('Enter New Password')}}"/>
                 <label for="firstName">{{__('New Password')}}</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="pasword" id="confirmnewpassord" name="confirmnewpassord" placeholder="{{__('Confirm New Password')}}"/>
+                <input class="form-control" type="pasword" id="confirm_new_password" name="confirm_new_password" placeholder="{{__('Confirm New Password')}}"/>
                 <label for="firstName">{{__('Confirm New Password')}}</label>
               </div>
             </div>
@@ -156,19 +156,20 @@
               processData: false,
               contentType: false,
               success: function (response) {
+            Swal.fire({
+                icon: response.icon,
+                title: response.state,
+                text: response.message,
+            });
+
+            },
+            error: function (error) {
               Swal.fire({
-                  icon: 'success',
-                  title: 'Success',
-                  text: 'Updated successfully!',
-              });
-          },
-          error: function (error) {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Validation Error',
-                  text: error.responseJSON.error,
-              });
-          }
+                    icon: 'error',
+                    title: error.responseJSON.message,
+                    text: error.responseJSON.error,
+                });
+            }
           });
       });
 
@@ -185,16 +186,16 @@
                 success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Changed successfully!',
+                    title: response.state,
+                    text: response.message,
                 });
                 userPlacesdataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Validation Error',
-                    text: error.responseJSON.error,
+                    title: error.responseJSON.message,
+                    text: error.responseJSON.errors,
                 });
             }
             });

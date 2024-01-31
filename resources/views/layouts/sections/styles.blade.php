@@ -27,8 +27,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <style type="text/styles">
-div:where(.swal2-container) {
-  z-index: 1075;
+.swal2-container.swal2-center.swal2-backdrop-show {
+  z-index: 10075;
 }
 </style>
 <!-- Vendor Styles -->

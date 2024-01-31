@@ -118,6 +118,8 @@ class CounterController extends Controller
       }
 
       $counter->name = $request->name;
+      // $counter->worker_id = $request->user()->id;
+      // $counter->status = '0';
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;

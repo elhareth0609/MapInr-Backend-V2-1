@@ -22,7 +22,7 @@
       <!-- Account -->
       <div class="card-body pt-2 mt-1">
         <form id="updateUser" >
-          <input type="hidden" id="id" name="id" value="{{ $user->di }}" />
+          <input type="hidden" id="id" name="id" value="{{ $user->id }}" />
 
           <div class="row mt-2 gy-4">
             <div class="col-md-6">
@@ -75,16 +75,16 @@ $('#updateUser').submit(function (e) {
             data: $(this).serialize(),
             success: function (response) {
             Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'User updated successfully!',
+                icon: response.icon,
+                title: response.state,
+                text: response.message,
             });
 
             },
             error: function (error) {
               Swal.fire({
                     icon: 'error',
-                    title: 'Validation Error',
+                    title: error.responseJSON.message,
                     text: error.responseJSON.error,
                 });
             }

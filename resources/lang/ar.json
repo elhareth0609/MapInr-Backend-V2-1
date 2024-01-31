@@ -76,6 +76,20 @@
     "Do You Really Want To Remove This Place From Worker." : "هل تريد حقًا إزالة هذا المكان من العامل؟",
     "Do You Really Want To Remove This Wokrker From Place." : "هل تريد حقًا إزالة هذا العامل من المكان؟",
     "Worker Remove" : "تمت إزالة العامل",
-    "Add Worker" : "أضف عامل"
+    "Add Worker" : "أضف عامل",
+    "Validation failed" : "خطأ في المتغيرات",
+    "User deleted successfully." : "تم حذف العضو بنجاح",
+    "Success" : "جيد جداً",
+    "User created successfully" : "تم إضافة العضو بنجاح",
+    "Sorry," : "أسف",
+    "There Is No User To Deleted." : "لا يوجد أي عضو لحذفه",
+    "There Is No User To Update." : "لا يوجد أي عضو لتحديثه",
+    "User updated successfully." : "تم تحديث العضو بنجاح",
+    "Do Your Really Want To Update Your Account Information." : "هل تريد حقًا تحديث معلومات حسابك؟",
+    "Updated successfully" : "تم التحديث بنجاح",
+    "Do Your Really Want To Change Your Password." : "هل تريد حقا أن تغير كلمة السر الخاصة بك؟",
+    "Changed successfully" : "تم التغيير بنجاح",
+    "Past Password Incorrect" : " كلمة السر القديمة خاطئة",
+    "Files Upload It Successfully" : "تم رفع الملفات بنجاح"
 
 }

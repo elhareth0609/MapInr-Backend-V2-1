@@ -31,15 +31,14 @@ class ExelController extends Controller
               Excel::import($import, $oneExcelFile);
           }
 
-
           return response()->json([
-            'status' => 1,
-            'message' => 'File uploaded and data inserted successfully'
+            'state' => __('Success'),
+            'message' => __('Files Upload It Successfully')
           ]);
         } catch (\Exception $e) {
           return response()->json([
             'status' => 0,
-            'error' => $e->getMessage(),
+            'errors' => $e->getMessage(),
           ],401);
         }
     }

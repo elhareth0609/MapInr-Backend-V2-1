@@ -21,9 +21,13 @@ class UserController extends Controller
     ->with('user',$user);
   }
 
-  public function generate_password()
-  {
-      $generatedPassword = Str::random(12);
+  public function generate_password() {
+      // $generatedPassword = Str::random(6, '0123456789');
+      $generatedPassword = '';
+      for ($i = 0; $i < 8; $i++) {
+          $generatedPassword .= mt_rand(0, 9);
+      }
+
 
       $passwordExists = User::where('password', Hash::make($generatedPassword))->exists();
 
@@ -32,7 +36,9 @@ class UserController extends Controller
           $passwordExists = User::where('password', Hash::make($generatedPassword))->exists();
       }
 
-      return response()->json(['password' => $generatedPassword]);
+      return response()->json([
+        'password' => $generatedPassword
+      ]);
   }
 
   public function create(Request $request) {
@@ -40,8 +46,8 @@ class UserController extends Controller
     $rules = [
       'firstname' => 'required|string',
       'lastname' => 'required|string',
-      'email' => 'required|email|unique:users',
-      'phone' => 'required|string',
+      'email' => 'sometimes|email|nullable|unique:users',
+      'phone' => 'sometimes|nullable|string',
       'password' => 'required|string|min:8',
     ];
 
@@ -50,7 +56,7 @@ class UserController extends Controller
     if ($validator->fails()) {
       return response()->json([
         'status' => 0,
-        'message' => 'Validation failed',
+        'message' => __('Validation failed'),
         'error' => $validator->errors()->first(),
       ], 422);
     }
@@ -62,8 +68,8 @@ class UserController extends Controller
     $user->save();
 
     return response()->json([
-      'status' => 1,
-      'message' => 'User created successfully',
+      'state' => __('Success'),
+      'message' => __('User created successfully'),
     ]);
   }
 
@@ -73,14 +79,14 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json([
-          'status' => 1,
-          'message' => 'User deleted successfully.',
+          'state' => __('Success'),
+          'message' => __('User deleted successfully.'),
         ]);
     } else {
         return response()->json([
-          'status' => 1,
-          'message' => 'Sorry,',
-          'error' => 'There Is No User To Deleted.',
+          'status' => __('Success'),
+          'message' => __('Sorry,'),
+          'error' => __('There Is No User To Deleted.'),
         ],401);
     }
   }
@@ -178,8 +184,8 @@ class UserController extends Controller
     $rules = [
       'id' => 'required|string',
       'fullname' => 'required|string',
-      'email' => 'required|email',
-      'phone' => 'required|string',
+      'email' => 'sometimes|email|nullable|unique:users',
+      'phone' => 'sometimes|nullable|string',
     ];
 
     // Validate the request
@@ -189,7 +195,7 @@ class UserController extends Controller
     if ($validator->fails()) {
       return response()->json([
         'status' => 0,
-        'message' => 'Validation failed',
+        'message' => __('Validation failed'),
         'error' => $validator->errors()->first(),
       ], 422);
     }
@@ -202,13 +208,15 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-          'status' => 1,
-          'message' => 'User updated successfully.',
-        ],401);
+          'icon' => 'success',
+          'state' => __('Success'),
+          'message' => __('User updated successfully.'),
+        ]);
     } else {
         return response()->json([
-          'status' => 1,
-          'message' => 'There is no user with this id.',
+          'icon' => 'alert',
+          'state' => __('Sorry,'),
+          'message' => __('There Is No User To Update.'),
         ]);
 
     }

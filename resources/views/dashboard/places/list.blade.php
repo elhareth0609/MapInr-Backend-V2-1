@@ -197,16 +197,16 @@ $(document).ready( function () {
             success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Files Upload It successfully!',
+                    title: response.state,
+                    text: response.message,
                 });
                 placesdataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Validation Error',
-                    text: error.responseJSON.error,
+                    title: 'Error',
+                    text: error.responseJSON.errors,
                 });
             }
         });

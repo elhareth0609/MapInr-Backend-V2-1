@@ -31,11 +31,10 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($user) {
         if ($user->password === null) {
-            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
+          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
         }
-          // return $user->status;
       })
       ->editColumn('created_at', function($user) {
           return $user->created_at->format('Y-m-d');
@@ -163,9 +162,9 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($worker) {
         if ($worker->password === null) {
-          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
+          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
         }
           // return $worker->status;
       })

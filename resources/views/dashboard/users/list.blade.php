@@ -55,7 +55,7 @@
               <div class="col mb-4 mt-2">
                 <div class="form-floating form-floating-outline">
                   <div class="input-group">
-                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password">
+                    <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password" readonly required>
                     <button class="btn btn-outline-primary" type="button" id="copyPassword" ><span class="mdi mdi-content-copy"></span></button>
                     <button class="btn btn-outline-primary" type="button" id="generatePassword">{{__('Generate')}}</button>
                   </div>
@@ -157,15 +157,15 @@
                 success: function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Success',
-                        text: 'User deleted successfully!',
+                        title: response.state,
+                        text: response.message,
                     });
                     userDataTable.ajax.reload();
                 },
                 error: function (error) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Validation Error',
+                        title: error.responseJSON.status,
                         text: error.responseJSON.error,
                     });
                 }
@@ -311,22 +311,20 @@ $(document).ready( function () {
             success: function (response) {
             Swal.fire({
                 icon: 'success',
-                title: 'Success',
-                text: 'User created successfully!',
+                title: response.state,
+                text: response.message,
             });
             userDataTable.ajax.reload();
             },
             error: function (error) {
               Swal.fire({
                     icon: 'error',
-                    title: 'Validation Error',
+                    title: error.responseJSON.message,
                     text: error.responseJSON.error,
                 });
             }
         });
       });
-
-
 
   });
 </script>
