@@ -29,7 +29,7 @@ class YourExcelImport implements ToCollection
 
       $place = new Place;
       $place->place_id = $placeId;
-      $place->place_name = 'place_' . $row[0];
+      $place->place_name = 'place_' . $placeId;
       $place->save();
 
       $rows->skip(1)->each(function ($row) use($place){

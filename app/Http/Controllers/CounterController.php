@@ -77,7 +77,7 @@ class CounterController extends Controller
 
   public function update(Request $request) {
 
-    $validator = Validator::make($request->all(), [
+      $validator = Validator::make($request->all(), [
         'name'      => 'required|string|max:255',
         'longitude' => 'required|numeric',
         'place_id' => [
@@ -96,7 +96,7 @@ class CounterController extends Controller
         'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
         'note'      => 'sometimes|string',
         'phone'     => 'sometimes|string'
-    ]);
+      ]);
 
     if ($validator->fails()) {
       return response()->json([

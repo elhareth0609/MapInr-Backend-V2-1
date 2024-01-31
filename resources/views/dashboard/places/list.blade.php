@@ -70,13 +70,10 @@
       <table class="table table-striped w-100" id="places" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            <th>#</th>
+            {{-- <th>#</th> --}}
             <th>{{__('Place Number')}}</th>
-            <th>{{__('Place Name')}}</th>
             <th>{{__('Counters')}}</th>
             <th>{{__('Workers')}}</th>
-            {{-- <th>{{__('Longitude')}}</th>
-            <th>{{__('Latitude')}}</th> --}}
             <th>{{__('Created At')}}</th>
             <th>{{__('Actions')}}</th>
           </tr>
@@ -229,15 +226,13 @@ $(document).ready( function () {
       },
       ajax: '{{ route("places-table") }}',
       columns: [
-        { data: 'id', title: '#' },
         { data: 'place_id', title: '{{ __("Place Id")}}' },
-        { data: 'place_name', title: '{{ __("Place Name")}}' },
         { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
         { data: 'created_at', title: '{{ __("Created At") }}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
-      order: [[5, "desc"]],
+      order: [[3, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

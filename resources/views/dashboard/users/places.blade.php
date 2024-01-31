@@ -47,7 +47,7 @@
         </div><div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Inforamtion')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
     </ul>
     <div class="card mb-4">
@@ -77,13 +77,9 @@
             <table class="table table-striped w-100" id="userPlaces" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
-                  <th>#</th>
                   <th>{{__('Place Number')}}</th>
-                  <th>{{__('Place Name')}}</th>
                   <th>{{__('Counters')}}</th>
                   <th>{{__('Workers')}}</th>
-                  {{-- <th>{{__('Longitude')}}</th>
-                  <th>{{__('Latitude')}}</th> --}}
                   <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
@@ -606,15 +602,13 @@ var select = $('select[multiple]');
         },
         ajax: '{{ url("worker-places/" . $user->id) }}',
         columns: [
-          { data: 'id', title: '#' },
           { data: 'place_id', title: '{{__("Place Id")}}' },
-          { data: 'place_name', title: '{{__("Place Name")}}' },
           { data: 'counters', title: '{{__("Counters")}}' },
           { data: 'workers', title: '{{__("Workers")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
         ],
-        "order": [[5, "desc"]],
+        "order": [[4, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();

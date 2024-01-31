@@ -46,8 +46,9 @@ class ExelController extends Controller
 
     public function exportFile($id,Excel $excel){
       try {
-        $place = Place::find($id);
-        $filename = $place->place_id . '.xlsx';
+        $place = Place::where('place_id',$id)->first();
+        $filename = $id . '.xlsx';
+        $id = $place->id;
         return Excel::download(new YourExcelExport($id), $filename);
 
 
@@ -61,7 +62,7 @@ class ExelController extends Controller
 
     public function exportFileZip(Excel $excel){
       try {
-        $placeIds = Place::pluck('id');
+        $places = Place::all();
 
         // Create a temporary directory to store individual Excel files
         $tempDir = storage_path('app/temp_export');
@@ -71,9 +72,9 @@ class ExelController extends Controller
 
         // Create Excel files for each place and store them in the temporary directory
         $excelFiles = [];
-        foreach ($placeIds as $placeId) {
-            $export = new PlacesExport($placeId);
-            $fileName = "file{$placeId}.xlsx";
+        foreach ($places as $place) {
+            $export = new PlacesExport($place->id);
+            $fileName = "{$place->place_id}.xlsx";
             $filePath = "{$tempDir}/{$fileName}";
 
             Excel::store($export, $fileName, 'temp_export');

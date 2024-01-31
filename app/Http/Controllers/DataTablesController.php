@@ -31,9 +31,9 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($user) {
         if ($user->password === null) {
-            return '<span class="badge rounded-pill bg-label-danger me-1">OFF</span>';
+            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-success me-1">ON</span>';
+            return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
         }
           // return $user->status;
       })
@@ -42,7 +42,7 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($user) {
         return '
-        <a href="' . url("/user/{$user->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
+        <a href="' . url("/user/{$user->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
@@ -55,7 +55,7 @@ class DataTablesController extends Controller
             <div class="modal-body text-center">
               <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
               <div class="row justify-content-center text-wrap">
-                '. __("Do Your Really want to delete This User.") .'
+                '. __("Do You Really want to delete This User.") .'
               </div>
             </div>
             <div class="modal-footer">
@@ -82,14 +82,8 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($places)
 
-      ->editColumn('id', function($place) {
-          return $place->id;
-      })
       ->editColumn('place_id', function($place) {
           return $place->place_id;
-      })
-      ->editColumn('place_name', function($place) {
-        return $place->place_name;
       })
       ->editColumn('counters', function($place) {
         return $place->counters->count();
@@ -97,20 +91,13 @@ class DataTablesController extends Controller
       ->editColumn('workers', function($place) {
         return $place->workers->count();
       })
-      ->editColumn('longitude', function($place) {
-          return $place->longitude;
-      })
-      ->editColumn('latitude', function($place) {
-          return $place->latitude;
-      })
-
       ->editColumn('created_at', function($place) {
           return $place->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($place) {
           return '
-          <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-magnify"></icon></a>
-          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->id . '"><icon class="mdi mdi-download"></icon></a>
+          <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-pen"></icon></a>
+          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a>
           ';
         })
       ->rawColumns(['actions'])
@@ -125,9 +112,6 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($counters)
 
-      ->editColumn('id', function($counter) {
-          return $counter->id;
-      })
       ->editColumn('place_id', function($counter) {
           return $counter->place->place_id;
       })
@@ -179,9 +163,9 @@ class DataTablesController extends Controller
       })
       ->editColumn('status', function($worker) {
         if ($worker->password === null) {
-          return '<span class="badge rounded-pill bg-label-danger me-1">OFF</span>';
+          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
         } else {
-            return '<span class="badge rounded-pill bg-label-success me-1">ON</span>';
+            return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
         }
           // return $worker->status;
       })
@@ -190,7 +174,7 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($worker) use ($id) {
         return '
-        <a href="' . url("/user/{$worker->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
+        <a href="' . url("/user/{$worker->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $worker->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
@@ -203,7 +187,7 @@ class DataTablesController extends Controller
             <div class="modal-body text-center">
               <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
               <div class="row justify-content-center text-wrap">
-                '. __("Do Your Really Want To Remove This Wokrker From Place.") .'
+                '. __("Do You Really Want To Remove This Wokrker From Place.") .'
               </div>
             </div>
             <div class="modal-footer">
@@ -269,14 +253,11 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($places)
 
-      ->editColumn('id', function($place) {
-          return $place->id;
-      })
+      // ->editColumn('id', function($place) {
+      //     return $place->id;
+      // })
       ->editColumn('place_id', function($place) {
           return $place->place_id;
-      })
-      ->editColumn('place_name', function($place) {
-        return $place->place_name;
       })
       ->editColumn('counters', function($place) {
         return $place->counters->count();
@@ -284,18 +265,13 @@ class DataTablesController extends Controller
       ->editColumn('workers', function($place) {
         return $place->workers->count();
       })
-      // ->editColumn('longitude', function($place) {
-      //     return $place->longitude;
-      // })
-      // ->editColumn('latitude', function($place) {
-      //     return $place->latitude;
-      // })
+
       ->editColumn('created_at', function($place) {
           return $place->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($place) use ($id) {
           return '
-            <a href="' . url("/place/{$place->id}") . '" data-place-id="1"><icon class="mdi mdi-magnify"></icon></a>
+            <a href="' . url("/place/{$place->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
             <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $place->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
             <!-- Modal -->
@@ -308,7 +284,7 @@ class DataTablesController extends Controller
                   <div class="modal-body text-center">
                     <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
                     <div class="row justify-content-center text-wrap">
-                      '. __("Do Your Really Want To Remove This Place From Worker.") .'
+                      '. __("Do You Really Want To Remove This Place From Worker.") .'
                     </div>
                   </div>
                   <div class="modal-footer">

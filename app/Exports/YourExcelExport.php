@@ -28,7 +28,7 @@ class YourExcelExport implements FromCollection, WithEvents
         // Transform counters into a collection
         $data = $counters->map(function ($counter) {
             return [
-                'Counter ID' => $counter->counter_id,
+                'Counter Number' => $counter->counter_id,
                 'Longitude' => $counter->longitude,
                 'Latitude' => $counter->latitude,
                 'Name' => $counter->name,
