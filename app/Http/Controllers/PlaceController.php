@@ -10,7 +10,7 @@ use App\Models\Place_Worker;
 
 class PlaceController extends Controller
 {
-    //
+
   public function place($id) {
       $place = Place::where('id', $id)->first();
       return view('dashboard.places.index')
@@ -26,17 +26,8 @@ class PlaceController extends Controller
     ]);
   }
 
-
   public function all_places(Request $request) {
-    $workerPlaces = Place_Worker::with(['place.counters' => function ($query) {
-        $query->where('status', '1');
-      }])->where('worker_id', $request->user()->id)->get();
-
-    $workernotPlaces = Place_Worker::with(['place.counters' => function ($query) use ($request){
-        $query->where('status', '0')
-              ->where('worker_id', $request->user()->id);
-
-      }])->where('worker_id', $request->user()->id)->get();
+    $workerPlaces = Place_Worker::with('place.counters')->get()->sortBy('place_id');
 
     $isworker = $request->user() ? true : false;
 
@@ -46,25 +37,6 @@ class PlaceController extends Controller
             'place' => [],
         ],
     ];
-
-
-    $responseData['data']['place'][] = [
-      'id' => 0,
-      'place_id' => 0,
-      'counters' => $workernotPlaces->flatMap(function ($place_worker) {
-          return $place_worker->place->counters->map(function ($counter) {
-              return [
-                  'id' => $counter->id,
-                  'counter_id' => $counter->counter_id,
-                  'place_id' => $counter->place_id,
-                  'name' => $counter->name,
-                  'latitude' => $counter->latitude,
-                  'longitude' => $counter->longitude,
-              ];
-          });
-      })->all(),
-  ];
-
 
     foreach ($workerPlaces as $workerPlace) {
       // Add place details to the response
@@ -84,39 +56,6 @@ class PlaceController extends Controller
       ];
     }
 
-      // foreach ($workernotPlaces as $workernotPlace) {
-    //     // Add place details to the response
-    // $responseData['data']['place']['notcounter'][] = [
-    //     'id' => $workernotPlace->place->id,
-    //     'place_id' => $workernotPlace->place->place_id,
-    //     'counters' => $workernotPlace->place->counters->map(function ($counter) {
-    //         return [
-    //             'id' => $counter->id,
-    //             'counter_id' => $counter->counter_id,
-    //             'name' => $counter->name,
-    //             'latitude' => $counter->latitude,
-    //             'longitude' => $counter->longitude,
-    //         ];
-    //     })->all(),
-    // ];
-    // }
-
-    // foreach ($workerPlaces as $workerPlace) {
-    //   // Add place details to the response
-    //   $responseData['data']['place']['counters'][] = [
-    //       'id' => $workerPlace->place->id,
-    //       'place_id' => $workerPlace->place->place_id,
-    //       'counters' => $workerPlace->place->counters->map(function ($counter) {
-    //           return [
-    //               'id' => $counter->id,
-    //               'counter_id' => $counter->counter_id,
-    //               'name' => $counter->name,
-    //               'latitude' => $counter->latitude,
-    //               'longitude' => $counter->longitude,
-    //           ];
-    //       })->all(),
-    //   ];
-    // }
     return response()->json($responseData);
   }
 

@@ -16,10 +16,12 @@ class CounterController extends Controller
       $validator = Validator::make($request->all(), [
           'name'      => 'required|string|max:255',
           'longitude' => 'required|numeric',
-          'place_id' => [
-            'required',
+          'id' => [
+            'sometimes',
             'numeric',
-            Rule::exists('places', 'id'),
+            Rule::exists('counters', 'id')->where(function ($query) {
+              $query->where('status', '1');
+            }),
           ],
           'latitude'  => 'required|numeric',
           'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
@@ -37,7 +39,7 @@ class CounterController extends Controller
 
       try {
 
-        $place = Counter::where('place_id', $request->place_id)->orderBy('counter_id', 'desc')->first()->counter_id;
+        $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first()->counter_id;
 
         $uniqueName = null;
         if ($request->has('photo')) {
@@ -49,11 +51,18 @@ class CounterController extends Controller
         }
 
 
+        if ($request->id) {
+          $counter = Counter::find($request->id);
+          $id = $counter->counter_id;
+        } else {
+          $id = ++$place;
+        }
+
         $counter = new Counter();
         $counter->name = $request->name;
-        $counter->place_id = $request->place_id;
+        $counter->place_id = 0;
         $counter->worker_id = $request->user()->id;
-        $counter->counter_id = ++$place;
+        $counter->counter_id = $id;
         $counter->longitude = $request->longitude;
         $counter->latitude = $request->latitude;
         $counter->picture = $uniqueName;
@@ -80,11 +89,11 @@ class CounterController extends Controller
       $validator = Validator::make($request->all(), [
         'name'      => 'required|string|max:255',
         'longitude' => 'required|numeric',
-        'place_id' => [
-          'required',
-          'numeric',
-          Rule::exists('places', 'id'),
-        ],
+        // 'place_id' => [
+        //   'required',
+        //   'numeric',
+        //   Rule::exists('places', 'id'),
+        // ],
         'counter_id' => [
           'required',
           'numeric',
@@ -118,8 +127,6 @@ class CounterController extends Controller
       }
 
       $counter->name = $request->name;
-      // $counter->worker_id = $request->user()->id;
-      // $counter->status = '0';
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;

@@ -60,12 +60,18 @@ class UserController extends Controller
         'error' => $validator->errors()->first(),
       ], 422);
     }
+
     $user = new User();
     $user->fullname = $request->firstname . ' ' . $request->lastname;
     $user->email = $request->email;
     $user->phone = $request->phone;
     $user->password = $request->password;
     $user->save();
+
+    $place = new Place_Worker;
+    $place->place_id = 0;
+    $place->worker_id = $user->id;
+    $place->save();
 
     return response()->json([
       'state' => __('Success'),
