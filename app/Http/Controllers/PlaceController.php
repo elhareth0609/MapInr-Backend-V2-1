@@ -19,7 +19,8 @@ class PlaceController extends Controller
 
   public function all_places(Request $request) {
     $workerPlaces = Place_Worker::with(['place.counters' => function ($query) use ($request) {
-      $query->where('worker_id', $request->user()->id);
+      $query->where('worker_id', $request->user()->id)
+            ->orWhere('status', '1');
     }])
     ->where('worker_id', $request->user()->id)
     ->get()
