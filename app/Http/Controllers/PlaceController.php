@@ -17,15 +17,6 @@ class PlaceController extends Controller
       ->with('place', $place);
   }
 
-  public function all_in_list(Request $request) {
-    $places = Place::select('id','place_id')->get();
-
-    return response()->json([
-      'status' => 1,
-      'data' => $places,
-    ]);
-  }
-
   public function all_places(Request $request) {
     $workerPlaces = Place_Worker::with('place.counters')->get()->sortBy('place_id');
 

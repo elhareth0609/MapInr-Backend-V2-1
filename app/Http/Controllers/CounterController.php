@@ -89,11 +89,6 @@ class CounterController extends Controller
       $validator = Validator::make($request->all(), [
         'name'      => 'required|string|max:255',
         'longitude' => 'required|numeric',
-        // 'place_id' => [
-        //   'required',
-        //   'numeric',
-        //   Rule::exists('places', 'id'),
-        // ],
         'counter_id' => [
           'required',
           'numeric',
