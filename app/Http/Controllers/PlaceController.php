@@ -18,9 +18,13 @@ class PlaceController extends Controller
   }
 
   public function all_places(Request $request) {
-    $workerPlaces = Place_Worker::with('place.counters')->get()->sortBy('place_id');
+    $workerPlaces = Place_Worker::with(['place.counters' => function ($query) use ($request) {
+      $query->where('worker_id', $request->user()->id);
+    }])
+    ->where('worker_id', $request->user()->id)
+    ->get()
+    ->sortBy('place_id');
 
-    $isworker = $request->user() ? true : false;
 
     $responseData = [
         'status' => 1,
