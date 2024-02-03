@@ -32,13 +32,13 @@ class PlacesExport implements FromCollection, WithEvents
               'Latitude' => $counter->latitude,
               'Name' => $counter->name,
               'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
-              'Picture' => $counter->picture, // Use the "picture" field to access the storage name of the photo
+              // 'Picture' => $counter->picture, // Use the "picture" field to access the storage name of the photo
           ];
       });
 
       // Add headers to the collection
       $headers = [
-          'Counter Number', 'Longitude', 'Latitude', 'Name', 'Created At', 'Picture',
+          'Counter Number', 'Longitude', 'Latitude', 'Name', 'Created At',
       ];
 
       // Prepend headers to the data collection
@@ -51,7 +51,9 @@ class PlacesExport implements FromCollection, WithEvents
   {
       return [
           AfterSheet::class => function (AfterSheet $event) {
+            if ($this->placeId == 0) {
               $this->insertPictures($event->sheet);
+            }
           },
       ];
   }

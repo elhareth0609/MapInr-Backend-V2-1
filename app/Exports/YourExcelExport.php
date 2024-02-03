@@ -51,7 +51,9 @@ class YourExcelExport implements FromCollection, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
+              if ($this->placeId == 0) {
                 $this->insertPictures($event->sheet);
+              }
             },
         ];
     }
