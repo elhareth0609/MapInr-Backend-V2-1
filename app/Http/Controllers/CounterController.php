@@ -52,8 +52,8 @@ class CounterController extends Controller
 
 
         if ($request->id) {
-          $counter = Counter::find($request->id);
-          $id = $counter->counter_id;
+          $selectCounter = Counter::find($request->id);
+          $id = $selectCounter->counter_id;
         } else {
           $id = ++$place;
         }
