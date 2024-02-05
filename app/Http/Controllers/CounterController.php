@@ -84,7 +84,7 @@ class CounterController extends Controller
 
         return response()->json([
             'status' => 1,
-            'message' => 'Created successfully',
+            'message' => 'Created successfully : ' . $counter,
         ]);
       } catch (\Exception $e) {
         return response()->json([
@@ -142,7 +142,7 @@ class CounterController extends Controller
 
       return response()->json([
           'status' => 1,
-          'message' => 'Updated successfully',
+          'message' => 'Updated successfully : ' . $counter,
       ]);
     } catch (\Exception $e) {
       return response()->json([
