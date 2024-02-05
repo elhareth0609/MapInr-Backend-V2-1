@@ -63,6 +63,7 @@ class CounterController extends Controller
             $counter = Counter::where('counter_id',$selectCounter->counter_id)
                               ->where('place_id',0)
                               ->first();
+
           }
         } else {
           $id = ++$place;
@@ -75,9 +76,9 @@ class CounterController extends Controller
         $counter->counter_id = $id;
         $counter->longitude = $request->longitude;
         $counter->latitude = $request->latitude;
-        $counter->picture = $uniqueName ? $uniqueName : $selectCounter->phone;
-        $counter->phone = $request->input('phone',$selectCounter->phone);
-        $counter->note = $request->input('note',$selectCounter->note);
+        $counter->picture = $uniqueName ? $uniqueName : $counter->picture;
+        $counter->phone = $request->input('phone',$counter->phone);
+        $counter->note = $request->input('note',$counter->note);
         $counter->status = '0';
         $counter->save();
 
