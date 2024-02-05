@@ -54,20 +54,30 @@ class CounterController extends Controller
         if ($request->id) {
           $selectCounter = Counter::find($request->id);
           $id = $selectCounter->counter_id;
+          $is_exist = Counter::where('counter_id',$selectCounter->counter_id)
+                      ->where('place_id',0)
+                      ->first();
+          if (!$is_exist) {
+            $counter = new Counter();
+          } else {
+            $counter = Counter::where('counter_id',$selectCounter->counter_id)
+                              ->where('place_id',0)
+                              ->first();
+          }
         } else {
           $id = ++$place;
+          $counter = new Counter();
         }
 
-        $counter = new Counter();
         $counter->name = $request->name;
         $counter->place_id = 0;
         $counter->worker_id = $request->user()->id;
         $counter->counter_id = $id;
         $counter->longitude = $request->longitude;
         $counter->latitude = $request->latitude;
-        $counter->picture = $uniqueName;
-        $counter->phone = $request->phone;
-        $counter->note = $request->note;
+        $counter->picture = $uniqueName ? $uniqueName : $selectCounter->phone;
+        $counter->phone = $request->input('phone',$selectCounter->phone);
+        $counter->note = $request->input('note',$selectCounter->note);
         $counter->status = '0';
         $counter->save();
 
