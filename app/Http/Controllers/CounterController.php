@@ -152,4 +152,31 @@ class CounterController extends Controller
     }
 }
 
+  public function destroy(Request $request){
+    try {
+      $counter = Counter::find($request->id);
+      if (!$counter) {
+        return response()->json([
+          'status' => 0,
+          'message' => 'There is no counter with this id. ',
+        ],422);
+      } else if ($counter->place_id === '0') {
+        return response()->json([
+          'status' => 0,
+          'message' => 'You Can\'t Delete This Counter.. ',
+        ],422);
+      }
+
+      $counter->delete();
+      return response()->json([
+        'status' => 1,
+        'message' => 'Deleted successfully.',
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
 }
