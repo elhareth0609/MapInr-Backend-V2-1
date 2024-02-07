@@ -282,21 +282,7 @@ $(document).ready( function () {
       userDataTable.page(page).draw(false);
     };
 
-    // $('#checkbox_all').change(function() {
-    //   $('.checkbox-row').prop('checked', $(this).prop('checked'));
-    // });
 
-    // Handle individual row checkboxes
-    // $('.checkbox-row').change(function() {
-    //   if (!$(this).prop('checked')) {
-    //     $('#checkbox_all').prop('checked', false);
-    //   } else {
-    //     // Check if all row checkboxes are checked
-    //     if ($('.checkbox-row:checked').length === $('.checkbox-row').length) {
-    //       $('#checkbox_all').prop('checked', true);
-    //     }
-    //   }
-    // });
 
       $('#createNewUser').submit(function (e) {
         e.preventDefault();

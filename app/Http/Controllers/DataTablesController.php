@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Place;
 use App\Models\Counter;
 use App\Models\Place_Worker;
+use App\Models\Municipality;
+
 use DataTables;
 
 class DataTablesController extends Controller
@@ -304,5 +306,86 @@ class DataTablesController extends Controller
     }
 
     return view('dashboard.users.places');
+  }
+
+  public function municipalitys(Request $request) {
+    $municipalitys = Municipality::all();
+
+    if ($request->ajax()) {
+      return DataTables::of($municipalitys)
+
+      ->editColumn('id', function($municipality) {
+          return $municipality->id;
+      })
+      ->editColumn('places', function($municipality) {
+        return $municipality->places->count();
+      })
+      ->addColumn('actions', function($municipality) {
+          return '
+          <a href="' . url("/municipality/{$municipality->id}") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
+          <a href="javascript:void(0);" class="download-btn" data-municipality-id="' . $municipality->id . '" onclick="downloadOnesMunicipality(' . $municipality->id . ')"><icon class="mdi mdi-download"></icon></a>
+          <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" data-municipality-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Municipality Delete") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                  <div class="row justify-content-center text-wrap">
+                    '. __("Do You Really want to delete This Municipality.") .'
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser(' . $municipality->id . ')">'. __("Submit") .'</button>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+              ';
+        })
+      ->rawColumns(['actions'])
+      ->make(true);
+
+    }
+    return view('dashboard.municipalitys.list');
+  }
+  public function municipality_places($id,Request $request) {
+    $places = Place::where('municipality_id',$id)->get();
+    $municipality = Municipality::find($id);
+    if ($request->ajax()) {
+      return DataTables::of($places)
+
+      ->editColumn('place_id', function($place) {
+          return $place->place_id;
+      })
+      ->editColumn('counters', function($place) {
+        return $place->counters->count();
+      })
+      ->editColumn('workers', function($place) {
+        return $place->workers->count();
+      })
+      ->editColumn('created_at', function($place) {
+          return $place->created_at->format('Y-m-d');
+      })
+      ->addColumn('actions', function($place) {
+          return '
+          <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-pen"></icon></a>
+          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a>
+          ';
+        })
+      ->rawColumns(['actions'])
+      ->make(true);
+
+    }
+
+    return view('dashboard.municipalitys.places')
+    ->with('municipality',$municipality);
   }
 }

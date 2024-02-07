@@ -42,7 +42,6 @@
             <th>#</th>
             <th>{{__('Counter Number')}}</th>
             <th>{{__('Place Number')}}</th>
-            <th>{{__('Name')}}</th>
             <th>{{__('Longitude')}}</th>
             <th>{{__('Latitude')}}</th>
             <th>{{__('Status')}}</th>
@@ -111,13 +110,12 @@ $(document).ready( function () {
         { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'place_id', title: '{{__("Place Id")}}' },
-        { data: 'name', title: '{{__("Name")}}' },
         { data: 'longitude', title: '{{__("Longitude")}}' },
         { data: 'latitude', title: '{{__("Latitude")}}' },
         { data: 'status', title: '{{__("Status")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
-      "order": [[7, "desc"]],
+      "order": [[6, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

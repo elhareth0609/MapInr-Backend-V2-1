@@ -9,11 +9,13 @@ use App\Models\Place;
 
 class YourExcelImport implements ToCollection
 {
-    protected $fileName;
+  protected $fileName;
+  protected $id;
 
-    public function __construct($fileName)
+    public function __construct($fileName,$id)
     {
-        $this->fileName = $fileName;
+      $this->fileName = $fileName;
+      $this->id = $id;
     }
 
     public function collection(Collection $rows)
@@ -29,6 +31,7 @@ class YourExcelImport implements ToCollection
 
       $place = new Place;
       $place->place_id = $placeId;
+      $place->municipality_id = $this->id;
       $place->place_name = 'place_' . $placeId;
       $place->save();
 

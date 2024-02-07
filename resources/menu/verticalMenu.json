@@ -3,14 +3,14 @@
     {
       "name": "Users",
       "icon": "menu-icon tf-icons mdi mdi-list-box-outline",
-      "slug": "cards-basic",
+      "slug": "users",
       "url": "/users"
     },
     {
-      "name": "Places",
+      "name": "Municipalitys",
       "icon": "menu-icon tf-icons mdi mdi-map-outline",
-      "slug": "cards-basic",
-      "url": "/places"
+      "slug": "municipalitys",
+      "url": "/municipalitys"
     },
     {
       "name": "Counters",
@@ -21,7 +21,7 @@
     {
       "name": "Settings",
       "icon": "menu-icon tf-icons mdi mdi-cog-outline",
-      "slug": "cards-basic",
+      "slug": "settings",
       "url": "/settings"
     }
   ]

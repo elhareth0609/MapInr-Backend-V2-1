@@ -11,7 +11,9 @@ use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
+use App\Models\Municipality;
 use App\Models\Place;
 
 class ExelController extends Controller
@@ -20,14 +22,20 @@ class ExelController extends Controller
     {
         $request->validate([
           'excelFiles.*' => 'required|mimes:xlsx,xls',
-        ]);
+          'id' => [
+            'required',
+            'string',
+            Rule::exists('municipalities', 'id'),
+        ],
+            ]);
 
         try {
           $files = $request->file('excelFile');
 
           foreach ($files as $oneExcelFile) {
               $fileName = $oneExcelFile->getClientOriginalName();
-              $import = new YourExcelImport($fileName);
+              $id = $request->id;
+              $import = new YourExcelImport($fileName,$id);
               Excel::import($import, $oneExcelFile);
           }
 
@@ -59,9 +67,10 @@ class ExelController extends Controller
       }
     }
 
-    public function exportFileZip(Excel $excel){
+    public function exportFileZip($id,Excel $excel){
       try {
-        $places = Place::all();
+        $places = Place::where('municipality_id',$id)->get();
+        $municipality = Municipality::find($id);
 
         // Create a temporary directory to store individual Excel files
         $tempDir = storage_path('app/temp_export');
@@ -82,7 +91,7 @@ class ExelController extends Controller
         }
 
         // Create a zip file containing all Excel files
-        $zipFileName = 'file.zip';
+        $zipFileName = $municipality->name . '.zip';
         $zipFilePath = "{$tempDir}/{$zipFileName}";
 
         $zip = new ZipArchive;
@@ -94,36 +103,12 @@ class ExelController extends Controller
 
         $zip->close();
         File::cleanDirectory(public_path('files'));
-        $publicZipFilePath = public_path('files/file.zip');
+        $publicZipFilePath = public_path('files/' . $municipality->name . '.zip');
         File::move($zipFilePath, $publicZipFilePath);
 
         File::cleanDirectory(storage_path('app/temp_export'));
 
-        return response()->json(['url' => asset('files/file.zip')]);
-
-
-        // Stream the ZIP file contents directly to the response
-        $response = response()->stream(
-            function () use ($zipFilePath) {
-                readfile($zipFilePath);
-            },
-            200,
-            [
-                'Content-Type' => 'application/zip',
-                'Content-Disposition' => 'attachment; filename="file.zip"',
-            ]
-        );
-
-        // Register an "after" callback to delete the temporary files
-        $response->send(function () use ($excelFiles, $zipFilePath) {
-            foreach ($excelFiles as $excelFile) {
-                unlink($excelFile);
-            }
-            // Move the deletion of the ZIP file here
-            unlink($zipFilePath);
-          });
-
-        return $response;
+        return response()->json(['url' => asset('files/' . $municipality->name . '.zip')]);
 
 
     } catch (\Exception $e) {
@@ -131,6 +116,74 @@ class ExelController extends Controller
             'status' => 0,
             'error' => $e->getMessage(),
         ], 401);
+    }
+
+
+    }
+
+
+    public function exportMunicipalitysZip(Excel $excel) {
+      try {
+        $municipalities = Municipality::all();
+
+        foreach ($municipalities as $municipality) {
+            // Create a directory for the municipality if it doesn't exist
+            $municipalityDir = storage_path("app/temp_export/{$municipality->name}");
+            if (!is_dir($municipalityDir)) {
+                mkdir($municipalityDir, 0755, true);
+            }
+
+            // Get places for the current municipality
+            $places = Place::where('municipality_id', $municipality->id)->get();
+
+            // Create Excel files for each place and store them in the municipality directory
+// Create Excel files for each place and store them in the municipality directory
+// Create Excel files for each place and store them in the municipality directory
+foreach ($places as $place) {
+  $export = new PlacesExport($place->id);
+  $fileName = "{$place->place_id}.xlsx";
+
+  // Specify the directory path based on the municipality name
+  $directoryPath = "temp_export/{$municipality->name}";
+
+  // Store the Excel file in the municipality directory
+  Excel::store($export, "{$directoryPath}/{$fileName}");
+
+  // Store the file path for adding to the zip archive later
+  $excelFiles[] = storage_path("app/{$directoryPath}/{$fileName}");
+}
+
+
+        }
+
+        // Create a zip file containing all Excel files organized by municipality
+        $zipFileName = 'municipalities.zip';
+        $zipFilePath = storage_path("app/temp_export/{$zipFileName}");
+
+        $zip = new ZipArchive;
+        $zip->open($zipFilePath, ZipArchive::CREATE);
+
+        // Add files to the zip archive, organizing them into folders by municipality name
+        foreach ($municipalities as $municipality) {
+            $municipalityDir = storage_path("app/temp_export/{$municipality->name}");
+            foreach (glob("{$municipalityDir}/*") as $file) {
+                $zip->addFile($file, "{$municipality->name}/" . basename($file));
+            }
+        }
+
+        $zip->close();
+
+        // Move the zip file to the public directory
+        $publicZipFilePath = public_path('files/' . $zipFileName);
+        File::move($zipFilePath, $publicZipFilePath);
+
+        // Clean up temporary directories
+        File::cleanDirectory(storage_path('app/temp_export'));
+
+        return response()->json(['url' => asset('files/' . $zipFileName)]);
+    } catch (\Exception $e) {
+        // Handle any exceptions
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 
 

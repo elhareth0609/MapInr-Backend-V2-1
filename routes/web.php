@@ -51,8 +51,7 @@ use App\Http\Controllers\DataTablesController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ExelController;
 use App\Http\Controllers\LanguageController;
-
-
+use App\Http\Controllers\MunicipalityController;
 
 
 // Main Page Route
@@ -81,17 +80,23 @@ Route::post('/update-information', [SettingController::class, 'update_informatio
 
 
 Route::get('/users', [DataTablesController::class, 'users'])->name('users-table');
+Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
+
 Route::get('/places', [DataTablesController::class, 'places'])->name('places-table');
-Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
 Route::get('/place-workers/{id}', [DataTablesController::class, 'place_workers'])->name('place-workers-table');
 Route::get('/place-counters/{id}', [DataTablesController::class, 'place_counters'])->name('place-counters-table');
-Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
+
+Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
+
+Route::get('/municipalitys', [DataTablesController::class, 'municipalitys'])->name('municipalitys');
+Route::get('/municipality/{id}/places', [DataTablesController::class, 'municipality_places'])->name('municipality.places');
 
 // Route::post('/user-places', [DataTablesController::class, 'user_places'])->name('user-places-table');
 
 Route::get('/place/{id}', [PlaceController::class, 'place'])->name('place');
 Route::get('/place/{id}/workers', [PlaceController::class, 'place_workers'])->name('place_users');
 Route::get('/place/{id}/counters', [PlaceController::class, 'place_counters'])->name('place_counters');
+
 
 Route::get('/user/{id}', [UserController::class, 'user'])->name('user');
 Route::get('/user/{id}/places', [UserController::class, 'user_places'])->name('user_places');
@@ -103,9 +108,34 @@ Route::post('/user/add-place-worker', [UserController::class, 'addPlaceWorker'])
 Route::post('/user/add-worker-place', [UserController::class, 'addWorkerPlace'])->name('add.worker.place');
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
 
+
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
-Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file');
-Route::get('/exoprt-file-zip', [ExelController::class, 'exportFileZip'])->name('export.file.zip');
+Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file'); // for place counters
+Route::get('/exoprt-file-zip/{id}', [ExelController::class, 'exportFileZip'])->name('export.file.zip');
+// Route::get('/exoprt-municipality-places-zip/{id}', [ExelController::class, 'exportMunicipalityPlacesZip'])->name('export.municipality.places.zip'); // for one municipality places
+Route::get('/exoprt-municipalitys-zip', [ExelController::class, 'exportMunicipalitysZip'])->name('export.municipalitys.zip'); // for all
+
+
+Route::post('/municipality/create', [MunicipalityController::class, 'create'])->name('municipality.create');
+Route::post('/municipality/update', [MunicipalityController::class, 'update'])->name('municipality.update');
+Route::get('/municipality/destroy/{id}', [MunicipalityController::class, 'destroy'])->name('municipality.destroy');
+Route::get('/municipality/{id}', [MunicipalityController::class, 'municipality'])->name('municipality');
+// Route::get('/municipality/{id}/workers', [PlaceController::class, 'municipality_workers'])->name('municipality.users');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

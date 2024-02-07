@@ -26,34 +26,20 @@
           <div class="row mt-2 gy-4">
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="text" id="number" name="number" value="{{ $place->place_id }}" placeholder="{{ __('Enter Your Place Number')}}" />
+                <input class="form-control" type="text" id="number" name="number" value="{{ $place->place_id }}" placeholder="{{ __('Enter Your Place Number')}}" disabled>
                 <label for="firstName">{{ __('Place Number')}}</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating form-floating-outline">
-                <input class="form-control" type="text" name="name" id="name" value="{{ $place->name }}" placeholder="{{ __('Enter Your Place Name')}}"/>
+                <input class="form-control" type="text" name="name" id="name" value="{{ $place->name }}" placeholder="{{ __('Enter Your Place Name')}}" disabled>
                 <label for="lastName">{{ __('Place Name')}}</label>
               </div>
             </div>
-            {{-- <div class="col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input class="form-control" type="text" id="longitude" name="longitude" value="{{ $place->longitude }}" placeholder="{{ __('Enter Your longitude')}}" />
-                <label for="email">{{ __('Longitude')}}</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input type="text" class="form-control" id="latitude" name="latitude" value="{{ $place->latitude }}" placeholder="{{ __('Enter Your langitude')}}" />
-                <label for="organization">{{ __('Latitude')}}</label>
-              </div>
-            </div>
- --}}
           </div>
-          <div class="mt-4">
+          {{-- <div class="mt-4">
             <button type="submit" class="btn btn-primary me-2">{{ __('Save Changes')}}</button>
-            {{-- <button type="reset" class="btn btn-outline-secondary">Reset</button> --}}
-          </div>
+          </div> --}}
         </form>
       </div>
       <!-- /Account -->

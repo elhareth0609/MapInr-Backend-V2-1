@@ -12,10 +12,11 @@ class Place extends Model
     protected $fillable = [
       'place_id',
       'place_name',
+      'municipality_id',
       'latitude',
       'longitude',
       'phone',
-      'status',
+      'status'
     ];
 
     public function counters()
@@ -26,6 +27,11 @@ class Place extends Model
     public function workers()
     {
         return $this->hasMany(Place_Worker::class);
+    }
+
+    public function municipalitys()
+    {
+        return $this->belongsTo(Municipality::class);
     }
 
 }

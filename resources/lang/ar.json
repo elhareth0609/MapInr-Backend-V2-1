@@ -90,6 +90,18 @@
     "Do Your Really Want To Change Your Password." : "هل تريد حقا أن تغير كلمة السر الخاصة بك؟",
     "Changed successfully" : "تم التغيير بنجاح",
     "Past Password Incorrect" : " كلمة السر القديمة خاطئة",
-    "Files Upload It Successfully" : "تم رفع الملفات بنجاح"
+    "Files Upload It Successfully" : "تم رفع الملفات بنجاح",
+    "Municipality Details": "تفاصيل البلدية",
+    "Municipality Settings": "إعدادات البلدية",
+    "Municipalitys": "البلديات",
+    "Municipality Name": "اسم البلدية",
+    "All Municipalitys": "جميع البلديات",
+    "Add Municipality": "إضافة بلدية",
+    "Municipality updated successfully.": "تم تحديث البلدية بنجاح.",
+    "Do You Really want to delete This Municipality.": "هل تريد حقًا حذف هذه البلدية؟",
+    "Municipality Delete": "حذف البلدية",
+    "Municipality deleted successfully.": "تم حذف البلدية بنجاح.",
+    "Municipality created successfully": "تم إنشاء البلدية بنجاح.",
+    "" : ""
 
 }
