@@ -16,6 +16,7 @@
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
     </ul>
     <div class="card mb-4">
       <h4 class="card-header">{{ __('User Details')}}</h4>

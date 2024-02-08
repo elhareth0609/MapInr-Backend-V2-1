@@ -11,11 +11,13 @@ use App\Models\Counter;
 
 class YourExcelExport implements FromCollection, WithEvents
 {
-    protected $placeId;
+  protected $placeId;
+  protected $uid;
 
-    public function __construct($id)
+    public function __construct($id,$uid)
     {
-        $this->placeId = $id;
+      $this->placeId = $id;
+      $this->uid = $uid;
     }
 
     /**
@@ -23,7 +25,7 @@ class YourExcelExport implements FromCollection, WithEvents
      */
     public function collection()
     {
-        $counters = Counter::where('place_id', $this->placeId)->get();
+        $counters = Counter::where('place_id', $this->placeId)->where('worker_id',$this->uid)->get();
 
         // Transform counters into a collection
         $data = $counters->map(function ($counter) {

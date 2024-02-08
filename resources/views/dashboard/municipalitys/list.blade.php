@@ -281,6 +281,10 @@ $(document).ready( function () {
 
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+        $('#municipalitys tbody').on('dblclick', 'tr', function () {
+            var userId = $(this).find('a[data-municipality-id]').attr('href').split('/').pop();
+            window.location.href = '/municipality/' + userId;
+        });
       },
     });
     $('#customSearch').on('keyup', function () {
@@ -328,31 +332,6 @@ $(document).ready( function () {
     window.changePage = function (page) {
         dataTable.page(page).draw(false);
     };
-
-    // $(document).on('click', '.download-btn-zip', function() {
-    //     var placeId = $(this).data('place-id');
-
-    //     // Make an AJAX request to download Excel for the specific place
-    //     $.ajax({
-    //         url: '/exoprt-file/' + placeId, // Update the URL to your route for downloading Excel
-    //         type: 'GET',
-    //         xhrFields: {
-    //             responseType: 'blob' // Important to set the responseType to 'blob'
-    //         },
-    //         success: function(response) {
-    //             // Create a Blob from the response
-    //             var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-    //             // Use FileSaver.js library to trigger the download
-    //             saveAs(blob,+ placeId + '.xlsx');
-    //         },
-    //         error: function(error) {
-    //             // Handle error
-    //             console.error(error);
-    //         }
-    //     });
-    // });
-
 
     $('#exportButton').click(function () {
         $.ajax({

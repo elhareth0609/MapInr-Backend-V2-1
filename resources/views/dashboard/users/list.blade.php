@@ -101,6 +101,7 @@
             <th>{{__('Full Name')}}</th>
             <th>{{__('Email')}}</th>
             <th>{{__('Phone')}}</th>
+            <th>{{__('Counters')}}</th>
             <th>{{__('Status')}}</th>
             <th>{{__('Created At')}}</th>
             <th>{{__('Actions')}}</th>
@@ -223,17 +224,22 @@ $(document).ready( function () {
         { data: 'fullname', name: '{{__("Full Name")}}' },
         { data: 'email', name: '{{__("Email")}}' },
         { data: 'phone', name: '{{__("Phone")}}' },
+        { data: 'counters', name: '{{__("Counters")}}' },
         { data: 'status', name: '{{__("Status")}}' },
         { data: 'created_at', name: '{{__("Created At")}}' },
         { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
       ],
-      "order": [[5, "desc"]],
+      "order": [[6, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
 
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+        $('#users tbody').on('dblclick', 'tr', function () {
+          var userId = $(this).find('a[data-worker-id]').attr('href').split('/').pop();
+          window.location.href = '/user/' + userId;
+        });
       },
     });
     $('#customSearch').on('keyup', function () {
@@ -282,8 +288,6 @@ $(document).ready( function () {
       userDataTable.page(page).draw(false);
     };
 
-
-
       $('#createNewUser').submit(function (e) {
         e.preventDefault();
 
@@ -308,6 +312,30 @@ $(document).ready( function () {
                     title: error.responseJSON.message,
                     text: error.responseJSON.error,
                 });
+            }
+        });
+      });
+
+      $(document).on('click', '.download-btn-user-file', function() {
+        var placeId = $(this).data('worker-id');
+
+        // Make an AJAX request to download Excel for the specific place
+        $.ajax({
+            url: '/exoprt-user-file/' + placeId, // Update the URL to your route for downloading Excel
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Important to set the responseType to 'blob'
+            },
+            success: function(response) {
+                // Create a Blob from the response
+                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Use FileSaver.js library to trigger the download
+                saveAs(blob,+ placeId + '.xlsx');
+            },
+            error: function(error) {
+                // Handle error
+                console.error(error);
             }
         });
       });

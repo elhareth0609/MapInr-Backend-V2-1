@@ -25,4 +25,9 @@ class Counter extends Model
     {
         return $this->belongsTo(Place::class);
     }
+
+    public function worker()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

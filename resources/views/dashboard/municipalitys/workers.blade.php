@@ -640,6 +640,10 @@ $(document).ready( function () {
 
       // Update the content of the custom info element
       $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+      $('#placeWorkers tbody').on('dblclick', 'tr', function () {
+          var userId = $(this).find('a[data-worker-id]').attr('href').split('/').pop();
+          window.location.href = '/user/' + userId;
+      });
     },
   });
   $('#customSearch').on('keyup', function () {

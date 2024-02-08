@@ -185,6 +185,12 @@ class UserController extends Controller
       ->with('user', $user);
   }
 
+  public function user_counters($id) {
+    $user = User::find($id);
+    return view('dashboard.users.counters')
+    ->with('user', $user);
+  }
+
   public function update(Request $request) {
 
     $rules = [

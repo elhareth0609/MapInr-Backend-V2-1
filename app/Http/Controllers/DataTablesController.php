@@ -31,6 +31,9 @@ class DataTablesController extends Controller
       ->editColumn('phone', function($user) {
           return $user->phone;
       })
+      ->editColumn('counters', function($user) {
+        return $user->counters->count();
+      })
       ->editColumn('status', function($user) {
         if ($user->password === null) {
           return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
@@ -43,8 +46,9 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($user) {
         return '
-        <a href="' . url("/user/{$user->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <a href="javascript:void(0);" class="download-btn-user-file" data-worker-id="' . $user->id . '"><icon class="mdi mdi-download"></icon></a>
+        <a href="' . url("/user/{$user->id}") . '" data-worker-id="1"><icon class="mdi mdi-pen"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
       <div class="modal fade" id="user-delete-modal-' . $user->id . '" tabindex="-1" aria-hidden="true">
@@ -109,33 +113,25 @@ class DataTablesController extends Controller
   }
 
   public function counters(Request $request) {
-    $counters = Counter::all();
+    $counters = Counter::where('status','0')->get();
     if ($request->ajax()) {
       return DataTables::of($counters)
-
-      ->editColumn('place_id', function($counter) {
-          return $counter->place->place_id;
+      ->editColumn('worker_id', function($counter) {
+        return $counter->worker->fullname;
       })
-      ->editColumn('name', function($counter) {
-        return $counter->name;
-    })
       ->editColumn('longitude', function($counter) {
-          return $counter->longitude;
+        return $counter->longitude;
       })
       ->editColumn('latitude', function($counter) {
           return $counter->latitude;
       })
-      ->editColumn('status', function($counter) {
-        if ($counter->status === '0') {
-            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
-        } else {
-            return '<span class="badge rounded-pill bg-label-info">' . __("Active"). '</span>';
-        }
+      ->editColumn('phone', function($counter) {
+        return $counter->phone;
       })
       ->editColumn('created_at', function($counter) {
           return $counter->created_at->format('Y-m-d');
       })
-      ->rawColumns(['status'])
+      // ->rawColumns(['status'])
       ->make(true);
 
     }
@@ -162,6 +158,9 @@ class DataTablesController extends Controller
       ->editColumn('phone', function($worker) {
           return $worker->phone;
       })
+      ->editColumn('counters', function($worker) {
+        return $worker->counters->count();
+      })
       ->editColumn('status', function($worker) {
         if ($worker->password === null) {
           return '<span class="badge rounded-pill bg-label-success me-1">' . __("ON") . '</span>';
@@ -175,7 +174,7 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($worker) use ($id) {
         return '
-        <a href="' . url("/user/{$worker->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
+        <a href="' . url("/user/{$worker->id}") . '" data-worker-id="1"><icon class="mdi mdi-pen"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $worker->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
@@ -214,32 +213,32 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($counters)
 
-      ->editColumn('id', function($counter) {
-          return $counter->id;
+      ->editColumn('counter_id', function($counter) {
+          return $counter->counter_id;
       })
-      ->editColumn('place_id', function($counter) {
-          return $counter->place->place_id;
-      })
-      ->editColumn('name', function($counter) {
-        return $counter->name;
-    })
+      // ->editColumn('place_id', function($counter) {
+      //     return $counter->place->place_id;
+      // })
+      // ->editColumn('name', function($counter) {
+      //   return $counter->name;
+      // })
       ->editColumn('longitude', function($counter) {
           return $counter->longitude;
       })
       ->editColumn('latitude', function($counter) {
           return $counter->latitude;
       })
-      ->editColumn('status', function($counter) {
-        if ($counter->status === '0') {
-            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
-        } else {
-            return '<span class="badge rounded-pill bg-label-info me-1">' . __("Active"). '</span>';
-        }
-      })
-      ->editColumn('created_at', function($counter) {
-          return $counter->created_at->format('Y-m-d');
-      })
-      ->rawColumns(['status'])
+      // ->editColumn('status', function($counter) {
+      //   if ($counter->status === '0') {
+      //       return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
+      //   } else {
+      //       return '<span class="badge rounded-pill bg-label-info me-1">' . __("Active"). '</span>';
+      //   }
+      // })
+      // ->editColumn('created_at', function($counter) {
+      //     return $counter->created_at->format('Y-m-d');
+      // })
+      // ->rawColumns(['status'])
       ->make(true);
 
     }
@@ -267,9 +266,9 @@ class DataTablesController extends Controller
         return $place->workers->count();
       })
 
-      ->editColumn('created_at', function($place) {
-          return $place->created_at->format('Y-m-d');
-      })
+      // ->editColumn('created_at', function($place) {
+      //     return $place->created_at->format('Y-m-d');
+      // })
       ->addColumn('actions', function($place) use ($id) {
           return '
             <a href="' . url("/place/{$place->id}") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
@@ -308,8 +307,43 @@ class DataTablesController extends Controller
     return view('dashboard.users.places');
   }
 
+  public function worker_counters($id,Request $request) {
+    $counters = Counter::where('worker_id',$id)->get();
+    if ($request->ajax()) {
+      return DataTables::of($counters)
+
+      ->editColumn('counter_id', function($counter) {
+          return $counter->counter_id;
+      })
+      // ->editColumn('name', function($counter) {
+      //   return $counter->name;
+      // })
+      ->editColumn('longitude', function($counter) {
+          return $counter->longitude;
+      })
+      ->editColumn('latitude', function($counter) {
+          return $counter->latitude;
+      })
+      ->editColumn('status', function($counter) {
+        if ($counter->status === '0') {
+            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
+        } else {
+            return '<span class="badge rounded-pill bg-label-info">' . __("Active"). '</span>';
+        }
+      })
+      ->editColumn('created_at', function($counter) {
+          return $counter->created_at->format('Y-m-d');
+      })
+      ->rawColumns(['status'])
+      ->make(true);
+
+    }
+
+    return view('dashboard.users.counters');
+  }
+
   public function municipalitys(Request $request) {
-    $municipalitys = Municipality::all();
+    $municipalitys = Municipality::where('id','!=', 0)->get();
 
     if ($request->ajax()) {
       return DataTables::of($municipalitys)
@@ -371,13 +405,35 @@ class DataTablesController extends Controller
       ->editColumn('workers', function($place) {
         return $place->workers->count();
       })
-      ->editColumn('created_at', function($place) {
-          return $place->created_at->format('Y-m-d');
-      })
       ->addColumn('actions', function($place) {
           return '
           <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-pen"></icon></a>
           <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a>
+          <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#place-delete-modal-' . $place->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="place-delete-modal-' . $place->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Place Delete") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                  <div class="row justify-content-center text-wrap">
+                    '. __("Do You Really want to delete This Place.") .'
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyPlace(' . $place->id . ')">'. __("Submit") .'</button>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
           ';
         })
       ->rawColumns(['actions'])

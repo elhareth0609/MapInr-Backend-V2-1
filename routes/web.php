@@ -81,6 +81,7 @@ Route::post('/update-information', [SettingController::class, 'update_informatio
 
 Route::get('/users', [DataTablesController::class, 'users'])->name('users-table');
 Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
+Route::get('/worker-counters/{id}', [DataTablesController::class, 'worker_counters'])->name('worker-counters-table');
 
 Route::get('/places', [DataTablesController::class, 'places'])->name('places-table');
 Route::get('/place-workers/{id}', [DataTablesController::class, 'place_workers'])->name('place-workers-table');
@@ -96,10 +97,12 @@ Route::get('/municipality/{id}/places', [DataTablesController::class, 'municipal
 Route::get('/place/{id}', [PlaceController::class, 'place'])->name('place');
 Route::get('/place/{id}/workers', [PlaceController::class, 'place_workers'])->name('place_users');
 Route::get('/place/{id}/counters', [PlaceController::class, 'place_counters'])->name('place_counters');
+Route::get('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name('place.destroy');
 
 
 Route::get('/user/{id}', [UserController::class, 'user'])->name('user');
 Route::get('/user/{id}/places', [UserController::class, 'user_places'])->name('user_places');
+Route::get('/user/{id}/counters', [UserController::class, 'user_counters'])->name('user_counters');
 Route::post('/user/create', [UserController::class, 'create'])->name('user-create');
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
@@ -111,6 +114,7 @@ Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePl
 
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
 Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file'); // for place counters
+Route::get('/exoprt-user-file/{id}', [ExelController::class, 'exportUserFile'])->name('export.user.file'); // for place counters
 Route::get('/exoprt-file-zip/{id}', [ExelController::class, 'exportFileZip'])->name('export.file.zip');
 // Route::get('/exoprt-municipality-places-zip/{id}', [ExelController::class, 'exportMunicipalityPlacesZip'])->name('export.municipality.places.zip'); // for one municipality places
 Route::get('/exoprt-municipalitys-zip', [ExelController::class, 'exportMunicipalitysZip'])->name('export.municipalitys.zip'); // for all

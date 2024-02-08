@@ -49,6 +49,8 @@
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
+
     </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Counters')}}</h4> --}}
@@ -80,7 +82,6 @@
                   <th>{{__('Place Number')}}</th>
                   <th>{{__('Counters')}}</th>
                   <th>{{__('Workers')}}</th>
-                  <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
@@ -605,16 +606,18 @@ var select = $('select[multiple]');
           { data: 'place_id', title: '{{__("Place Id")}}' },
           { data: 'counters', title: '{{__("Counters")}}' },
           { data: 'workers', title: '{{__("Workers")}}' },
-          { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
         ],
-        "order": [[4, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
 
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+          $('#userPlaces tbody').on('dblclick', 'tr', function () {
+            var userId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
+            window.location.href = '/place/' + userId;
+          });
         },
       });
       $('#customSearch').on('keyup', function () {

@@ -84,6 +84,7 @@
                   <th>{{__('Full Name')}}</th>
                   <th>{{__('Email')}}</th>
                   <th>{{__('Phone')}}</th>
+                  <th>{{__('Counters')}}</th>
                   <th>{{__('Status')}}</th>
                   <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
@@ -629,17 +630,22 @@ $(document).ready( function () {
       { data: 'fullname', name: '{{ __("Full Name")}}' },
       { data: 'email', name: '{{ __("Email")}}' },
       { data: 'phone', name: '{{ __("Phone")}}' },
+      { data: 'counters', name: '{{ __("Counters")}}' },
       { data: 'status', name: '{{ __("Status")}}' },
       { data: 'created_at', name: '{{ __("Created At")}}' },
       { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
     ],
-    "order": [[5, "desc"]],
+    "order": [[6, "desc"]],
     "drawCallback": function () {
       updateCustomPagination();
       var pageInfo = this.api().page.info();
 
       // Update the content of the custom info element
       $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+      $('#placeWorkers tbody').on('dblclick', 'tr', function () {
+          var userId = $(this).find('a[data-worker-id]').attr('href').split('/').pop();
+          window.location.href = '/user/' + userId;
+      });
     },
   });
   $('#customSearch').on('keyup', function () {

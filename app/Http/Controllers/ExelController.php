@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\YourExcelExport;
+use App\Exports\YourUserExcelExport;
 use App\Imports\YourExcelImport;
 use App\Exports\PlacesExport;
 use ZipArchive;
@@ -15,6 +16,7 @@ use Illuminate\Validation\Rule;
 
 use App\Models\Municipality;
 use App\Models\Place;
+use App\Models\User;
 
 class ExelController extends Controller
 {
@@ -66,6 +68,25 @@ class ExelController extends Controller
         ],401);
       }
     }
+
+    public function exportUserFile($id,Excel $excel){
+      try {
+        $user = User::find($id);
+        // $place = Place::where('worker_id',$id)->where('worker',$id)->first();
+        $filename = $user->fullname . '.xlsx';
+        $id = 0;
+        $uid = $user->id;
+        return Excel::download(new YourExcelExport($id,$uid), $filename);
+
+
+      } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'error' => $e->getMessage(),
+        ],401);
+      }
+    }
+
 
     public function exportFileZip($id,Excel $excel){
       try {

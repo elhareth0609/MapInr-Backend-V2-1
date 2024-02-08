@@ -71,4 +71,22 @@ class PlaceController extends Controller
     return view('dashboard.places.counters')
     ->with('place', $place);
   }
+
+  public function destroy($id) {
+    $place = Place::find($id);
+    if ($place) {
+        $place->delete();
+
+        return response()->json([
+          'state' => __('Success'),
+          'message' => __('Place deleted successfully.'),
+        ]);
+    } else {
+        return response()->json([
+          'status' => __('Success'),
+          'message' => __('Sorry,'),
+          'error' => __('There Is No Place To Deleted.'),
+        ],401);
+    }
+  }
 }

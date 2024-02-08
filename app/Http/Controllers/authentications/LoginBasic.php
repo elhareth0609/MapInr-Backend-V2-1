@@ -23,7 +23,7 @@ class LoginBasic extends Controller
       if (Auth::attempt($credentials, $request->has('remember'))) {
           // Authentication passed
           if (Auth::user()->role === 'admin') {
-            return redirect()->route('places-table');
+            return redirect()->route('municipalitys');
           } else {
             Auth::logout();
             return redirect()->route('auth-login-basic');

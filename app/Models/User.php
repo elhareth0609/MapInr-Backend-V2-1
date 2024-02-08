@@ -42,4 +42,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         // 'password' => 'hashed',
     ];
+
+    public function counters()
+    {
+        return $this->hasMany(Counter::class,'worker_id');
+    }
 }

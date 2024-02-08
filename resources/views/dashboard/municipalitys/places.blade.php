@@ -87,7 +87,6 @@
                   <th>{{__('Place Number')}}</th>
                   <th>{{__('Counters')}}</th>
                   <th>{{__('Workers')}}</th>
-                  <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
@@ -177,6 +176,33 @@
 
 
 <script>
+    var municipalityPlacesDataTable;
+
+function submitDistroyPlace(id) {
+          $.ajax({
+              type: 'GET',
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: '/place/destroy/' + id,
+              success: function (response) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: response.state,
+                      text: response.message,
+                  });
+                  municipalityPlacesDataTable.ajax.reload();
+              },
+              error: function (error) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: error.responseJSON.status,
+                      text: error.responseJSON.error,
+                  });
+              }
+          });
+      }
+
   $(document).ready( function () {
       $.ajaxSetup({
           headers: {
@@ -194,7 +220,6 @@
 
     });
 
-    var municipalityPlacesDataTable;
 
     $(document).on('submit', '#uploadForm', function (e) {
         e.preventDefault();
@@ -247,16 +272,18 @@
         { data: 'place_id', title: '{{ __("Place Id")}}' },
         { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
-        { data: 'created_at', title: '{{ __("Created At") }}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
         ],
-        "order": [[3, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
 
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+          $('#municipalityPlaces tbody').on('dblclick', 'tr', function () {
+              var userId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
+              window.location.href = '/place/' + userId;
+          });
         },
       });
       $('#customSearch').on('keyup', function () {
@@ -305,6 +332,29 @@
         municipalityPlacesDataTable.page(page).draw(false);
       };
 
+      $(document).on('click', '.download-btn', function() {
+        var placeId = $(this).data('place-id');
+
+        // Make an AJAX request to download Excel for the specific place
+        $.ajax({
+            url: '/exoprt-file/' + placeId, // Update the URL to your route for downloading Excel
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Important to set the responseType to 'blob'
+            },
+            success: function(response) {
+                // Create a Blob from the response
+                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Use FileSaver.js library to trigger the download
+                saveAs(blob,+ placeId + '.xlsx');
+            },
+            error: function(error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    });
 
     });
   </script>

@@ -27,19 +27,18 @@ class PlacesExport implements FromCollection, WithEvents
         // Transform counters into a collection
         $data = $counters->map(function ($counter) {
           return [
-              'Counter Number' => $counter->counter_id,
-              'Longitude' => $counter->longitude,
-              'Latitude' => $counter->latitude,
-              'Name' => $counter->name,
-              'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
-              // 'Picture' => $counter->picture, // Use the "picture" field to access the storage name of the photo
+            'Counter Number' => $counter->counter_id,
+            'Longitude' => $counter->longitude,
+            'Latitude' => $counter->latitude,
+            'Phone' => $counter->phone,
+            'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
           ];
-      });
+        });
 
-      // Add headers to the collection
-      $headers = [
-          'Counter Number', 'Longitude', 'Latitude', 'Name', 'Created At',
-      ];
+        // Add headers to the collection
+        $headers = [
+            'Counter Number', 'Longitude', 'Latitude', 'Phone', 'Created At',
+        ];
 
       // Prepend headers to the data collection
       $collection = collect([$headers])->merge($data);

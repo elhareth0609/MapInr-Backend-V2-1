@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', ' Place - Counters')
+@section('title', ' User - Counters')
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
@@ -8,15 +8,15 @@
 
 @section('content')
 <h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">{{ __('Place Settings') }} /</span> {{ $place->name }}
+  <span class="text-muted fw-light">{{ __('User Settings') }} / </span> {{ $user->name }}
 </h4>
 
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
-      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/workers')}}"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
+      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
     </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Counters')}}</h4> --}}
@@ -42,14 +42,15 @@
             <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Counters')}}</h5>
           </div>
           <div class="table-responsive text-nowrap">
-            <table class="table table-striped w-100" id="placeCounters" dir="rtl">
+            <table class="table table-striped w-100" id="userCounters" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Number')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
-                  {{-- <th>{{__('Status')}}</th> --}}
-                  {{-- <th>{{__('Created At')}}</th> --}}
+                  <th>{{__('Phone')}}</th>
+                  <th>{{__('Status')}}</th>
+                  <th>{{__('Created At')}}</th>
                 </tr>
               </thead>
             </table>
@@ -70,18 +71,18 @@
 
         <!--/ Responsive Table -->
         <style>
-        #placeCounters_length {
+        #userCounters_length {
           display: none;
         }
 
-        #placeCounters_filter {
+        #userCounters_filter {
           display: none;
         }
 
-        #placeCounters_paginate {
+        #userCounters_paginate {
           display: none;
         }
-        #placeCounters_info {
+        #userCounters_info {
           display: none;
         }
         .delete-alert-span::before {
@@ -108,7 +109,7 @@
       });
 
       $.noConflict();
-      var placeCountersDataTable = $('#placeCounters').DataTable({
+      var userCountersDataTable = $('#userCounters').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
@@ -117,15 +118,16 @@
         language: {
           info: "_START_-_END_ of _TOTAL_",
         },
-        ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
+        ajax: '{{ route("worker-counters-table", ["id" => $user->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}' },
           { data: 'latitude', title: '{{__("Latitude")}}' },
-          // { data: 'status', title: '{{__("Status")}}' },
-          // { data: 'created_at', title: '{{__("Created At")}}' }
+          { data: 'phone', title: '{{__("Phone")}}' },
+          { data: 'status', title: '{{__("Status")}}' },
+          { data: 'created_at', title: '{{__("Created At")}}' }
         ],
-        // "order": [[4, "desc"]],
+        "order": [[4, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
@@ -135,10 +137,10 @@
         },
       });
       $('#customSearch').on('keyup', function () {
-        placeCountersDataTable.search(this.value).draw();
+        userCountersDataTable.search(this.value).draw();
       });
       $('#RowSelect').on('change', function () {
-        placeCountersDataTable.page.len(this.value).draw();
+        userCountersDataTable.page.len(this.value).draw();
       });
 
       updateCustomPagination();
@@ -146,7 +148,7 @@
       // Function to update custom pagination
       function updateCustomPagination() {
           var customPaginationContainer = $('#custom-pagination');
-          var pageInfo = placeCountersDataTable.page.info();
+          var pageInfo = userCountersDataTable.page.info();
 
           // Clear existing pagination items
           customPaginationContainer.empty();
@@ -177,7 +179,7 @@
 
       // Function to handle page change
       window.changePage = function (page) {
-        placeCountersDataTable.page(page).draw(false);
+        userCountersDataTable.page(page).draw(false);
       };
 
 

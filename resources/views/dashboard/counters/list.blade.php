@@ -39,12 +39,14 @@
       <table class="table table-striped w-100" id="counters" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            <th>#</th>
+            {{-- <th>#</th> --}}
             <th>{{__('Counter Number')}}</th>
-            <th>{{__('Place Number')}}</th>
+            {{-- <th>{{__('Place Number')}}</th> --}}
+            <th>{{__('Worker')}}</th>
             <th>{{__('Longitude')}}</th>
             <th>{{__('Latitude')}}</th>
-            <th>{{__('Status')}}</th>
+            <th>{{__('Phone')}}</th>
+            {{-- <th>{{__('Status')}}</th> --}}
             <th>{{__('created At')}}</th>
           </tr>
         </thead>
@@ -107,15 +109,16 @@ $(document).ready( function () {
       },
       ajax: '{{ route("counters-table") }}',
       columns: [
-        { data: 'id', title: '#' },
+        // { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
-        { data: 'place_id', title: '{{__("Place Id")}}' },
+        { data: 'worker_id', title: '{{__("Worker")}}' },
         { data: 'longitude', title: '{{__("Longitude")}}' },
         { data: 'latitude', title: '{{__("Latitude")}}' },
-        { data: 'status', title: '{{__("Status")}}' },
+        { data: 'phone', title: '{{__("Phone")}}' },
+        // { data: 'status', title: '{{__("Status")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
-      "order": [[6, "desc"]],
+      "order": [[5, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
