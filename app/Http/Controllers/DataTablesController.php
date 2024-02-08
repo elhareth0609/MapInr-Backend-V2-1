@@ -117,8 +117,11 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($counters)
       ->editColumn('worker_id', function($counter) {
-        return $counter->worker->fullname;
-      })
+        if ($counter->worker) {
+          return $counter->worker->fullname;
+      } else {
+          return 'Unknown Worker';
+      }      })
       ->editColumn('longitude', function($counter) {
         return $counter->longitude;
       })
