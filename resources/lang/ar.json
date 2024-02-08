@@ -107,7 +107,7 @@
     "Place deleted successfully." : "تم حذف التورني بنجاح.",
     "Do You Really want to delete This Place." : "هل تريد حقًا حذف هذا التورني?",
     "Place Delete" : "حذف التورني",
-    "" : "",
+    "Worker" : "العامل",
     "" : ""
 
 }
