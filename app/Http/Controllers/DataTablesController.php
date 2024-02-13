@@ -247,36 +247,36 @@ class DataTablesController extends Controller
         $allworkers = User::pluck('id', 'fullname');
         $html = '
         <a href="javascript:void(0);" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#addWorkerCounter-' . $counter->id . '"><icon class="mdi mdi-plus-outline"></icon></a>
-        <div class="modal fade" class="addWorkerCounterModale" id="addWorkerCounter-' . $counter->id . '" data-counter-id="' . $counter->id . '" data-bs-backdrop="static" tabindex="-1">
-        <div class="modal-dialog">
-          <form class="modal-content" id="addCounterWorker" action="' . route("add.counter.worker") .  '" method="POST" enctype="multipart/form-data">';
-          $html .= csrf_field();
-          $html .= '  <div class="modal-header">
-              <h4 class="modal-title" id="backDropModalTitle">' . __("Add Worker") . '</h4>
-            </div>
-            <div class="modal-body">
-              <select class="select-mult" id="select-' . $counter->id . '" multiple="" data-placeholder="Choose Places ..." name="selectedWorkers[]">';
-
-                foreach ($allworkers as $workerName => $workerId) {
-                    $html .= '
-                    <option
-                    value="' .  $workerId . '" ' . (in_array($workerId, $workers->toArray()) ? 'selected' : '') . '>' . $workerName . '</option>
-
-                    ';
-                }
-
-              $html .= '</select>
-            <input type="hidden" id="counter_id" name="counter_id" value="' . $counter->id . '">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __('Close') . '</button>
-              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">' . __('Submit') . '</button>
-            </div>
-          </form>
-        </div>
-      </div>
         ';
         return $html;
+      //   <div class="modal fade" class="addWorkerCounterModale" id="addWorkerCounter-' . $counter->id . '" data-counter-id="' . $counter->id . '" data-bs-backdrop="static" tabindex="-1">
+      //   <div class="modal-dialog">
+      //     <form class="modal-content" id="addCounterWorker" action="' . route("add.counter.worker") .  '" method="POST" enctype="multipart/form-data">';
+      //     $html .= csrf_field();
+      //     $html .= '  <div class="modal-header">
+      //         <h4 class="modal-title" id="backDropModalTitle">' . __("Add Worker") . '</h4>
+      //       </div>
+      //       <div class="modal-body">
+      //         <select class="select-mult" id="select-' . $counter->id . '" multiple="" data-placeholder="Choose Places ..." name="selectedWorkers[]">';
+
+      //           foreach ($allworkers as $workerName => $workerId) {
+      //               $html .= '
+      //               <option
+      //               value="' .  $workerId . '" ' . (in_array($workerId, $workers->toArray()) ? 'selected' : '') . '>' . $workerName . '</option>
+
+      //               ';
+      //           }
+
+      //         $html .= '</select>
+      //       <input type="hidden" id="counter_id" name="counter_id" value="' . $counter->id . '">
+      //       </div>
+      //       <div class="modal-footer">
+      //         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __('Close') . '</button>
+      //         <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">' . __('Submit') . '</button>
+      //       </div>
+      //     </form>
+      //   </div>
+      // </div>
     })
 
     ->rawColumns(['actions'])
