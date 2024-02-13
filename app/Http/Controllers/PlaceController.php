@@ -68,8 +68,14 @@ class PlaceController extends Controller
 
   public function place_counters($id,Request $request) {
     $place = Place::where('id', $id)->first();
+    // $workers = Counter::where('counter', $id)->pluck('place_id');
+    // $allworkers = User::pluck('id', 'fullname');
+
     return view('dashboard.places.counters')
-    ->with('place', $place);
+    ->with('place', $place)
+    // ->with('workers', $workers)
+    // ->with('allworkers', $allworkers)
+    ;
   }
 
   public function destroy($id) {

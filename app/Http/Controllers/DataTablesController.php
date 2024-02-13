@@ -9,7 +9,7 @@ use App\Models\Place;
 use App\Models\Counter;
 use App\Models\Place_Worker;
 use App\Models\Municipality;
-
+use App\Models\Worker_Counter;
 use DataTables;
 
 class DataTablesController extends Controller
@@ -46,8 +46,8 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($user) {
         return '
-        <a href="javascript:void(0);" class="download-btn-user-file" data-worker-id="' . $user->id . '"><icon class="mdi mdi-download"></icon></a>
         <a href="' . url("/user/{$user->id}") . '" data-worker-id="1"><icon class="mdi mdi-pen"></icon></a>
+        <a href="javascript:void(0);" class="download-btn-user-file" data-worker-id="' . $user->id . '"><icon class="mdi mdi-download"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
@@ -242,14 +242,53 @@ class DataTablesController extends Controller
       //     return $counter->created_at->format('Y-m-d');
       // })
       // ->rawColumns(['status'])
-      ->make(true);
+      ->addColumn('actions', function($counter) {
+        $workers = Worker_Counter::where('counter_id', $counter->id)->pluck('worker_id');
+        $allworkers = User::pluck('id', 'fullname');
+        $html = '
+        <a href="javascript:void(0);" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#addWorkerCounter-' . $counter->id . '"><icon class="mdi mdi-plus-outline"></icon></a>
+        <div class="modal fade" class="addWorkerCounterModale" id="addWorkerCounter-' . $counter->id . '" data-counter-id="' . $counter->id . '" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog">
+          <form class="modal-content" id="addCounterWorker" action="' . route("add.counter.worker") .  '" method="POST" enctype="multipart/form-data">';
+          $html .= csrf_field();
+          $html .= '  <div class="modal-header">
+              <h4 class="modal-title" id="backDropModalTitle">' . __("Add Worker") . '</h4>
+            </div>
+            <div class="modal-body">
+              <select class="select-mult" id="select-' . $counter->id . '" multiple="" data-placeholder="Choose Places ..." name="selectedWorkers[]">';
+
+                foreach ($allworkers as $workerName => $workerId) {
+                    $html .= '
+                    <option
+                    value="' .  $workerId . '" ' . (in_array($workerId, $workers->toArray()) ? 'selected' : '') . '>' . $workerName . '</option>
+
+                    ';
+                }
+
+              $html .= '</select>
+            <input type="hidden" id="counter_id" name="counter_id" value="' . $counter->id . '">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __('Close') . '</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">' . __('Submit') . '</button>
+            </div>
+          </form>
+        </div>
+      </div>
+        ';
+        return $html;
+    })
+
+    ->rawColumns(['actions'])
+    ->make(true);
+
 
     }
     return view('dashboard.places.counter');
   }
 
   public function worker_places($id,Request $request) {
-    $places_ids = Place_Worker::where('worker_id', $id)->pluck('place_id')->toArray();
+    $places_ids = Place_Worker::where('worker_id', $id)->where('place_id','!=','0')->pluck('place_id')->toArray();
 
     $places = Place::whereIn('id', $places_ids)->get();
 
@@ -337,7 +376,12 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($counter) {
           return $counter->created_at->format('Y-m-d');
       })
-      ->rawColumns(['status'])
+      ->addColumn('actions', function($counter) {
+        return '
+        <a href="javascript:void(0);" class="download-btn" data-counter-id="' . $counter->counter_id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        ';
+      })
+      ->rawColumns(['status','actions'])
       ->make(true);
 
     }

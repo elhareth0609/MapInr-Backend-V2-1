@@ -47,4 +47,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Counter::class,'worker_id');
     }
+
+    
 }

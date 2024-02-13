@@ -52,9 +52,9 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        {{-- <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6">
+        <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
           <span class="tf-icons mdi mdi-download me-1"></span>Export
-        </button> --}}
+        </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
           <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">
@@ -172,6 +172,29 @@ $(document).ready( function () {
     window.changePage = function (page) {
         dataTable.page(page).draw(false);
     };
+
+    $(document).on('click', '#exportButton', function() {
+
+        // Make an AJAX request to download Excel for the specific place
+        $.ajax({
+            url: '/exoprt-file/0', // Update the URL to your route for downloading Excel
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // Important to set the responseType to 'blob'
+            },
+            success: function(response) {
+                // Create a Blob from the response
+                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Use FileSaver.js library to trigger the download
+                saveAs(blob,+ '0' + '.xlsx');
+            },
+            error: function(error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    });
 
 
   });

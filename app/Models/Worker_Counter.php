@@ -5,22 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Place_Worker extends Model
+class Worker_Counter extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'place_id',
-        'worker_id',
-    ];
+      'counter_id',
+      'worker_id',
+  ];
 
-    public function place()
-    {
-      return $this->belongsTo(Place::class);
-    }
+  public function counter()
+  {
+      return $this->belongsTo(Counter::class);
+  }
 
-    public function worker()
-    {
+  public function worker()
+  {
       return $this->belongsTo(User::class);
-    }
+  }
 }

@@ -14,9 +14,9 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
+      <li class="nav-item"><a class="nav-link active" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
     </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Counters')}}</h4> --}}
@@ -51,6 +51,7 @@
                   <th>{{__('Phone')}}</th>
                   <th>{{__('Status')}}</th>
                   <th>{{__('Created At')}}</th>
+                  <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
             </table>
@@ -91,6 +92,9 @@
         td , tr{
           text-align: center;
         }
+
+
+
         </style>
 
       </div>
@@ -101,15 +105,47 @@
 
 
 <script>
+
+
+
+
   $(document).ready( function () {
       $.ajaxSetup({
           headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
+      var userCountersDataTable;
+      $('#addCounterWorker').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Make AJAX request
+            $.ajax({
+                url: $(this).attr('action'),
+                method: $(this).attr('method'),
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Counter Add To Worker successfully!',
+                });
+                userCountersDataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
+            }
+            });
+        });
 
       $.noConflict();
-      var userCountersDataTable = $('#userCounters').DataTable({
+      userCountersDataTable = $('#userCounters').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
@@ -125,7 +161,8 @@
           { data: 'latitude', title: '{{__("Latitude")}}' },
           { data: 'phone', title: '{{__("Phone")}}' },
           { data: 'status', title: '{{__("Status")}}' },
-          { data: 'created_at', title: '{{__("Created At")}}' }
+          { data: 'created_at', title: '{{__("Created At")}}' },
+          { data: 'actions', title: '{{__("Actions")}}' }
         ],
         "order": [[4, "desc"]],
         "drawCallback": function () {
