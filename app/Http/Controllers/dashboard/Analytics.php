@@ -9,7 +9,7 @@ class Analytics extends Controller
 {
   public function index()
   {
-    return redirect()->route('places-table');
+    return redirect()->route('municipalitys');
     return view('content.dashboard.dashboards-analytics');
   }
 }
