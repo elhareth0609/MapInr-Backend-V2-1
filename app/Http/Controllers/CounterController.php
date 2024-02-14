@@ -50,23 +50,30 @@ class CounterController extends Controller
           $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
         }
 
+        // if ($request->id) {
+        //   $selectCounter = Counter::find($request->id);
+        //   $id = $selectCounter->counter_id;
+        //   $is_exist = Counter::where('counter_id',$selectCounter->counter_id)
+        //               ->where('place_id',0)
+        //               ->first();
+        //   if (!$is_exist) {
+        //     $counter = new Counter();
+        //   } else {
+        //     $counter = Counter::where('counter_id',$selectCounter->counter_id)
+        //                       ->where('place_id',0)
+        //                       ->first();
+        //   }
+        // } else {
+        //   $id = ++$place;
+        //   $counter = new Counter();
+        // }
 
         if ($request->id) {
-          $selectCounter = Counter::find($request->id);
-          $id = $selectCounter->counter_id;
-          $is_exist = Counter::where('counter_id',$selectCounter->counter_id)
-                      ->where('place_id',0)
-                      ->first();
-          if (!$is_exist) {
-            $counter = new Counter();
-          } else {
-            $counter = Counter::where('counter_id',$selectCounter->counter_id)
-                              ->where('place_id',0)
-                              ->first();
+          $counter = Counter::find($request->id);
+          $id = $counter->counter_id;
 
-          }
         } else {
-          $id = ++$place;
+          $id = null;
           $counter = new Counter();
         }
 
@@ -161,7 +168,7 @@ class CounterController extends Controller
           'message' => 'There is no counter with this id. ',
         ],422);
       }
-      
+
 
       $counter->delete();
       return response()->json([
