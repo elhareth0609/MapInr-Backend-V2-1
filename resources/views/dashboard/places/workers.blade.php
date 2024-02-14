@@ -563,8 +563,8 @@ var select = $('select[multiple]');
             success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Worker Removed From Place successfully!',
+                    title: response.state,
+                    text: response.message,
                 });
                 placeWorkersDataTable.ajax.reload();
             },
@@ -599,8 +599,9 @@ $(document).ready( function () {
                 success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Worker Add To Place successfully!',
+                    title: response.state,
+                    text: response.message,
+
                 });
                 placeWorkersDataTable.ajax.reload();
             },
@@ -693,7 +694,6 @@ $(document).ready( function () {
   window.changePage = function (page) {
     placeWorkersDataTable.page(page).draw(false);
   };
-
 
 });
 </script>

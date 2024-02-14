@@ -109,10 +109,11 @@ Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
 Route::post('/user/add-place-worker', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
 Route::post('/user/add-worker-place', [UserController::class, 'addWorkerPlace'])->name('add.worker.place');
-Route::post('/user/add-counter-worker', [UserController::class, 'addPlaceWorker'])->name('add.counter.worker');
-Route::post('/user/add-worker-counter', [UserController::class, 'addWorkerPlace'])->name('add.worker.counter');
+Route::post('/user/add-counter-worker', [UserController::class, 'addCounterWorker'])->name('add.counter.worker');
+// Route::post('/user/add-worker-counter', [UserController::class, 'addWorkerPlace'])->name('add.worker.counter');
 
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
+Route::get('user/remove-counter/{id}/{counterId}', [UserController::class, 'removeCounterWorker'])->name('user-remove-counter-worker');
 
 
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');

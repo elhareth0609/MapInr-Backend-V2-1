@@ -39,6 +39,7 @@
                 </div>
               </div>
             </div>
+            <div id="selectedFileName"></div>
 
           </div>
           <div class="modal-footer">
@@ -220,6 +221,17 @@ function submitDistroyPlace(id) {
 
     });
 
+    $(document).on('change', '#fileID', function (e) {
+    // Get the selected file(s)
+    var files = $(this)[0].files;
+
+    // Display the file name(s)
+    var fileNameContainer = $('#selectedFileName');
+    fileNameContainer.empty(); // Clear previous file name(s)
+    for (var i = 0; i < files.length; i++) {
+        fileNameContainer.append('<p>' + files[i].name + '</p>');
+    }
+});
 
     $(document).on('submit', '#uploadForm', function (e) {
         e.preventDefault();

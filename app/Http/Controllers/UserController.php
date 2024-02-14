@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Place;
 use App\Models\Place_Worker;
+use App\Models\Worker_Counter;
+
 
 class UserController extends Controller
 {
@@ -113,8 +115,8 @@ class UserController extends Controller
       }
 
       return response()->json([
-        'status' => 1,
-        'message' => 'Add Worker To Place Is Successful.',
+        'state' => __("Success"),
+        'message' => __("Add Worker To Place Is Successful."),
       ], 200);
 
 
@@ -143,8 +145,8 @@ class UserController extends Controller
       }
 
       return response()->json([
-        'status' => 1,
-        'message' => 'Add Place To Worker Is Successful.',
+        'state' => __("Success"),
+        'message' => __("Add Place To Worker Is Successful."),
       ], 200);
 
 
@@ -157,18 +159,74 @@ class UserController extends Controller
   }
   }
 
+  public function addCounterWorker(Request $request) {
+
+    try {
+      Worker_Counter::where('counter_id', $request->counter_id)->delete();
+
+      $workerIds = $request->input('selectedWorkers',[]);
+      $counterId = $request->input('counter_id');
+
+      foreach ($workerIds as $workerId) {
+          $counterWorker = new Worker_Counter;
+          $counterWorker->worker_id = $workerId;
+          $counterWorker->counter_id = $counterId;
+          $counterWorker->save();
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Add Worker To Counter Is Successful."),
+      ], 200);
+
+
+  } catch (\Exception $e) {
+    return response()->json([
+      'status' => 0,
+      'error' => $e->getMessage(),
+    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+
+  }
+  }
+
+
   public function removePlaceWorker($id, $placeId) {
     try {
       $placeWorker = Place_Worker::where('worker_id', $id)->where('place_id', $placeId)->first();
       $placeWorker->delete();
 
       return response()->json([
-        'status' => 1,
-        'message' => 'Remove Place From Worker Successfully.',
+        'state' => __("Success"),
+        'message' => __("Remove Place From Worker Successfully."),
       ]);
     } catch (\Exception $e) {
       return response()->json([
-        'status' => 1,
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], [$e->getCode()]);
+    }
+
+  }
+
+  public function removeCounterWorker($id, $counterId) {
+    try {
+      $counterWorker = Worker_Counter::where('worker_id', $id)->where('counter_id', $counterId)->first();
+      if ($counterWorker) {
+        $counterWorker->delete();
+      } else {
+        return response()->json([
+          'state' => 'Error',
+          'error' => __("Oops! Something went wrong"),
+        ], 401);
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Counter Removed From Worker successfully!"),
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
         'error' => $e->getMessage(),
       ], [$e->getCode()]);
     }
@@ -196,7 +254,7 @@ class UserController extends Controller
     $rules = [
       'id' => 'required|string',
       'fullname' => 'required|string',
-      'email' => 'sometimes|email|nullable|unique:users',
+      'email' => 'sometimes|email|nullable',
       'phone' => 'sometimes|nullable|string',
     ];
 

@@ -542,8 +542,8 @@ var select = $('select[multiple]');
             success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Place Removed From Worker successfully!',
+                    title: response.state,
+                    text: response.message,
                 });
                 userPlacesdataTable.ajax.reload();
             },
@@ -565,7 +565,11 @@ var select = $('select[multiple]');
           }
       });
 
-      $('#addWorkerPlace').on('submit', function(e) {
+      // $(document).on('submit', '#addWorkerPlace', function(e) {
+        $('#addWorkerPlace').on('submit', function(e) {
+      console.log('====================================');
+      console.log();
+      console.log('====================================');
             e.preventDefault(); // Prevent the default form submission
 
             // Make AJAX request
@@ -578,8 +582,8 @@ var select = $('select[multiple]');
                 success: function (response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: 'Worker Add To Place successfully!',
+                    title: response.state,
+                    text:  response.message,
                 });
                 userPlacesdataTable.ajax.reload();
             },

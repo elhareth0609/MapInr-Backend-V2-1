@@ -105,8 +105,33 @@
 
 
 <script>
+      var userCountersDataTable;
 
+function submitRemoveCounterWorker(userid, counterid) {
 
+    $.ajax({
+        type: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/user/remove-counter/' + userid + '/' + counterid,
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: response.state,
+                text: response.message,
+            });
+            userCountersDataTable.ajax.reload();
+        },
+        error: function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: error.responseJSON.error,
+            });
+        }
+    });
+}
 
 
   $(document).ready( function () {
@@ -115,7 +140,7 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
-      var userCountersDataTable;
+
       $('#addCounterWorker').on('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
 

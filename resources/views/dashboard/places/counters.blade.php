@@ -418,35 +418,6 @@
 
 <script>
 
-// Wrap each select element with the necessary markup and apply the selectMultiple class
-// Wrap each select element with the necessary markup and apply the selectMultiple class
-
-
-
-    // var select = $('select[multiple]');
-    // var options = select.find('option');
-
-    // var div = $('<div />').addClass('selectMultiple w-100');
-    // var active = $('<div />');
-    // var list = $('<ul />');
-    // var placeholder = select.data('placeholder');
-
-    // var span = $('<span />').text(placeholder).appendTo(active);
-
-    // options.each(function() {
-    //     var text = $(this).text();
-    //     if($(this).is(':selected')) {
-    //         active.append($('<a />').html('<em>' + text + '</em><i></i>'));
-    //         span.addClass('hide');
-    //     } else {
-    //         list.append($('<li />').html(text));
-    //     }
-    // });
-
-    // active.append($('<div />').addClass('arrow'));
-    // div.append(active).append(list);
-
-    // select.wrap(div);
 
     $(document).on('click', '.selectMultiple ul li', function(e) {
         var select = $(this).parent().parent();
@@ -527,7 +498,7 @@
         $('select[multiple]').each(function () {
             var select = $(this);
             var options = select.find('option');
-            var div = $('<div />').addClass('selectMultiple w-100');
+            var div = $('<div />').addClass('selectMultiple w-100 text-wrap');
             var active = $('<div />');
             var list = $('<ul />');
             var placeholder = select.data('placeholder');
@@ -560,10 +531,41 @@
           }
       });
 
+      var placeCountersDataTable;
+
+      $(document).on('submit', '[id^="addCounterWorker-"]', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Make AJAX request
+            $.ajax({
+                url: $(this).attr('action'),
+                method: $(this).attr('method'),
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                placeCountersDataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
+            }
+            });
+        });
+
+
       $.noConflict();
 
 
-      var placeCountersDataTable = $('#placeCounters').DataTable({
+      placeCountersDataTable = $('#placeCounters').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
