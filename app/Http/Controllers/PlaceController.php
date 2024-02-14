@@ -37,7 +37,7 @@ class PlaceController extends Controller
     ];
 
     foreach ($workerPlaces as $workerPlace) {
-      // Add place details to the response
+
       $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
@@ -70,7 +70,6 @@ class PlaceController extends Controller
             $place = Place::where('place_id',$placeId)->first();
 
             if ($place) {
-                // $counters = Counter::where('place_id', $place->id)->get();
                 $counters = Counter::where('place_id', $place->id)
                 ->whereIn('id', function ($query) use ($request) {
                     $query->select('counter_id')
@@ -78,6 +77,7 @@ class PlaceController extends Controller
                         ->where('worker_id', $request->user()->id);
                 })
                 ->get();
+
                 $responseData['data']['place']->push([
                     'id' => $place->id,
                     'place_id' => $place->place_id,
@@ -97,7 +97,6 @@ class PlaceController extends Controller
     }
 
 
-    // return response()->json($placeIds);
     return response()->json($responseData);
   }
 
@@ -116,12 +115,8 @@ class PlaceController extends Controller
   public function place_counters($id, Request $request)
   {
     $place = Place::where('id', $id)->first();
-    // $workers = Counter::where('counter', $id)->pluck('place_id');
-    // $allworkers = User::pluck('id', 'fullname');
 
     return view('dashboard.places.counters')->with('place', $place);
-    // ->with('workers', $workers)
-    // ->with('allworkers', $allworkers)
   }
 
   public function destroy($id)
