@@ -120,7 +120,7 @@ class DataTablesController extends Controller
         if ($counter->worker) {
           return $counter->worker->fullname;
       } else {
-          return 'Unknown Worker';
+          return __("Unknown");
       }      })
       ->editColumn('longitude', function($counter) {
         return $counter->longitude;
