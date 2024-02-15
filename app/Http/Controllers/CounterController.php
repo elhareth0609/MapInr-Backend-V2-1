@@ -83,11 +83,8 @@ class CounterController extends Controller
         $counter->longitude = $request->longitude;
         $counter->latitude = $request->latitude;
         $counter->picture = $uniqueName ;
-        // $counter->picture = $uniqueName ? $uniqueName : $counterSelected->picture;
         $counter->phone = $request->phone;
-        // $counter->phone = $request->input('phone',$counterSelected->phone);
         $counter->note = $request->note;
-        // $counter->note = $request->input('note',$counterSelected->note);
         $counter->status = '0';
         $counter->save();
 
@@ -163,8 +160,8 @@ class CounterController extends Controller
 
   public function destroy(Request $request){
     try {
-      $counter = Counter::where('counter_id', $request->id)->where('place_id','0')->first();
-      // $counter = Counter::find($request->id);
+      // $counter = Counter::where('counter_id', $request->id)->where('place_id','0')->first();
+      $counter = Counter::find($request->id);
       if (!$counter) {
         return response()->json([
           'status' => 0,
