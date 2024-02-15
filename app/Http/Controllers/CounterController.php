@@ -72,7 +72,7 @@ class CounterController extends Controller
           $counterSelected = Counter::find($request->id);
           $id = $counterSelected->counter_id;
         } else {
-          $id = null;
+          $id = 0;
         }
 
         $counter = new Counter();
