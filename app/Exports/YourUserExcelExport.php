@@ -87,16 +87,16 @@ class YourUserExcelExport implements FromCollection, WithEvents
 
                     // Set the coordinates for the image
                     $drawing->setCoordinates("G{$imageRow}");
-                } else {
-                  // Leave the cell empty if the picture does not exist
-                  $worksheet = $sheet->getDelegate();
-                  $worksheet->getCell("G{$imageRow}")->setValue('');
                 }
+            } else {
+              // Leave the cell empty if the picture does not exist
+              $worksheet = $sheet->getDelegate();
+              $worksheet->getCell("G{$imageRow}")->setValue('');
+            }
 
                 $imageRow++;
 
             }
-        }
     }
 
   }
