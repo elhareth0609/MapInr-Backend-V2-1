@@ -46,7 +46,7 @@
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Number')}}</th>
-                  <th>{{__('Counter Name')}}</th>
+                  <th>{{__('Name')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>

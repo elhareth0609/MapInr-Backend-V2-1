@@ -113,6 +113,7 @@ class DataTablesController extends Controller
   }
 
   public function counters(Request $request) {
+
     $counters = Counter::where('status','0')->get();
     if ($request->ajax()) {
       return DataTables::of($counters)
