@@ -80,9 +80,9 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
+        {{-- <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
           <span class="tf-icons mdi mdi-download me-1"></span>{{__('Export All')}}
-        </button>
+        </button> --}}
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
           <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">

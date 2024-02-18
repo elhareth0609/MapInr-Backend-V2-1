@@ -30,17 +30,18 @@ class YourExcelExport implements FromCollection, WithEvents
         // Transform counters into a collection
         $data = $counters->map(function ($counter) {
             return [
-                'Counter Number' => $counter->counter_id,
-                'Longitude' => $counter->longitude,
-                'Latitude' => $counter->latitude,
-                'Phone' => $counter->phone,
-                'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
+              'Counter Number' => $counter->counter_id,
+              'Name' => $counter->name,
+              'Longitude' => $counter->longitude,
+              'Latitude' => $counter->latitude,
+              'Phone' => $counter->phone,
+              'Created At' => $counter->created_at->format('Y-m-d H:i:s'),
             ];
         });
 
         // Add headers to the collection
         $headers = [
-            'Counter Number', 'Longitude', 'Latitude', 'Phone', 'Created At',
+            'Counter Number','Name', 'Longitude', 'Latitude', 'Phone', 'Created At',
         ];
 
         // Prepend headers to the data collection
@@ -62,7 +63,7 @@ class YourExcelExport implements FromCollection, WithEvents
 
     public function insertPictures($sheet)
     {
-        $counters = Counter::where('place_id', $this->placeId)->get();
+        $counters = Counter::where('worker_id', $this->uid)->get();
 
         // Get the starting row for embedding images
         $imageRow = 2;
@@ -90,10 +91,14 @@ class YourExcelExport implements FromCollection, WithEvents
 
                     // Set the coordinates for the image
                     $drawing->setCoordinates("G{$imageRow}");
-
-                    // Increment the row index for the next image
-                    $imageRow++;
+                } else {
+                  // Leave the cell empty if the picture does not exist
+                  $worksheet = $sheet->getDelegate();
+                  $worksheet->getCell("G{$imageRow}")->setValue('');
                 }
+                
+                $imageRow++;
+
             }
         }
     }

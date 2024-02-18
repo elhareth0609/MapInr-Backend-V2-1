@@ -102,7 +102,7 @@ class DataTablesController extends Controller
       ->addColumn('actions', function($place) {
           return '
           <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-pen"></icon></a>
-          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a>
+          <!-- <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a> -->
           ';
         })
       ->rawColumns(['actions'])
@@ -364,9 +364,9 @@ class DataTablesController extends Controller
       ->editColumn('counter_id', function($counter) {
           return $counter->counter_id;
       })
-      // ->editColumn('name', function($counter) {
-      //   return $counter->name;
-      // })
+      ->editColumn('name', function($counter) {
+        return $counter->name;
+      })
       ->editColumn('longitude', function($counter) {
           return $counter->longitude;
       })
@@ -431,10 +431,10 @@ class DataTablesController extends Controller
         return $municipality->places->count();
       })
       ->addColumn('actions', function($municipality) {
-          return '
-          <a href="' . url("/municipality/{$municipality->id}") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
-          <a href="javascript:void(0);" class="download-btn" data-municipality-id="' . $municipality->id . '" onclick="downloadOnesMunicipality(' . $municipality->id . ')"><icon class="mdi mdi-download"></icon></a>
-          <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" data-municipality-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        return '
+        <a href="' . url("/municipality/{$municipality->id}") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" data-municipality-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <!-- <a href="javascript:void(0);" class="download-btn" data-municipality-id="' . $municipality->id . '" onclick="downloadOnesMunicipality(' . $municipality->id . ')"><icon class="mdi mdi-download"></icon></a> -->
 
           <!-- Modal -->
           <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" aria-hidden="true">
@@ -484,7 +484,7 @@ class DataTablesController extends Controller
       ->addColumn('actions', function($place) {
           return '
           <a href="' . url("/place/{$place->id}") . '" data-place-id="' . $place->id . '"><icon class="mdi mdi-pen"></icon></a>
-          <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a>
+          <!-- <a href="javascript:void(0);" class="download-btn" data-place-id="' . $place->place_id . '"><icon class="mdi mdi-download"></icon></a> -->
           <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#place-delete-modal-' . $place->id . '" data-place-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
           <!-- Modal -->

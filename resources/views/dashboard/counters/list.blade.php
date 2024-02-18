@@ -41,6 +41,7 @@
           <tr class="text-nowrap">
             {{-- <th>#</th> --}}
             <th>{{__('Counter Number')}}</th>
+            <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
             <th>{{__('Worker')}}</th>
             <th>{{__('Longitude')}}</th>
@@ -52,9 +53,9 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
+        {{-- <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
           <span class="tf-icons mdi mdi-download me-1"></span>Export
-        </button>
+        </button> --}}
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
           <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">
@@ -111,6 +112,7 @@ $(document).ready( function () {
       columns: [
         // { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
+        { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
         { data: 'longitude', title: '{{__("Longitude")}}' },
         { data: 'latitude', title: '{{__("Latitude")}}' },
@@ -118,7 +120,7 @@ $(document).ready( function () {
         // { data: 'status', title: '{{__("Status")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
-      "order": [[5, "desc"]],
+      "order": [[6, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();

@@ -210,7 +210,12 @@ class UserController extends Controller
 
   public function removeCounterWorker($id, $counterId) {
     try {
-      $counterWorker = Worker_Counter::where('worker_id', $id)->where('counter_id', $counterId)->first();
+      $is = Counter::find($counterId)->status;
+      if ($is == '1') {
+        $counterWorker = Worker_Counter::where('worker_id', $id)->where('counter_id', $counterId)->first();
+      } else {
+        $counterWorker = Counter::find($counterId);
+      }
       if ($counterWorker) {
         $counterWorker->delete();
       } else {

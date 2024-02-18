@@ -46,6 +46,7 @@
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Number')}}</th>
+                  <th>{{__('Counter Name')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>
@@ -182,6 +183,7 @@ function submitRemoveCounterWorker(userid, counterid) {
         ajax: '{{ route("worker-counters-table", ["id" => $user->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
+          { data: 'name', title: '{{__("Name")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}' },
           { data: 'latitude', title: '{{__("Latitude")}}' },
           { data: 'phone', title: '{{__("Phone")}}' },
@@ -189,7 +191,7 @@ function submitRemoveCounterWorker(userid, counterid) {
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
-        "order": [[4, "desc"]],
+        "order": [[6, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
