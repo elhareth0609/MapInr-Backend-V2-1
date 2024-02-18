@@ -9,14 +9,12 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\Models\Counter;
 
-class YourExcelExport implements FromCollection, WithEvents
+class YourUserExcelExport implements FromCollection, WithEvents
 {
-  protected $placeId;
   protected $uid;
 
     public function __construct($id,$uid)
     {
-      $this->placeId = $id;
       $this->uid = $uid;
     }
 
@@ -25,7 +23,7 @@ class YourExcelExport implements FromCollection, WithEvents
      */
     public function collection()
     {
-        $counters = Counter::where('place_id', $this->placeId)->where('worker_id',$this->uid)->get();
+        $counters = Counter::where('worker_id',$this->uid)->get();
 
         // Transform counters into a collection
         $data = $counters->map(function ($counter) {
@@ -54,9 +52,7 @@ class YourExcelExport implements FromCollection, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-              if ($this->placeId == 0) {
                 $this->insertPictures($event->sheet);
-              }
             },
         ];
     }
@@ -96,7 +92,7 @@ class YourExcelExport implements FromCollection, WithEvents
                   $worksheet = $sheet->getDelegate();
                   $worksheet->getCell("G{$imageRow}")->setValue('');
                 }
-                
+
                 $imageRow++;
 
             }

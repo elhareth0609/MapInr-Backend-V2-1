@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\YourExcelExport;
-use App\Exports\YourUserExcelExport;
-use App\Imports\YourExcelImport;
 use App\Exports\PlacesExport;
+use App\Exports\YourUserExcelExport;
+
+use App\Imports\YourExcelImport;
+
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -74,9 +76,9 @@ class ExelController extends Controller
         $user = User::find($id);
         // $place = Place::where('worker_id',$id)->where('worker',$id)->first();
         $filename = $user->fullname . '.xlsx';
-        $id = 0;
+        // $id = 0;
         $uid = $user->id;
-        return Excel::download(new YourExcelExport($id,$uid), $filename);
+        return Excel::download(new YourUserExcelExport($uid), $filename);
 
 
       } catch (\Exception $e) {
