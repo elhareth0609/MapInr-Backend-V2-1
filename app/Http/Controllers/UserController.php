@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 use App\Models\User;
 use App\Models\Place;
+use App\Models\Counter;
 use App\Models\Place_Worker;
 use App\Models\Worker_Counter;
 
