@@ -579,11 +579,9 @@
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}' },
           { data: 'latitude', title: '{{__("Latitude")}}' },
-          // { data: 'status', title: '{{__("Status")}}' },
-          // { data: 'created_at', title: '{{__("Created At")}}' }
           { data: 'actions', title: '{{__("Actions")}}' }
-          ],
-        // "order": [[4, "desc"]],
+        ],
+
         "drawCallback": function () {
           updateCustomPagination();
           initializeCustomSelects();

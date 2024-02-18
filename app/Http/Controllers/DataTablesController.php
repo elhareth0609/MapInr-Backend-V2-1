@@ -20,7 +20,7 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($users)
       ->editColumn('id', function($user) {
-          return $user->id;
+          return (string) $user->id;
       })
       ->editColumn('fullname', function($user) {
           return $user->fullname;
@@ -88,7 +88,7 @@ class DataTablesController extends Controller
       return DataTables::of($places)
 
       ->editColumn('place_id', function($place) {
-          return $place->place_id;
+          return (string) $place->place_id;
       })
       ->editColumn('counters', function($place) {
         return $place->counters->count();
@@ -117,6 +117,12 @@ class DataTablesController extends Controller
     $counters = Counter::where('status','0')->get();
     if ($request->ajax()) {
       return DataTables::of($counters)
+      ->editColumn('counter_id', function($counter) {
+        return (string) $counter->counter_id;
+      })
+      ->editColumn('name', function($counter) {
+        return $counter->name;
+      })
       ->editColumn('worker_id', function($counter) {
         if ($counter->worker) {
           return $counter->worker->fullname;
@@ -151,7 +157,7 @@ class DataTablesController extends Controller
     if ($request->ajax()) {
       return DataTables::of($workers)
       ->editColumn('id', function($worker) {
-          return $worker->id;
+          return (string) $worker->id;
       })
       ->editColumn('fullname', function($worker) {
           return $worker->fullname;
@@ -213,36 +219,19 @@ class DataTablesController extends Controller
   }
 
   public function place_counters($id,Request $request) {
-    $counters = Counter::where('place_id',$id)->get();
-    if ($request->ajax()) {
-      return DataTables::of($counters)
+    $counters = Counter::where('place_id', $id)->get();
 
+        if ($request->ajax()) {
+      return DataTables::of($counters)
       ->editColumn('counter_id', function($counter) {
-          return $counter->counter_id;
+        return (string) $counter->counter_id;
       })
-      // ->editColumn('place_id', function($counter) {
-      //     return $counter->place->place_id;
-      // })
-      // ->editColumn('name', function($counter) {
-      //   return $counter->name;
-      // })
       ->editColumn('longitude', function($counter) {
           return $counter->longitude;
       })
       ->editColumn('latitude', function($counter) {
           return $counter->latitude;
       })
-      // ->editColumn('status', function($counter) {
-      //   if ($counter->status === '0') {
-      //       return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';
-      //   } else {
-      //       return '<span class="badge rounded-pill bg-label-info me-1">' . __("Active"). '</span>';
-      //   }
-      // })
-      // ->editColumn('created_at', function($counter) {
-      //     return $counter->created_at->format('Y-m-d');
-      // })
-      // ->rawColumns(['status'])
       ->addColumn('actions', function($counter) {
         $workers = Worker_Counter::where('counter_id', $counter->id)->pluck('worker_id');
         $allworkers = User::pluck('id', 'fullname');
@@ -300,7 +289,7 @@ class DataTablesController extends Controller
       //     return $place->id;
       // })
       ->editColumn('place_id', function($place) {
-          return $place->place_id;
+          return (string) $place->place_id;
       })
       ->editColumn('counters', function($place) {
         return $place->counters->count();
@@ -363,7 +352,7 @@ class DataTablesController extends Controller
       return DataTables::of($counters)
 
       ->editColumn('counter_id', function($counter) {
-          return $counter->counter_id;
+          return (string) $counter->counter_id;
       })
       ->editColumn('name', function($counter) {
         return $counter->name;
@@ -426,7 +415,7 @@ class DataTablesController extends Controller
       return DataTables::of($municipalitys)
 
       ->editColumn('id', function($municipality) {
-          return $municipality->id;
+          return (string) $municipality->id;
       })
       ->editColumn('places', function($municipality) {
         return $municipality->places->count();
@@ -474,7 +463,7 @@ class DataTablesController extends Controller
       return DataTables::of($places)
 
       ->editColumn('place_id', function($place) {
-          return $place->place_id;
+          return (string) $place->place_id;
       })
       ->editColumn('counters', function($place) {
         return $place->counters->count();

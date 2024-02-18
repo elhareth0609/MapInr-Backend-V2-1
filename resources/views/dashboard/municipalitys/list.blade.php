@@ -270,8 +270,6 @@ $(document).ready( function () {
         { data: 'id', title: '#' },
         { data: 'name', title: '{{ __("Municipality Name")}}' },
         { data: 'places', title: '{{ __("Places")}}' },
-        // { data: 'workers', title: '{{ __("Workers")}}' },
-        // { data: 'created_at', title: '{{ __("Created At") }}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
       order: [[3, "desc"]],
