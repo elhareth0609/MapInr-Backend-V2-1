@@ -354,7 +354,7 @@ class DataTablesController extends Controller
     $counters = Counter::where('counters.worker_id', $id)
     ->orWhere('worker__counters.worker_id', $id)
     ->leftJoin('worker__counters', 'counters.id', '=', 'worker__counters.counter_id')
-    ->select('counters.counter_id', 'counters.longitude', 'counters.latitude', 'counters.status', 'counters.created_at', 'counters.id', 'counters.phone')
+    ->select('counters.counter_id', 'counters.longitude', 'counters.latitude', 'counters.status', 'counters.created_at', 'counters.id', 'counters.phone','counters.name')
     ->get();
 
 
