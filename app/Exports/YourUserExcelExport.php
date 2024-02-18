@@ -13,7 +13,7 @@ class YourUserExcelExport implements FromCollection, WithEvents
 {
   protected $uid;
 
-    public function __construct($id,$uid)
+    public function __construct($uid)
     {
       $this->uid = $uid;
     }
