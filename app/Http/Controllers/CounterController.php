@@ -100,6 +100,77 @@ class CounterController extends Controller
       }
   }
 
+  public function create_lot(Request $request) {
+    $validator = Validator::make($request->all(), [
+        '*.name'      => 'required|string|max:255',
+        '*.id' => [
+          'sometimes',
+          'numeric',
+          Rule::exists('counters', 'id')->where(function ($query) {
+            $query->where('status', '1');
+          }),
+        ],
+        '*.longitude' => 'required|numeric',
+        '*.latitude'  => 'required|numeric',
+        '*.photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+        '*.note'      => 'sometimes|string',
+        '*.phone'     => 'sometimes|string'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => 'Validation failed : ' . $validator->errors()->first(),
+            'error' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+        foreach ($request->all() as $data) {
+            $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first()->counter_id;
+
+            $uniqueName = null;
+            if (isset($data['photo'])) {
+                $timeName      = time();
+                $originalName  = pathinfo($data['photo']->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileExtension = $data['photo']->getClientOriginalExtension();
+                $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
+                $data['photo']->storeAs('public/assets/img/counters/', $uniqueName);
+            }
+
+          if (isset($data['id'])) {
+              $counterSelected = Counter::find($data['id']);
+              $id = $counterSelected ? $counterSelected->counter_id : 0;
+          } else {
+              $id = 0;
+          }
+
+            $counter = new Counter();
+            $counter->name = $data['name'];
+            $counter->place_id = 0;
+            $counter->worker_id = $request->user()->id;
+            $counter->counter_id = $id;
+            $counter->longitude = $data['longitude'];
+            $counter->latitude = $data['latitude'];
+            $counter->picture = $uniqueName;
+            $counter->phone = isset($data['phone']) ? $data['phone'] : null;
+            $counter->note = isset($data['note']) ? $data['note'] : null;
+            $counter->status = '0';
+            $counter->save();
+
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Created successfully ' ,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 0,
+            'message' => $e->getMessage(),
+        ]);
+    }
+}
 
   public function update(Request $request) {
 

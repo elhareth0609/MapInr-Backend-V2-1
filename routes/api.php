@@ -26,6 +26,7 @@ Route::post('/v1/user/login', [AuthController::class, 'login'])->name('login-api
 Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::get('/v1/places/all', [PlaceController::class, 'all_places'])->name('all-places');
   Route::post('/v1/counters/create', [CounterController::class, 'create'])->name('counter.create');
+  Route::post('/v1/counters/create-lot', [CounterController::class, 'create_lot'])->name('counter.create.lot');
   Route::post('/v1/counters/destroy', [CounterController::class, 'destroy'])->name('counter.destroy');
   Route::post('/v1/counters/update', [CounterController::class, 'update'])->name('counter.update');
 
