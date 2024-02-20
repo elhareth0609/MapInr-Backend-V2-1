@@ -28,6 +28,8 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/counters/create', [CounterController::class, 'create'])->name('counter.create');
   Route::post('/v1/counters/create-lot', [CounterController::class, 'create_lot'])->name('counter.create.lot');
   Route::post('/v1/counters/destroy', [CounterController::class, 'destroy'])->name('counter.destroy');
+  Route::post('/v1/counters/destroy-lot', [CounterController::class, 'destroy_lot'])->name('counter.destroy.lot');
   Route::post('/v1/counters/update', [CounterController::class, 'update'])->name('counter.update');
+  Route::post('/v1/counters/update-lot', [CounterController::class, 'update_lot'])->name('counter.update.lot');
 
 });
