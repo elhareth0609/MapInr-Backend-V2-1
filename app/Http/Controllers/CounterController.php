@@ -214,8 +214,8 @@ class CounterController extends Controller
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;
-      $counter->phone = isset($data['phone']) ? $data['phone'] : $counter->phone;
-      $counter->note = isset($data['note']) ? $data['note'] : $counter->note;
+      $counter->phone = $request->input('phone', $counter->phone);
+      $counter->note = $request->input('note', $counter->note);
       $counter->save();
 
       return response()->json([
@@ -273,14 +273,14 @@ class CounterController extends Controller
             $counter->longitude = $data['longitude'];
             $counter->latitude = $data['latitude'];
             $counter->picture = $uniqueName;
-            $counter->phone = $data->input('phone', $counter->phone);
-            $counter->note = $data->input('note', $counter->note);
+            $counter->phone = isset($data['phone']) ? $data['phone'] : $counter->phone;
+            $counter->note = isset($data['note']) ? $data['note'] : $counter->note;
             $counter->save();
 
       }
         return response()->json([
             'status' => 1,
-            'message' => 'Updated successfully : ' ,
+            'message' => 'Updated successfully.' ,
         ]);
       } catch (\Exception $e) {
         return response()->json([
