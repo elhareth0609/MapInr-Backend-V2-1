@@ -164,6 +164,7 @@ class CounterController extends Controller
             'status' => 1,
             'message' => 'Created successfully ' ,
         ]);
+
     } catch (\Exception $e) {
         return response()->json([
             'status' => 0,
@@ -213,8 +214,8 @@ class CounterController extends Controller
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;
-      $counter->phone = $request->input('phone', $counter->phone);
-      $counter->note = $request->input('note', $counter->note);
+      $counter->phone = isset($data['phone']) ? $data['phone'] : $counter->phone;
+      $counter->note = isset($data['note']) ? $data['note'] : $counter->note;
       $counter->save();
 
       return response()->json([
@@ -228,6 +229,68 @@ class CounterController extends Controller
       ]);
     }
 }
+
+    public function update_lot(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+          '*.name'      => 'required|string|max:255',
+          '*.longitude' => 'required|numeric',
+          '*.counter_id' => [
+            'required',
+            'numeric',
+            Rule::exists('counters', 'id')->where(function ($query) {
+              $query->where('status', '0');
+            }),
+          ],
+          '*.latitude'  => 'required|numeric',
+          '*.photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+          '*.note'      => 'sometimes|string',
+          '*.phone'     => 'sometimes|string'
+        ]);
+
+      if ($validator->fails()) {
+        return response()->json([
+          'status' => 0,
+          'message' => 'Validation failed : ' . $validator->errors()->first(),
+          'error' => $validator->errors()->first(),
+        ], 422);
+      }
+
+      try {
+
+        foreach ($request->all() as $data) {
+
+            $counter = Counter::find($data['counter_id']);
+
+            if (isset($data['photo'])) {
+              $uniqueName = time() . '_' . $data['photo']->getClientOriginalName();
+              $data['photo']->storeAs('public/assets/img/counters/', $uniqueName);
+            } else {
+                $uniqueName = $counter->picture;
+            }
+
+            $counter->name = $data['name'];
+            $counter->longitude = $data['longitude'];
+            $counter->latitude = $data['latitude'];
+            $counter->picture = $uniqueName;
+            $counter->phone = $data->input('phone', $counter->phone);
+            $counter->note = $data->input('note', $counter->note);
+            $counter->save();
+
+      }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Updated successfully : ' ,
+        ]);
+      } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'message' => $e->getMessage(),
+        ]);
+      }
+    }
+
+
 
   public function destroy(Request $request){
     try {
@@ -253,4 +316,24 @@ class CounterController extends Controller
       ]);
     }
   }
+
+
+  public function destroy_lot(Request $request){
+    try {
+      foreach ($request->all() as $data) {
+      $counter = Counter::find($data['id']);
+      $counter->delete();
+    }
+      return response()->json([
+        'status' => 1,
+        'message' => 'Deleted successfully.',
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
 }
