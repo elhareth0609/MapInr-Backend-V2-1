@@ -303,6 +303,12 @@ class CounterController extends Controller
         ],422);
       }
 
+      $photoPath = 'public/assets/img/counters/' . $counter->picture;
+
+      // Check if the photo exists and delete it
+      if ($counter->picture && Storage::exists($photoPath)) {
+          Storage::delete($photoPath);
+      }
 
       $counter->delete();
       return response()->json([
@@ -322,6 +328,13 @@ class CounterController extends Controller
     try {
       foreach ($request->all() as $data) {
       $counter = Counter::find($data['id']);
+
+      $photoPath = 'public/assets/img/counters/' . $counter->picture;
+
+      // Check if the photo exists and delete it
+      if ($counter->picture && Storage::exists($photoPath)) {
+          Storage::delete($photoPath);
+      }
       $counter->delete();
     }
       return response()->json([
