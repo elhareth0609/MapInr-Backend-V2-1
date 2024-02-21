@@ -39,7 +39,7 @@
       <table class="table table-striped w-100" id="counters" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            {{-- <th>#</th> --}}
+            <th><input type="checkbox" class="row-checkbox" value="0"></th>
             <th>{{__('Counter Number')}}</th>
             <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
@@ -90,6 +90,7 @@
     text-align: center;
   }
 </style>
+<button type="button" id="delete-button">vvvvvvvvv</button>
 <script>
 $(document).ready( function () {
     $.ajaxSetup({
@@ -102,21 +103,20 @@ $(document).ready( function () {
     var dataTable = $('#counters').DataTable({
       processing: true,
       serverSide: true,
-      pageLength: 100,
+      pageLength: 1,
       responsive: true,
       language: {
         info: "_START_-_END_ of _TOTAL_",
       },
       ajax: '{{ route("counters-table") }}',
       columns: [
-        // { data: 'id', title: '#' },
+        { data: 'id', title: '<input type="checkbox" id="check-all" class="row-checkbox"  value="0">',orderable :false },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
         { data: 'longitude', title: '{{__("Longitude")}}' },
         { data: 'latitude', title: '{{__("Latitude")}}' },
         { data: 'phone', title: '{{__("Phone")}}' },
-        // { data: 'status', title: '{{__("Status")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
       "order": [[6, "desc"]],
@@ -127,7 +127,76 @@ $(document).ready( function () {
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
       },
+      'columnDefs': [
+      {
+        'targets': 0,
+        'orderable':false,
+        'searchable':false,
+        'checkboxes': {
+          'selectRow': true
+        },
+        // 'render': function (data, type, full, meta){
+        //   //console.log(data, type, full, meta);
+        //   return data ?
+        //     '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + '" checked>' : '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+        // }
+      }
+    ],
+    'select': {
+        'style': 'multi'
+    },
     });
+
+
+
+
+
+    // var selectAllChecked = false; // Variable to track the state of "Select All" checkbox
+
+// // Click event handler for "Select All" checkbox
+// $('#counters thead').on('click', '#check-all', function() {
+//     selectAllChecked = !selectAllChecked; // Toggle selectAllChecked variable
+//     var checked = $(this).prop('checked');
+
+//     // Select or deselect all rows based on selectAllChecked variable
+//     $('#counters').DataTable().rows().every(function() {
+//         var rowNode = this.node();
+//         $('input[type="checkbox"]', rowNode).prop('checked', selectAllChecked);
+//     });
+// });
+
+// // Event listener for changing pages
+// $('#counters').on('draw.dt', function() {
+//     // Update the "Select All" checkbox state when changing pages
+//     $('#check-all').prop('checked', selectAllChecked);
+// });
+
+
+// // Event listener for changing pages
+// $('#counters').on('page.dt', function() {
+//     // Update the "Select All" checkbox state when changing pages
+//     $('#check-all').prop('checked', selectAllChecked);
+// });
+
+
+//     $('#counters tbody').on('change', '.row-checkbox', function() {
+//         var anySelected = $('.row-checkbox:checked').length > 0;
+//         $('#delete-button').toggle(anySelected);
+//     });
+
+//     $('#delete-button').click(function() {
+//         var ids = $('.row-checkbox:checked').map(function() {
+//             return $(this).val();
+//         }).get();
+
+//         deleteRows(ids);
+//     });
+
+    // Function to delete rows
+    function deleteRows(ids) {
+        console.log('Deleting rows:', ids);
+    }
+
     $('#customSearch').on('keyup', function () {
       dataTable.search(this.value).draw();
     });
