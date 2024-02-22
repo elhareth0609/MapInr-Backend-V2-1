@@ -161,7 +161,7 @@ $(document).ready( function () {
 
 
     var requestData = {
-        _token: '{{ csrf_token() }}', // Include CSRF token
+        _token: '{{ csrf_token() }}',
         ids: selectedRowsIds
     };
 
