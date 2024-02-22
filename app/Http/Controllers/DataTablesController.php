@@ -117,6 +117,9 @@ class DataTablesController extends Controller
     $counters = Counter::where('status','0')->get();
     if ($request->ajax()) {
       return DataTables::of($counters)
+      // ->editColumn('id', function($counter) {
+      //   return '<input type="checkbox" class="row-checkbox" name="id[]" value="' . $counter->id . '">';
+      // })
       ->editColumn('counter_id', function($counter) {
         return (string) $counter->counter_id;
       })
@@ -141,7 +144,7 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($counter) {
           return $counter->created_at->format('Y-m-d');
       })
-      // ->rawColumns(['status'])
+      // ->rawColumns(['id'])
       ->make(true);
 
     }

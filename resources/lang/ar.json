@@ -118,7 +118,8 @@
     "Add Worker To Place Is Successful." : "تمت إضافة العامل إلى المكان بنجاح.",
     "Remove Place From Worker Successfully." : "تمت إزالة المكان من العامل بنجاح.",
     "Add Place To Worker Is Successful." : "تمت إضافة المكان للعامل بنجاح.",
-    "Unknown" : "غير معروف"
+    "Unknown" : "غير معروف",
+    "Deleted Successfully" : "تم الحذف بنجاح"
 
 
 }

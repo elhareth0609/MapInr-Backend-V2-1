@@ -39,8 +39,10 @@ class CounterController extends Controller
 
       try {
 
-        $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first()->counter_id;
-
+        $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
+        if($place) {
+          $place->counter_id;
+        }
         $uniqueName = null;
         if ($request->has('photo')) {
           $timeName      = time();
@@ -49,24 +51,6 @@ class CounterController extends Controller
           $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
           $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
         }
-
-        // if ($request->id) {
-        //   $selectCounter = Counter::find($request->id);
-        //   $id = $selectCounter->counter_id;
-        //   $is_exist = Counter::where('counter_id',$selectCounter->counter_id)
-        //               ->where('place_id',0)
-        //               ->first();
-        //   if (!$is_exist) {
-        //     $counter = new Counter();
-        //   } else {
-        //     $counter = Counter::where('counter_id',$selectCounter->counter_id)
-        //                       ->where('place_id',0)
-        //                       ->first();
-        //   }
-        // } else {
-        //   $id = ++$place;
-        //   $counter = new Counter();
-        // }
 
         if ($request->id) {
           $counterSelected = Counter::find($request->id);
@@ -128,7 +112,12 @@ class CounterController extends Controller
 
     try {
         foreach ($request->all() as $data) {
-            $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first()->counter_id;
+            $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
+
+            if($place) {
+              $place->counter_id;
+            }
+            
 
             $uniqueName = null;
             if (isset($data['photo'])) {
@@ -350,5 +339,29 @@ class CounterController extends Controller
       ]);
     }
   }
+
+
+  public function delete_all(Request $request) {
+    try {
+    foreach ($request->ids as $id) {
+        $counter = Counter::find($id);
+        if ($counter) {
+            $counter->delete();
+        }
+    }
+
+    return response()->json([
+        'state' => __("Success"),
+        'message' => __("Deleted Successfully")
+    ]);
+  } catch (\Exception $e) {
+    return response()->json([
+      'status' => 0,
+      'error' => $e->getMessage(),
+    ],401);
+}
+}
+
+
 
 }

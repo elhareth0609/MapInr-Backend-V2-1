@@ -133,6 +133,8 @@ Route::get('/exoprt-file-zip/{id}', [ExelController::class, 'exportFileZip'])->n
 // Route::get('/exoprt-municipality-places-zip/{id}', [ExelController::class, 'exportMunicipalityPlacesZip'])->name('export.municipality.places.zip'); // for one municipality places
 Route::get('/exoprt-municipalitys-zip', [ExelController::class, 'exportMunicipalitysZip'])->name('export.municipalitys.zip'); // for all
 
+Route::post('/counters/delete-all', [CounterController::class, 'delete_all'])->name('counter.delete.all');
+
 
 Route::post('/municipality/create', [MunicipalityController::class, 'create'])->name('municipality.create');
 Route::post('/municipality/update', [MunicipalityController::class, 'update'])->name('municipality.update');

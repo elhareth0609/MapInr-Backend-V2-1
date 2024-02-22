@@ -39,7 +39,7 @@
       <table class="table table-striped w-100" id="counters" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            <th><input type="checkbox" class="row-checkbox" value="0"></th>
+            <th></th>
             <th>{{__('Counter Number')}}</th>
             <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
@@ -53,9 +53,9 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        {{-- <button type="button" class="btn btn-outline-primary col-lg-2 col-xl-2 col-md-2 col-sm-3 col-6" id="exportButton">
-          <span class="tf-icons mdi mdi-download me-1"></span>Export
-        </button> --}}
+        <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+          <icon class="mdi mdi-trash-can-outline"></icon>
+        </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
           <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">
@@ -90,7 +90,7 @@
     text-align: center;
   }
 </style>
-<button type="button" id="delete-button">vvvvvvvvv</button>
+<script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 <script>
 $(document).ready( function () {
     $.ajaxSetup({
@@ -103,14 +103,14 @@ $(document).ready( function () {
     var dataTable = $('#counters').DataTable({
       processing: true,
       serverSide: true,
-      pageLength: 1,
+      pageLength: 200,
       responsive: true,
       language: {
         info: "_START_-_END_ of _TOTAL_",
       },
       ajax: '{{ route("counters-table") }}',
       columns: [
-        { data: 'id', title: '<input type="checkbox" id="check-all" class="row-checkbox"  value="0">',orderable :false },
+        { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
@@ -119,7 +119,16 @@ $(document).ready( function () {
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
-      "order": [[6, "desc"]],
+      "order": [[7, "desc"]],
+      select: {
+        style: 'multi',
+      },
+    columnDefs: [{
+        targets: 0,
+        checkboxes: {
+            selectRow: true
+        }
+      }],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
@@ -127,75 +136,76 @@ $(document).ready( function () {
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
       },
-      'columnDefs': [
-      {
-        'targets': 0,
-        'orderable':false,
-        'searchable':false,
-        'checkboxes': {
-          'selectRow': true
-        },
-        // 'render': function (data, type, full, meta){
-        //   //console.log(data, type, full, meta);
-        //   return data ?
-        //     '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + '" checked>' : '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
-        // }
-      }
-    ],
-    'select': {
-        'style': 'multi'
-    },
+
     });
 
+    $('#delete-button').on('click', function() {
+    // var selectedRowsIds = dataTable.rows({ selected: true }).data().pluck('id').toArray();
+    var selectedRowsIds = [];
 
 
+    // Assuming dataTable is your DataTable instance
+    // dataTable.rows().every(function () {
+    //   var data = this.data();
+    //   var checkbox = $(data.checkboxSelector); // Replace checkboxSelector with the actual selector for your checkbox within each row
+    //   var isChecked = checkbox.prop('checked');
+
+    //   if (isChecked) {
+    //     console.log('Checkbox in this row is checked' );
+    //     // selectedRowsIds.push(data.id);
+    //   }
+
+    // });
+    // console.log(selectedRowsIds);
 
 
-    // var selectAllChecked = false; // Variable to track the state of "Select All" checkbox
+    var selectedRowsIds = [];
 
-// // Click event handler for "Select All" checkbox
-// $('#counters thead').on('click', '#check-all', function() {
-//     selectAllChecked = !selectAllChecked; // Toggle selectAllChecked variable
-//     var checked = $(this).prop('checked');
+// Iterate over each row in the DataTable
+dataTable.rows().every(function () {
+    var rowNode = this.node(); // Get the row node
+    var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
+    var isChecked = checkbox.prop('checked');
 
-//     // Select or deselect all rows based on selectAllChecked variable
-//     $('#counters').DataTable().rows().every(function() {
-//         var rowNode = this.node();
-//         $('input[type="checkbox"]', rowNode).prop('checked', selectAllChecked);
-//     });
-// });
-
-// // Event listener for changing pages
-// $('#counters').on('draw.dt', function() {
-//     // Update the "Select All" checkbox state when changing pages
-//     $('#check-all').prop('checked', selectAllChecked);
-// });
-
-
-// // Event listener for changing pages
-// $('#counters').on('page.dt', function() {
-//     // Update the "Select All" checkbox state when changing pages
-//     $('#check-all').prop('checked', selectAllChecked);
-// });
-
-
-//     $('#counters tbody').on('change', '.row-checkbox', function() {
-//         var anySelected = $('.row-checkbox:checked').length > 0;
-//         $('#delete-button').toggle(anySelected);
-//     });
-
-//     $('#delete-button').click(function() {
-//         var ids = $('.row-checkbox:checked').map(function() {
-//             return $(this).val();
-//         }).get();
-
-//         deleteRows(ids);
-//     });
-
-    // Function to delete rows
-    function deleteRows(ids) {
-        console.log('Deleting rows:', ids);
+    // If the checkbox is checked, add its ID to the selectedRowsIds array
+    if (isChecked) {
+        selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
+        // console.log('Checkbox in this row is checked',this.data().id);
+    } else {
+        // console.log('Checkbox in this row is not checked');
     }
+});
+
+// console.log(selectedRowsIds);
+
+
+
+    var requestData = {
+        _token: '{{ csrf_token() }}', // Include CSRF token
+        ids: selectedRowsIds
+    };
+
+    $.ajax({
+            url: '{{ route("counter.delete.all") }}',
+            type: 'POST',
+            data: requestData,
+            success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: response.state,
+                text: response.message,
+            });
+            dataTable.ajax.reload();
+            },
+            error: function (error) {
+              Swal.fire({
+                    icon: 'error',
+                    title: error.responseJSON.message,
+                    text: error.responseJSON.error,
+                });
+            }
+        });
+    });
 
     $('#customSearch').on('keyup', function () {
       dataTable.search(this.value).draw();
