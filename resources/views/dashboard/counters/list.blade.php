@@ -140,43 +140,23 @@ $(document).ready( function () {
     });
 
     $('#delete-button').on('click', function() {
-    // var selectedRowsIds = dataTable.rows({ selected: true }).data().pluck('id').toArray();
+
     var selectedRowsIds = [];
 
+    dataTable.rows().every(function () {
+        var rowNode = this.node(); // Get the row node
+        var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
+        var isChecked = checkbox.prop('checked');
 
-    // Assuming dataTable is your DataTable instance
-    // dataTable.rows().every(function () {
-    //   var data = this.data();
-    //   var checkbox = $(data.checkboxSelector); // Replace checkboxSelector with the actual selector for your checkbox within each row
-    //   var isChecked = checkbox.prop('checked');
+        if (isChecked) {
+            selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
+            // console.log('Checkbox in this row is checked',this.data().id);
+        } else {
+            // console.log('Checkbox in this row is not checked');
+        }
+    });
 
-    //   if (isChecked) {
-    //     console.log('Checkbox in this row is checked' );
-    //     // selectedRowsIds.push(data.id);
-    //   }
-
-    // });
     // console.log(selectedRowsIds);
-
-
-    var selectedRowsIds = [];
-
-// Iterate over each row in the DataTable
-dataTable.rows().every(function () {
-    var rowNode = this.node(); // Get the row node
-    var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
-    var isChecked = checkbox.prop('checked');
-
-    // If the checkbox is checked, add its ID to the selectedRowsIds array
-    if (isChecked) {
-        selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
-        // console.log('Checkbox in this row is checked',this.data().id);
-    } else {
-        // console.log('Checkbox in this row is not checked');
-    }
-});
-
-// console.log(selectedRowsIds);
 
 
 
