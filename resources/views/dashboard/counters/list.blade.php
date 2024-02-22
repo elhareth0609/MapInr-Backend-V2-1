@@ -103,7 +103,7 @@ $(document).ready( function () {
     var dataTable = $('#counters').DataTable({
       processing: true,
       serverSide: true,
-      pageLength: 200,
+      pageLength: 100,
       responsive: true,
       language: {
         info: "_START_-_END_ of _TOTAL_",
