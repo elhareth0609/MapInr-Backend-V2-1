@@ -124,6 +124,7 @@ Route::post('/user/add-counter-worker', [UserController::class, 'addCounterWorke
 
 Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePlaceWorker'])->name('user-remove-place-worker');
 Route::get('user/remove-counter/{id}/{counterId}', [UserController::class, 'removeCounterWorker'])->name('user-remove-counter-worker');
+Route::post('user/remove-worker-counters', [UserController::class, 'removeWorkerCounters'])->name('user.delete.counters.all');
 
 
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');

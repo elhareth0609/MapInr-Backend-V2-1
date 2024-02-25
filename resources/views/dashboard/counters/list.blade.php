@@ -120,15 +120,15 @@ $(document).ready( function () {
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
       "order": [[7, "desc"]],
-      select: {
-        style: 'multi',
-      },
-    columnDefs: [{
-        targets: 0,
-        checkboxes: {
-            selectRow: true
-        }
-      }],
+    //   select: {
+    //     style: 'multi',
+    //   },
+    // columnDefs: [{
+    //     targets: 0,
+    //     checkboxes: {
+    //         selectRow: true
+    //     }
+    //   }],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
@@ -139,53 +139,53 @@ $(document).ready( function () {
 
     });
 
-    $('#delete-button').on('click', function() {
+    // $('#delete-button').on('click', function() {
 
-    var selectedRowsIds = [];
+    // var selectedRowsIds = [];
 
-    dataTable.rows().every(function () {
-        var rowNode = this.node(); // Get the row node
-        var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
-        var isChecked = checkbox.prop('checked');
+    // dataTable.rows().every(function () {
+    //     var rowNode = this.node(); // Get the row node
+    //     var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
+    //     var isChecked = checkbox.prop('checked');
 
-        if (isChecked) {
-            selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
-            // console.log('Checkbox in this row is checked',this.data().id);
-        } else {
-            // console.log('Checkbox in this row is not checked');
-        }
-    });
+    //     if (isChecked) {
+    //         selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
+    //         // console.log('Checkbox in this row is checked',this.data().id);
+    //     } else {
+    //         // console.log('Checkbox in this row is not checked');
+    //     }
+    // });
 
     // console.log(selectedRowsIds);
 
 
 
-    var requestData = {
-        _token: '{{ csrf_token() }}',
-        ids: selectedRowsIds
-    };
+    // var requestData = {
+    //     _token: '{{ csrf_token() }}',
+    //     ids: selectedRowsIds
+    // };
 
-    $.ajax({
-            url: '{{ route("counter.delete.all") }}',
-            type: 'POST',
-            data: requestData,
-            success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: response.state,
-                text: response.message,
-            });
-            dataTable.ajax.reload();
-            },
-            error: function (error) {
-              Swal.fire({
-                    icon: 'error',
-                    title: error.responseJSON.message,
-                    text: error.responseJSON.error,
-                });
-            }
-        });
-    });
+    // $.ajax({
+    //         url: '{{ route("counter.delete.all") }}',
+    //         type: 'POST',
+    //         data: requestData,
+    //         success: function (response) {
+    //         Swal.fire({
+    //             icon: 'success',
+    //             title: response.state,
+    //             text: response.message,
+    //         });
+    //         dataTable.ajax.reload();
+    //         },
+    //         error: function (error) {
+    //           Swal.fire({
+    //                 icon: 'error',
+    //                 title: error.responseJSON.message,
+    //                 text: error.responseJSON.error,
+    //             });
+    //         }
+    //     });
+    // });
 
     $('#customSearch').on('keyup', function () {
       dataTable.search(this.value).draw();

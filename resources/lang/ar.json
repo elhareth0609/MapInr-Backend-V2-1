@@ -119,7 +119,9 @@
     "Remove Place From Worker Successfully." : "تمت إزالة المكان من العامل بنجاح.",
     "Add Place To Worker Is Successful." : "تمت إضافة المكان للعامل بنجاح.",
     "Unknown" : "غير معروف",
-    "Deleted Successfully" : "تم الحذف بنجاح"
+    "Deleted Successfully" : "تم الحذف بنجاح",
+    "There Is No Selected Rows." : "لا توجد صفوف محددة.",
+    "Counters Removed From Worker successfully!" : "تمت إزالة العدادات من العامل بنجاح!"
 
 
 }

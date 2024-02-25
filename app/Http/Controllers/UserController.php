@@ -305,4 +305,41 @@ class UserController extends Controller
 
   }
 
+  public function removeWorkerCounters(Request $request) {
+    try {
+      if(empty($request->ids)) {
+        return response()->json([
+        'state' => __("Error"),
+        'message' => __("There Is No Selected Rows."),
+        ], 401);
+      }
+
+      foreach ($request->ids as $id) {
+        $is = Counter::find($id);
+        if ($is) {
+          $is = $is->status;
+          if ($is == '1') {
+            $counterWorker = Worker_Counter::where('worker_id', $request->uid)->where('counter_id', $id)->first();
+          } else {
+            $counterWorker = Counter::find($id);
+          }
+
+          if ($counterWorker) {
+            $counterWorker->delete();
+          }
+        }
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Counters Removed From Worker successfully!"),
+      ]);
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500);
+    }
+  }
 }
