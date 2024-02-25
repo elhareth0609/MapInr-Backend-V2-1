@@ -3,12 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\CounterController;
-use App\Http\Controllers\DataTablesController;
-use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
