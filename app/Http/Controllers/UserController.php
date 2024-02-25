@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Counter;
 
+use App\Models\Place;
+use App\Models\Place_Worker;
+use App\Models\User;
+
+use App\Models\Worker_Counter;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-
-use App\Models\User;
-use App\Models\Place;
-use App\Models\Counter;
-use App\Models\Place_Worker;
-use App\Models\Worker_Counter;
 
 
 class UserController extends Controller
@@ -204,7 +205,7 @@ class UserController extends Controller
       return response()->json([
         'status' => 0,
         'error' => $e->getMessage(),
-      ], [$e->getCode()]);
+      ], 500);
     }
 
   }
@@ -234,7 +235,7 @@ class UserController extends Controller
       return response()->json([
         'status' => 0,
         'error' => $e->getMessage(),
-      ], [$e->getCode()]);
+      ], 500);
     }
 
   }
@@ -325,6 +326,12 @@ class UserController extends Controller
           }
 
           if ($counterWorker) {
+            $photoPath = 'public/assets/img/counters/' . $counterWorker->picture;
+
+            if ($counterWorker->picture && Storage::exists($photoPath)) {
+                Storage::delete($photoPath);
+            }
+
             $counterWorker->delete();
           }
         }
