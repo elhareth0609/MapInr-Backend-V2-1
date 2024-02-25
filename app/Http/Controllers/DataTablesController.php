@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Models\User;
-use App\Models\Place;
 use App\Models\Counter;
-use App\Models\Place_Worker;
+
 use App\Models\Municipality;
+use App\Models\Place;
+use App\Models\Place_Worker;
+use App\Models\User;
 use App\Models\Worker_Counter;
-use DataTables;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class DataTablesController extends Controller
 {

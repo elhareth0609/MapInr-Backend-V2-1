@@ -50,7 +50,7 @@ class AuthController extends Controller
                 'message' => 'There Is No User With This Code'
               ]);
           }
-      } catch (Exeption $e) {
+      } catch (\Exception $e) {
         return response()->json([
           'status' => 0,
           'message' => $e->getMessage()
