@@ -44,6 +44,7 @@ class CounterController extends Controller
           $place->counter_id;
         }
         $uniqueName = null;
+        // if ! $request->id do this
         if ($request->has('photo')) {
           $timeName      = time();
           $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
@@ -117,9 +118,10 @@ class CounterController extends Controller
             if($place) {
               $place->counter_id;
             }
-            
+
 
             $uniqueName = null;
+            // if ! isset($data['id']) do this
             if (isset($data['photo'])) {
                 $timeName      = time();
                 $originalName  = pathinfo($data['photo']->getClientOriginalName(), PATHINFO_FILENAME);
@@ -128,12 +130,12 @@ class CounterController extends Controller
                 $data['photo']->storeAs('public/assets/img/counters/', $uniqueName);
             }
 
-          if (isset($data['id'])) {
-              $counterSelected = Counter::find($data['id']);
-              $id = $counterSelected ? $counterSelected->counter_id : 0;
-          } else {
-              $id = 0;
-          }
+            if (isset($data['id'])) {
+                $counterSelected = Counter::find($data['id']);
+                $id = $counterSelected ? $counterSelected->counter_id : 0;
+            } else {
+                $id = 0;
+            }
 
             $counter = new Counter();
             $counter->name = $data['name'];
@@ -196,6 +198,7 @@ class CounterController extends Controller
       if ($request->has('photo')) {
         $uniqueName = time() . '_' . $request->file('photo')->getClientOriginalName();
         $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+      // else if !counter put uniqe name null
       } else {
           $uniqueName = $counter->picture;
       }
@@ -256,6 +259,7 @@ class CounterController extends Controller
             if (isset($data['photo'])) {
               $uniqueName = time() . '_' . $data['photo']->getClientOriginalName();
               $data['photo']->storeAs('public/assets/img/counters/', $uniqueName);
+            // else if !counter put uniqe name null
             } else {
                 $uniqueName = $counter->picture;
             }

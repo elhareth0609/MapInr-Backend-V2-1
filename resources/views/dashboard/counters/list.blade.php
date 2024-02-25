@@ -39,7 +39,7 @@
       <table class="table table-striped w-100" id="counters" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            <th></th>
+            {{-- <th></th> --}}
             <th>{{__('Counter Number')}}</th>
             <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
@@ -53,9 +53,9 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+        {{-- <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
           <icon class="mdi mdi-trash-can-outline"></icon>
-        </button>
+        </button> --}}
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
           <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">
@@ -90,7 +90,7 @@
     text-align: center;
   }
 </style>
-<script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
+{{-- <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script> --}}
 <script>
 $(document).ready( function () {
     $.ajaxSetup({
@@ -110,7 +110,7 @@ $(document).ready( function () {
       },
       ajax: '{{ route("counters-table") }}',
       columns: [
-        { data: 'id', title: '#' },
+        // { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
@@ -119,7 +119,7 @@ $(document).ready( function () {
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],
-      "order": [[7, "desc"]],
+      "order": [[6, "desc"]],
     //   select: {
     //     style: 'multi',
     //   },
