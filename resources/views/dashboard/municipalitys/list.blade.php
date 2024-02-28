@@ -152,7 +152,7 @@
 
 </style>
 <script>
-    var municipalitysdataTable;
+    var dataTable;
 
 
       function submitDistroyUser(id) {
@@ -241,7 +241,7 @@ $(document).ready( function () {
                     title: response.state,
                     text: response.message,
                 });
-                municipalitysdataTable.ajax.reload();
+                dataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
@@ -366,7 +366,7 @@ $(document).ready( function () {
                 title: response.state,
                 text: response.message,
             });
-            userDataTable.ajax.reload();
+            dataTable.ajax.reload();
             },
             error: function (error) {
               Swal.fire({
