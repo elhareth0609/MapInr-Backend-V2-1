@@ -134,7 +134,10 @@ class UserController extends Controller
   public function addWorkerPlace(Request $request) {
 
     try {
-      Place_Worker::where('worker_id', $request->worker_id)->delete();
+      // Place_Worker::where('worker_id', $request->worker_id)->delete();
+      Place_Worker::where('worker_id', $request->worker_id)
+      ->where('place_id', '!=', 0)
+      ->delete();
 
       $placeIds = $request->input('selectedPlaces',[]);
       $workerId = $request->input('worker_id');
@@ -243,10 +246,29 @@ class UserController extends Controller
   public function user_places($id) {
       $user = User::find($id);
       $places = Place_Worker::where('worker_id', $id)->pluck('place_id');
-      $allplaces = Place::pluck('id', 'place_name');
+      // $allplaces = Place::pluck('id', 'place_name');
+      $allplaces = Place::with('municipality')->pluck('id', 'place_name');
+      // $allplacesFormatted = $allplaces->map(function ($placeId, $placeName) {
+      //   $place = Place::find($placeId);
+      //   return [
+      //     'id' => $placeId,
+      //     'name' => "{$place->municipality->name} - {$placeName}"
+      //   ];
+      // });
+      $allplacesFormatted = $allplaces->reject(function ($placeId, $placeName) {
+        return $placeId === 0; // Filter out places with place_id equal to 0
+    })->map(function ($placeId, $placeName) {
+        $place = Place::find($placeId);
+        return [
+            'id' => $placeId,
+            'name' => "{$place->municipality->name} - {$placeName}"
+        ];
+    });
+
+      // dd($places);
       return view('dashboard.users.places')
       ->with('places', $places)
-      ->with('allplaces', $allplaces)
+      ->with('allplaces', $allplacesFormatted)
       ->with('user', $user);
   }
 

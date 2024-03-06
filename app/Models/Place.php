@@ -29,9 +29,9 @@ class Place extends Model
         return $this->hasMany(Place_Worker::class);
     }
 
-    public function municipalitys()
+    public function municipality()
     {
-        return $this->belongsTo(Municipality::class);
+        return $this->belongsTo(Municipality::class, 'municipality_id');
     }
 
 }

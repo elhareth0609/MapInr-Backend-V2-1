@@ -30,11 +30,17 @@
               <div class="modal-body">
 
                 <select class="select-mult" multiple data-placeholder="Choose Places ..." name="selectedPlaces[]">
-                  @foreach ($allplaces as $placeName => $placeId)
+                  {{-- @foreach ($allplaces as $placeName => $placeId)
                       <option value="{{ $placeId }}" {{ in_array($placeId, $places->toArray()) ? 'selected' : '' }}>
                           {{ $placeName }}
                       </option>
+                  @endforeach --}}
+                  @foreach ($allplaces as $place)
+                      <option value="{{ $place['id'] }}" {{ in_array($place['id'], $places->toArray()) ? 'selected' : '' }}>
+                          {{ $place['name'] }}
+                      </option>
                   @endforeach
+
                 </select>
               <input type="hidden" id="worker_id" name="worker_id" value="{{ $user->id }}">
               </div>

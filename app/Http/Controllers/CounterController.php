@@ -105,9 +105,7 @@ class CounterController extends Controller
         '*.phone'     => 'sometimes|string'
     ]);
     Log::info('Request In Processing', [
-      'data' => $request->all(),
-      'photo_name' => $request->file('photo') ? $request->file('photo')->getClientOriginalName() : null
-    ]);
+      'data' => $request->all()    ]);
 
     if ($validator->fails()) {
         return response()->json([
