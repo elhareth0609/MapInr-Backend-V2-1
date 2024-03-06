@@ -103,32 +103,32 @@ class UserController extends Controller
 
   public function addPlaceWorker(Request $request) {
 
-    try {
-      Place_Worker::where('place_id', $request->place_id)->delete();
+      try {
+        Place_Worker::where('place_id', $request->place_id)->delete();
 
-      $workerIds = $request->input('selectedWorkers',[]);
-      $placeId = $request->input('place_id');
+        $workerIds = $request->input('selectedWorkers',[]);
+        $placeId = $request->input('place_id');
 
-      foreach ($workerIds as $workerId) {
-          $placeWorker = new Place_Worker;
-          $placeWorker->worker_id = $workerId;
-          $placeWorker->place_id = $placeId;
-          $placeWorker->save();
+        foreach ($workerIds as $workerId) {
+            $placeWorker = new Place_Worker;
+            $placeWorker->worker_id = $workerId;
+            $placeWorker->place_id = $placeId;
+            $placeWorker->save();
+        }
+
+        return response()->json([
+          'state' => __("Success"),
+          'message' => __("Add Worker To Place Is Successful."),
+        ], 200);
+
+
+      } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'error' => $e->getMessage(),
+        ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
       }
 
-      return response()->json([
-        'state' => __("Success"),
-        'message' => __("Add Worker To Place Is Successful."),
-      ], 200);
-
-
-  } catch (\Exception $e) {
-    return response()->json([
-      'status' => 0,
-      'error' => $e->getMessage(),
-    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
-
-  }
   }
 
   public function addWorkerPlace(Request $request) {
