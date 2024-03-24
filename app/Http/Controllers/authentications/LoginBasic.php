@@ -21,14 +21,12 @@ class LoginBasic extends Controller
       $credentials = $request->only('email', 'password');
 
       if (Auth::attempt($credentials, $request->has('remember'))) {
-          // Authentication passed
           if (Auth::user()->role === 'admin') {
             return redirect()->route('municipalitys');
           } else {
             Auth::logout();
             return redirect()->route('auth-login-basic');
           }
-
       }
 
       // Authentication failed

@@ -89,7 +89,7 @@ Route::post('/change-password', [SettingController::class, 'change_password'])->
 Route::post('/update-information', [SettingController::class, 'update_information'])->name('settings.update.information');
 
 
-Route::get('/users', [DataTablesController::class, 'users'])->name('users-table');
+Route::get('/users', [DataTablesController::class, 'users'])->name('users');
 Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
 Route::get('/worker-counters/{id}', [DataTablesController::class, 'worker_counters'])->name('worker-counters-table');
 

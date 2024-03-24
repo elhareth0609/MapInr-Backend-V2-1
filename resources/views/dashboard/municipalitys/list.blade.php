@@ -168,7 +168,7 @@
                       title: response.state,
                       text: response.message,
                   });
-                  userDataTable.ajax.reload();
+                  dataTable.ajax.reload();
               },
               error: function (error) {
                   Swal.fire({
@@ -256,7 +256,7 @@ $(document).ready( function () {
 
 
     $.noConflict();
-    var dataTable = $('#municipalitys').DataTable({
+    dataTable = $('#municipalitys').DataTable({
       processing: true,
       serverSide: true,
       pageLength: 100,
@@ -272,7 +272,6 @@ $(document).ready( function () {
         { data: 'places', title: '{{ __("Places")}}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
-      order: [[3, "desc"]],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
@@ -281,7 +280,7 @@ $(document).ready( function () {
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
         $('#municipalitys tbody').on('dblclick', 'tr', function () {
             var userId = $(this).find('a[data-municipality-id]').attr('href').split('/').pop();
-            window.location.href = '/municipality/' + userId;
+            window.location.href = '/municipality/' + userId + '/places';
         });
       },
     });
@@ -291,6 +290,7 @@ $(document).ready( function () {
     $('#RowSelect').on('change', function () {
       dataTable.page.len(this.value).draw();
     });
+
 
     updateCustomPagination();
 

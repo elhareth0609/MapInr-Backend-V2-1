@@ -147,7 +147,7 @@
   }
 </style>
 <script>
-  var userDataTable;
+  var dataTable;
         function submitDistroyUser(id) {
             $.ajax({
                 type: 'GET',
@@ -161,7 +161,7 @@
                         title: response.state,
                         text: response.message,
                     });
-                    userDataTable.ajax.reload();
+                    dataTable.ajax.reload();
                 },
                 error: function (error) {
                     Swal.fire({
@@ -209,25 +209,24 @@ $(document).ready( function () {
 
 
     $.noConflict();
-    userDataTable = $('#users').DataTable({
+    dataTable = $('#users').DataTable({
       processing: true,
       serverSide: true,
       pageLength: 100,
       responsive: true,
-
       language: {
         info: "_START_-_END_ of _TOTAL_",
       },
-      ajax: '{{ route("users-table") }}',
+      ajax: '{{ route("users") }}',
       columns: [
-        { data: 'id', name: '#' },
-        { data: 'fullname', name: '{{__("Full Name")}}' },
-        { data: 'email', name: '{{__("Email")}}' },
-        { data: 'phone', name: '{{__("Phone")}}' },
-        { data: 'counters', name: '{{__("Counters")}}' },
-        { data: 'status', name: '{{__("Status")}}' },
-        { data: 'created_at', name: '{{__("Created At")}}' },
-        { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
+        { data: 'id', title: '#' },
+        { data: 'fullname', title: '{{__("Full Name")}}' },
+        { data: 'email', title: '{{__("Email")}}' },
+        { data: 'phone', title: '{{__("Phone")}}' },
+        { data: 'counters', title: '{{__("Counters")}}' },
+        { data: 'status', title: '{{__("Status")}}' },
+        { data: 'created_at', title: '{{__("Created At")}}' },
+        { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],
       "order": [[6, "desc"]],
       "drawCallback": function () {
@@ -243,49 +242,50 @@ $(document).ready( function () {
       },
     });
     $('#customSearch').on('keyup', function () {
-      userDataTable.search(this.value).draw();
+      dataTable.search(this.value).draw();
     });
     $('#RowSelect').on('change', function () {
-      userDataTable.page.len(this.value).draw();
+      dataTable.page.len(this.value).draw();
     });
 
     updateCustomPagination();
 
     // Function to update custom pagination
     function updateCustomPagination() {
-        var customPaginationContainer = $('#custom-pagination');
-        var pageInfo = userDataTable.page.info();
+      var customPaginationContainer = $('#custom-pagination');
+      var pageInfo = dataTable.page.info();
 
-        // Clear existing pagination items
-        customPaginationContainer.empty();
+      // Clear existing pagination items
+      customPaginationContainer.empty();
 
-        // Add "Previous" button with logic to disable and apply red color
-        var prevButton = '<li class="page-item prev';
-        if (pageInfo.page === 0) {
-            prevButton += ' disabled"><a class="page-link" style="color: #d4d3d5;">';
-        } else {
-            prevButton += '"><a class="page-link" href="javascript:void(0);" onclick="changePage(' + (pageInfo.page - 1) + ')">';
-        }
-        prevButton += '<i class="tf-icon mdi mdi-chevron-left"></i></a></li>';
-        customPaginationContainer.append(prevButton);
+      // Add "Previous" button with logic to disable and apply red color
+      var prevButton = '<li class="page-item prev';
+      if (pageInfo.page === 0) {
+          prevButton += ' disabled"><a class="page-link" style="color: #d4d3d5;">';
+      } else {
+          prevButton += '"><a class="page-link" href="javascript:void(0);" onclick="changePage(' + (pageInfo.page - 1) + ')">';
+      }
+      prevButton += '<i class="tf-icon mdi mdi-chevron-left"></i></a></li>';
+      customPaginationContainer.append(prevButton);
 
-        // Add current page number
-        customPaginationContainer.append('<li class="page-item active"><a class="page-link">' + (pageInfo.page + 1) + '</a></li>');
+      // Add current page number
+      customPaginationContainer.append('<li class="page-item active"><a class="page-link">' + (pageInfo.page + 1) + '</a></li>');
 
-        // Add "Next" button with logic to disable and apply red color
-        var nextButton = '<li class="page-item next';
-        if (pageInfo.page === pageInfo.pages - 1) {
-            nextButton += ' disabled"><a class="page-link" style="color: #d4d3d5;">';
-        } else {
-            nextButton += '"><a class="page-link" href="javascript:void(0);" onclick="changePage(' + (pageInfo.page + 1) + ')">';
-        }
-        nextButton += '<i class="tf-icon mdi mdi-chevron-right"></i></a></li>';
-        customPaginationContainer.append(nextButton);
+      // Add "Next" button with logic to disable and apply red color
+      var nextButton = '<li class="page-item next';
+      if (pageInfo.page === pageInfo.pages - 1) {
+          nextButton += ' disabled"><a class="page-link" style="color: #d4d3d5;">';
+      } else {
+          nextButton += '"><a class="page-link" href="javascript:void(0);" onclick="changePage(' + (pageInfo.page + 1) + ')">';
+      }
+      nextButton += '<i class="tf-icon mdi mdi-chevron-right"></i></a></li>';
+      customPaginationContainer.append(nextButton);
     }
+
 
     // Function to handle page change
     window.changePage = function (page) {
-      userDataTable.page(page).draw(false);
+      dataTable.page(page).draw(false);
     };
 
       $('#createNewUser').submit(function (e) {
@@ -304,7 +304,7 @@ $(document).ready( function () {
                 title: response.state,
                 text: response.message,
             });
-            userDataTable.ajax.reload();
+            dataTable.ajax.reload();
             },
             error: function (error) {
               Swal.fire({

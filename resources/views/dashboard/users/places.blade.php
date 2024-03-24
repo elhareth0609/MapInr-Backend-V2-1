@@ -573,9 +573,6 @@ var select = $('select[multiple]');
 
       // $(document).on('submit', '#addWorkerPlace', function(e) {
         $('#addWorkerPlace').on('submit', function(e) {
-      console.log('====================================');
-      console.log();
-      console.log('====================================');
             e.preventDefault(); // Prevent the default form submission
 
             // Make AJAX request
@@ -626,8 +623,8 @@ var select = $('select[multiple]');
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
           $('#userPlaces tbody').on('dblclick', 'tr', function () {
-            var userId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
-            window.location.href = '/place/' + userId;
+            var placeId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
+            window.location.href = '/place/' + placeId + '/counters';
           });
         },
       });

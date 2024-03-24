@@ -293,8 +293,8 @@ function submitDistroyPlace(id) {
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
           $('#municipalityPlaces tbody').on('dblclick', 'tr', function () {
-              var userId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
-              window.location.href = '/place/' + userId;
+              var placeId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
+              window.location.href = '/place/' + placeId + '/counters';
           });
         },
       });
