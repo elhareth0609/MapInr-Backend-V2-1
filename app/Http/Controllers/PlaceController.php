@@ -62,6 +62,7 @@ class PlaceController extends Controller
     $placeIdsFirst = Counter::whereIn('id', $workerCounters)
       ->pluck('place_id')
       ->unique();
+
     $placeIds = Place::whereIn('id', $placeIdsFirst)->pluck('place_id')->unique();
 
     $responseData['data']['place'] = collect($responseData['data']['place']);
