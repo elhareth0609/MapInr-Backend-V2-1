@@ -10,6 +10,7 @@ use App\Models\User;
 
 use App\Models\Worker_Counter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -370,5 +371,46 @@ class UserController extends Controller
         'error' => $e->getMessage(),
       ], 500);
     }
+  }
+
+  public function check_password(Request $request) {
+
+    $validator = Validator::make($request->all(), [
+      'password' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+      $admin = User::find(Auth::user()->id);
+      if ($admin && Hash::check($request->password, $admin->password)) {
+        return response()->json([
+          'state' => __('Success'),
+          'message' => __('Checked successfully')
+        ]);
+      } else {
+        return response()->json([
+          'status' => 1,
+          'message' => __('Error'),
+          'errors' => __('Password Incorrect')
+        ], 422);
+      }
+
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 1,
+        'message' => __('Error'),
+        'errors' => $e->getMessage()
+      ], 422);
+    }
+
+
   }
 }

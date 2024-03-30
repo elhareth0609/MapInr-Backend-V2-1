@@ -155,11 +155,16 @@
     var dataTable;
 
 
-      function submitDistroyUser(id) {
+      function submitDistroyMunicipality(id) {
+        var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
           $.ajax({
-              type: 'GET',
+              type: 'DELETE',
               headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              data: {
+                password: password
               },
               url: '/municipality/destroy/' + id,
               success: function (response) {
@@ -173,8 +178,8 @@
               error: function (error) {
                   Swal.fire({
                       icon: 'error',
-                      title: error.responseJSON.status,
-                      text: error.responseJSON.error,
+                      title: error.responseJSON.message,
+                      text: error.responseJSON.errors,
                   });
               }
           });
@@ -278,10 +283,18 @@ $(document).ready( function () {
 
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+
         $('#municipalitys tbody').on('dblclick', 'tr', function () {
-            var userId = $(this).find('a[data-municipality-id]').attr('href').split('/').pop();
-            window.location.href = '/municipality/' + userId + '/places';
+            var municipalityId = $(this).find('a[data-municipality-id]').data('municipality-id');
+            window.location.href = '/municipality/' + municipalityId + '/places';
         });
+
+        $('.modal').on('dblclick', function (event) {
+            event.stopPropagation();
+        });
+
+
+
       },
     });
     $('#customSearch').on('keyup', function () {
@@ -378,26 +391,16 @@ $(document).ready( function () {
         });
       });
 
-    //   $('#exportButton').click(function () {
-    //     $.ajax({
-    //         url: '/exoprt-file-zip/{id}',
-    //         method: 'GET',
-    //         responseType: 'arraybuffer', // Use 'arraybuffer' for binary data
-    //         success: function (data) {
-    //         // Redirect the user to the download link
-    //         window.location.href = data.url;
-    //         },
-    //         error: function (error) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Validation Error',
-    //                 text: error.responseJSON.error,
-    //             });
-    //         }
-    //     });
-    // });
-
-
+      $(document).on('click', '.show-password', function () {
+        var inputField = $(this).closest('.modal-content').find('.form-control');
+          if (inputField.attr('type') === 'password') {
+              inputField.attr('type', 'text');
+              $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
+          } else {
+              inputField.attr('type', 'password');
+              $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
+          }
+      });
 
 
   });

@@ -49,9 +49,9 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($user) {
         return '
-        <a href="' . url("/user/{$user->id}") . '" data-worker-id="1"><icon class="mdi mdi-pen"></icon></a>
+        <a href="' . url("/user/{$user->id}") . '" data-worker-id="' . $user->id . '"><icon class="mdi mdi-pen"></icon></a>
         <a href="javascript:void(0);" class="download-btn-user-file" data-worker-id="' . $user->id . '"><icon class="mdi mdi-download"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#user-delete-modal-' . $user->id . '" data-worker-id="' . $user->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
       <div class="modal fade" id="user-delete-modal-' . $user->id . '" tabindex="-1" aria-hidden="true">
@@ -73,8 +73,6 @@ class DataTablesController extends Controller
           </div>
         </div>
       </div>
-    </div>
-  </div>
         ';
     })
       ->rawColumns(['status', 'actions'])
@@ -190,8 +188,8 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($worker) use ($id) {
         return '
-        <a href="' . url("/user/{$worker->id}") . '" data-worker-id="1"><icon class="mdi mdi-pen"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $worker->id . '" data-worker-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <a href="' . url("/user/{$worker->id}") . '" data-worker-id="' . $worker->id . '"><icon class="mdi mdi-pen"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#worker-place-remove-modal-' . $worker->id . '" data-worker-id="' . $worker->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
       <!-- Modal -->
       <div class="modal fade" id="worker-place-remove-modal-' . $worker->id . '" tabindex="-1" aria-hidden="true">
@@ -428,14 +426,12 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($municipality) {
         return '
-        <a href="' . url("/municipality/{$municipality->id}/places") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" data-municipality-id="1"><icon class="mdi mdi-trash-can-outline"></icon></a>
-        <!-- <a href="javascript:void(0);" class="download-btn" data-municipality-id="' . $municipality->id . '" onclick="downloadOnesMunicipality(' . $municipality->id . ')"><icon class="mdi mdi-download"></icon></a> -->
-
+        <a href="' . url("/municipality/{$municipality->id}/places") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
           <!-- Modal -->
-          <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" aria-hidden="true">
+
+          <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" data-bs-backdrop="static" >
             <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
+              <form class="modal-content" id="createNewMunicipality">
                 <div class="modal-header">
                   <h4 class="modal-title" id="modalCenterTitle">' .  __("Municipality Delete") . '</h4>
                 </div>
@@ -444,16 +440,25 @@ class DataTablesController extends Controller
                   <div class="row justify-content-center text-wrap">
                     '. __("Do You Really want to delete This Municipality.") .'
                   </div>
+                  <div class="row">
+                    <div class="col mb-4 mt-2">
+
+                    <div class="input-group" dir="ltr">
+                    <input type="password" class="form-control" id="show-password-municipality-' . $municipality->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $municipality->id . '" name="password-' . $municipality->id . '" required />
+                    <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $municipality->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                </div>
+
+
+                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser(' . $municipality->id . ')">'. __("Submit") .'</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyMunicipality(' . $municipality->id . ')">'. __("Submit") .'</button>
                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
-        </div>
-      </div>
               ';
         })
       ->rawColumns(['actions'])

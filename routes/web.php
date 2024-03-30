@@ -135,10 +135,10 @@ Route::post('/counters/delete-all', [CounterController::class, 'delete_all'])->n
 
 Route::post('/municipality/create', [MunicipalityController::class, 'create'])->name('municipality.create');
 Route::post('/municipality/update', [MunicipalityController::class, 'update'])->name('municipality.update');
-Route::get('/municipality/destroy/{id}', [MunicipalityController::class, 'destroy'])->name('municipality.destroy');
+Route::delete('/municipality/destroy/{id}', [MunicipalityController::class, 'destroy'])->name('municipality.destroy');
 Route::get('/municipality/{id}', [MunicipalityController::class, 'municipality'])->name('municipality');
 
-
+Route::post('/check-password', [UserController::class, 'check_password'])->name('password.check');
 
 
 
@@ -203,8 +203,8 @@ Route::get('/municipality/{id}', [MunicipalityController::class, 'municipality']
 // Route::get('/icons/icons-mdi', [MdiIcons::class, 'index'])->name('icons-mdi');
 
 // // form elements
-// Route::get('/forms/basic-inputs', [BasicInput::class, 'index'])->name('forms-basic-inputs');
-// Route::get('/forms/input-groups', [InputGroups::class, 'index'])->name('forms-input-groups');
+Route::get('/forms/basic-inputs', [BasicInput::class, 'index'])->name('forms-basic-inputs');
+Route::get('/forms/input-groups', [InputGroups::class, 'index'])->name('forms-input-groups');
 
 // // form layouts
 // Route::get('/form/layouts-vertical', [VerticalForm::class, 'index'])->name('form-layouts-vertical');

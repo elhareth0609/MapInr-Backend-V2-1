@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-
 use App\Models\Municipality;
+use App\Models\User;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class MunicipalityController extends Controller
 {
@@ -36,23 +39,58 @@ class MunicipalityController extends Controller
     ]);
   }
 
-  public function destroy($id) {
-    $municipality = Municipality::find($id);
-    if ($municipality) {
-        $municipality->delete();
+  public function destroy(Request $request, $id) {
+    // Validate the request data
+    $validator = Validator::make($request->all(), [
+        'password' => 'required|string',
+    ]);
 
+    // Check if validation fails
+    if ($validator->fails()) {
         return response()->json([
-          'state' => __('Success'),
-          'message' => __('Municipality deleted successfully.'),
-        ]);
-    } else {
-        return response()->json([
-          'status' => __('Success'),
-          'message' => __('Sorry,'),
-          'error' => __('There Is No Municipality To Deleted.'),
-        ],401);
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
     }
-  }
+
+    try {
+        // Check if the password is correct
+        $admin = User::find(Auth::user()->id);
+        if ($admin && Hash::check($request->password, $admin->password)) {
+            // Password is correct, proceed with deleting the municipality
+            $municipality = Municipality::find($id);
+            if ($municipality) {
+                $municipality->delete();
+
+                return response()->json([
+                    'status' => __('Success'),
+                    'message' => __('Municipality deleted successfully.'),
+                ]);
+            } else {
+                return response()->json([
+                    'status' => __('Error'),
+                    'message' => __('Sorry, the municipality does not exist.'),
+                ], 404);
+            }
+        } else {
+            // Password is incorrect
+            return response()->json([
+                'status' => 1,
+                'message' => __('Error'),
+                'errors' => __('Password Incorrect')
+            ], 422);
+        }
+    } catch (\Exception $e) {
+        // Handle any other exceptions
+        return response()->json([
+            'status' => 1,
+            'message' => __('Error'),
+            'errors' => $e->getMessage()
+        ], 422);
+    }
+}
+
 
   public function update(Request $request) {
 

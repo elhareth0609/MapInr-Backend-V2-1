@@ -10805,11 +10805,11 @@
   content: "\F0209";
 }
 
-.mdi-eye-off-outline::before {
+.mdi-lock-outline::before {
   content: "\F06D1";
 }
 
-.mdi-eye-outline::before {
+.mdi-lock-open-variant-outline::before {
   content: "\F06D0";
 }
 
@@ -16937,7 +16937,7 @@
   content: "\F16AD";
 }
 
-.mdi-lock-open-outline::before {
+.mdi-lock-open-variant-outline::before {
   content: "\F0340";
 }
 

@@ -626,6 +626,10 @@ var select = $('select[multiple]');
             var placeId = $(this).find('a[data-place-id]').attr('href').split('/').pop();
             window.location.href = '/place/' + placeId + '/counters';
           });
+
+          $('.modal').on('dblclick', function (event) {
+            event.stopPropagation();
+        });
         },
       });
       $('#customSearch').on('keyup', function () {

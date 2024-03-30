@@ -239,6 +239,10 @@ $(document).ready( function () {
           var userId = $(this).find('a[data-worker-id]').attr('href').split('/').pop();
           window.location.href = '/user/' + userId;
         });
+
+        $('.modal').on('dblclick', function (event) {
+            event.stopPropagation();
+        });
       },
     });
     $('#customSearch').on('keyup', function () {

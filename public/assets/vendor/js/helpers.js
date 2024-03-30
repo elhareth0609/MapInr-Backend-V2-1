@@ -12,7 +12,7 @@ return /******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
 /******/ 	var __webpack_require__ = {};
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
@@ -25,12 +25,12 @@ return /******/ (function() { // webpackBootstrap
 /******/ 			}
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -41,7 +41,7 @@ return /******/ (function() { // webpackBootstrap
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 /*!***********************************************!*\
@@ -704,10 +704,10 @@ var Helpers = {
           var formPasswordToggleInput = formPasswordToggle.querySelector('input');
           if (formPasswordToggleInput.getAttribute('type') === 'text') {
             formPasswordToggleInput.setAttribute('type', 'password');
-            formPasswordToggleIcon.classList.replace('mdi-eye-outline', 'mdi-eye-off-outline');
+            formPasswordToggleIcon.classList.replace('mdi-lock-open-variant-outline', 'mdi-lock-outline');
           } else if (formPasswordToggleInput.getAttribute('type') === 'password') {
             formPasswordToggleInput.setAttribute('type', 'text');
-            formPasswordToggleIcon.classList.replace('mdi-eye-off-outline', 'mdi-eye-outline');
+            formPasswordToggleIcon.classList.replace('mdi-lock-outline', 'mdi-lock-open-variant-outline');
           }
         });
       });
