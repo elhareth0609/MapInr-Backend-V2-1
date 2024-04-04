@@ -18,6 +18,7 @@ class Counter extends Model
         'longitude',
         'picture',
         'note',
+        'phone',
         'status',
     ];
 

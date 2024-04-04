@@ -29,6 +29,7 @@ class YourUserExcelExport implements FromCollection, WithEvents
         $data = $counters->map(function ($counter) {
             return [
               'R' => $counter->counter_id,
+              'Name' => $counter->name,
               'Longitude' => $counter->longitude,
               'Latitude' => $counter->latitude,
               'Phone' => $counter->phone,
@@ -37,7 +38,7 @@ class YourUserExcelExport implements FromCollection, WithEvents
 
         // Add headers to the collection
         $headers = [
-            'R', 'Longitude', 'Latitude', 'Phone',
+            'R', 'Name','Longitude', 'Latitude', 'Phone',
         ];
 
         // Prepend headers to the data collection

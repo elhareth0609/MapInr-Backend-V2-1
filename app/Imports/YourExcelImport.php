@@ -41,6 +41,7 @@ class YourExcelImport implements ToCollection
           $counter->place_id = $place->id;
           $counter->latitude = $row[1];
           $counter->longitude = $row[2];
+          $counter->phone = $row[3];
           $counter->name = 'counter_' . $row[0];
           $counter->status = 1;
           $counter->save();

@@ -107,7 +107,7 @@ class PlaceController extends Controller
   {
     $place = Place::where('id', $id)->first();
     $workers = Place_Worker::where('place_id', $id)->pluck('worker_id');
-    $users = User::pluck('id', 'fullname');
+    $users = User::where('role','!=','admin')->pluck('id', 'fullname');
 
     return view('dashboard.places.workers')
       ->with('place', $place)
