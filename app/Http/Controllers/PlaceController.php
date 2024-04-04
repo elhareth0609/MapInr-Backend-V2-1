@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Counter;
 
 use App\Models\Place;
-use App\Models\User;
 use App\Models\Place_Worker;
+use App\Models\User;
 use App\Models\Worker_Counter;
-use App\Models\Counter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PlaceController extends Controller
 {
@@ -122,25 +123,46 @@ class PlaceController extends Controller
     return view('dashboard.places.counters')->with('place', $place);
   }
 
-  public function destroy($id)
+  public function destroy(Request $request,$id)
   {
-    $place = Place::find($id);
-    if ($place) {
-      $place->delete();
 
-      return response()->json([
-        'state' => __('Success'),
-        'message' => __('Place deleted successfully.'),
-      ]);
-    } else {
-      return response()->json(
-        [
-          'status' => __('Success'),
-          'message' => __('Sorry,'),
-          'error' => __('There Is No Place To Deleted.'),
-        ],
-        401
-      );
+    $validator = Validator::make($request->all(), [
+      'password' => 'required|string',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
     }
+
+    try {
+
+        $place = Place::find($id);
+        if ($place) {
+          $place->delete();
+
+          return response()->json([
+            'state' => __('Success'),
+            'message' => __('Place deleted successfully.'),
+          ]);
+        } else {
+          return response()->json([
+              'status' => __('Success'),
+              'message' => __('Sorry,'),
+              'errors' => __('There Is No Place To Deleted.'),
+            ],401);
+        }
+      } catch (\Exception $e) {
+        return response()->json([
+            'status' => 1,
+            'message' => __('Error'),
+            'errors' => $e->getMessage()
+        ], 422);
+      }
+
   }
 }

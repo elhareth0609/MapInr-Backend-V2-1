@@ -45,6 +45,16 @@
               </div>
             </div>
 
+            <div class="col-md-6">
+              <div class="form-floating form-floating-outline">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="passwordInput" placeholder="{{__('Password')}}" name="password" value="{{ $user->password }}" readonly required>
+                  <button class="btn btn-outline-primary" type="button" id="copyPassword" ><span class="mdi mdi-content-copy"></span></button>
+                  <button class="btn btn-outline-primary" type="button" id="generatePassword">{{__('Generate')}}</button>
+                </div>
+              </div>
+            </div>
+
           </div>
           <div class="mt-4">
             <button type="submit" class="btn btn-primary me-2">{{ __('Save Changes')}}</button>
@@ -64,6 +74,32 @@ $(document).ready( function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $('#copyPassword').on('click', function() {
+        var passwordInput = $('#passwordInput');
+        passwordInput.select();
+        document.execCommand('copy');
+        // You can add a visual indication or alert here
+    });
+
+    // Function to generate a new password
+    $('#generatePassword').on('click', function() {
+        // Make an AJAX request to generate a new password
+        $.ajax({
+            url: '/generate-password',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+              $('#passwordInput').val(response.password);
+            },
+            error: function(error) {
+                console.error('Error generating password:', error);
+            }
+        });
+    });
+
 $('#updateUser').submit(function (e) {
         e.preventDefault();
 

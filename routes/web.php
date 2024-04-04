@@ -105,7 +105,7 @@ Route::get('/municipality/{id}/places', [DataTablesController::class, 'municipal
 Route::get('/place/{id}', [PlaceController::class, 'place'])->name('place');
 Route::get('/place/{id}/workers', [PlaceController::class, 'place_workers'])->name('place_users');
 Route::get('/place/{id}/counters', [PlaceController::class, 'place_counters'])->name('place_counters');
-Route::get('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name('place.destroy');
+Route::delete('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name('place.destroy');
 
 
 Route::get('/user/{id}', [UserController::class, 'user'])->name('user');
@@ -113,7 +113,7 @@ Route::get('/user/{id}/places', [UserController::class, 'user_places'])->name('u
 Route::get('/user/{id}/counters', [UserController::class, 'user_counters'])->name('user_counters');
 Route::post('/user/create', [UserController::class, 'create'])->name('user-create');
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
-Route::get('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
+Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
 Route::post('/user/add-place-worker', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
 Route::post('/user/add-worker-place', [UserController::class, 'addWorkerPlace'])->name('add.worker.place');

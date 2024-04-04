@@ -179,11 +179,16 @@
 <script>
     var municipalityPlacesDataTable;
 
-function submitDistroyPlace(id) {
+    function submitDistroyPlace(id) {
+        var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
           $.ajax({
-              type: 'GET',
+              type: 'DELETE',
               headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              data: {
+                password: password
               },
               url: '/place/destroy/' + id,
               success: function (response) {
@@ -198,11 +203,12 @@ function submitDistroyPlace(id) {
                   Swal.fire({
                       icon: 'error',
                       title: error.responseJSON.status,
-                      text: error.responseJSON.error,
+                      text: error.responseJSON.errors,
                   });
               }
           });
       }
+
 
   $(document).ready( function () {
       $.ajaxSetup({
@@ -300,7 +306,7 @@ function submitDistroyPlace(id) {
           $('.modal').on('dblclick', function (event) {
             event.stopPropagation();
         });
-        
+
         },
       });
       $('#customSearch').on('keyup', function () {
@@ -372,6 +378,18 @@ function submitDistroyPlace(id) {
             }
         });
     });
+
+
+      $(document).on('click', '.show-password', function () {
+        var inputField = $(this).closest('.modal-content').find('.form-control');
+          if (inputField.attr('type') === 'password') {
+              inputField.attr('type', 'text');
+              $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
+          } else {
+              inputField.attr('type', 'password');
+              $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
+          }
+      });
 
     });
   </script>

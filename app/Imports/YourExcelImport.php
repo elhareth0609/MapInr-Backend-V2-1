@@ -27,9 +27,9 @@ class YourExcelImport implements ToCollection
       $search = Place::where('place_id',$placeId)->first();
       if ($search) {
         if ($search->place_id == 0) {
-            return response()->json([
-              'error' => 'Cannot delete record with place_id equal to 0'
-            ], 400);
+            // return response()->json([
+            //   'error' => 'Cannot delete record with place_id equal to 0'
+            // ], 401);
         }
         $search->delete();
       }

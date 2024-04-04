@@ -57,19 +57,29 @@ class DataTablesController extends Controller
       <div class="modal fade" id="user-delete-modal-' . $user->id . '" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalCenterTitle">' .  __("User Delete") . '</h4>
-            </div>
-            <div class="modal-body text-center">
-              <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-              <div class="row justify-content-center text-wrap">
-                '. __("Do You Really want to delete This User.") .'
+            <form class="modal-content" id="createNewMunicipality">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalCenterTitle">' .  __("User Delete") . '</h4>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser(' . $user->id . ')">'. __("Submit") .'</button>
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
-            </div>
+              <div class="modal-body text-center">
+                <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                <div class="row justify-content-center text-wrap">
+                  '. __("Do You Really want to delete This User.") .'
+                </div>
+                <div class="row">
+                  <div class="col mb-4 mt-2">
+                    <div class="input-group" dir="ltr">
+                      <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required />
+                      <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $user->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser(' . $user->id . ')">'. __("Submit") .'</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -426,7 +436,8 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($municipality) {
         return '
-        <a href="' . url("/municipality/{$municipality->id}/places") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
+        <a href="' . url("/municipality/{$municipality->id}/places") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
           <!-- Modal -->
 
           <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" data-bs-backdrop="static" >
@@ -442,13 +453,10 @@ class DataTablesController extends Controller
                   </div>
                   <div class="row">
                     <div class="col mb-4 mt-2">
-
-                    <div class="input-group" dir="ltr">
-                    <input type="password" class="form-control" id="show-password-municipality-' . $municipality->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $municipality->id . '" name="password-' . $municipality->id . '" required />
-                    <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $municipality->id . '"><i class="mdi mdi-lock-outline"></i></span>
-                </div>
-
-
+                      <div class="input-group" dir="ltr">
+                        <input type="password" class="form-control" id="show-password-municipality-' . $municipality->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $municipality->id . '" name="password-' . $municipality->id . '" required />
+                        <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $municipality->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -492,19 +500,29 @@ class DataTablesController extends Controller
           <div class="modal fade" id="place-delete-modal-' . $place->id . '" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Place Delete") . '</h4>
-                </div>
-                <div class="modal-body text-center">
-                  <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-                  <div class="row justify-content-center text-wrap">
-                    '. __("Do You Really want to delete This Place.") .'
+                <form class="modal-content" id="createNewMunicipality">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modalCenterTitle">' .  __("Place Delete") . '</h4>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyPlace(' . $place->id . ')">'. __("Submit") .'</button>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
-                </div>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do You Really want to delete This Place.") .'
+                    </div>
+                    <div class="row">
+                      <div class="col mb-4 mt-2">
+                        <div class="input-group" dir="ltr">
+                          <input type="password" class="form-control" id="show-password-municipality-' . $place->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $place->id . '" name="password-' . $place->id . '" required />
+                          <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $place->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyPlace(' . $place->id . ')">'. __("Submit") .'</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>

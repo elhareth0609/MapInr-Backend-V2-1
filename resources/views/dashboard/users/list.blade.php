@@ -149,10 +149,15 @@
 <script>
   var dataTable;
         function submitDistroyUser(id) {
+          var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
             $.ajax({
-                type: 'GET',
+                type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                  password: password
                 },
                 url: '/user/destroy/' + id,
                 success: function (response) {
@@ -167,11 +172,14 @@
                     Swal.fire({
                         icon: 'error',
                         title: error.responseJSON.status,
-                        text: error.responseJSON.error,
+                        text: error.responseJSON.errors,
                     });
                 }
             });
         }
+
+
+
 
 $(document).ready( function () {
 
@@ -344,6 +352,16 @@ $(document).ready( function () {
         });
       });
 
+      $(document).on('click', '.show-password', function () {
+        var inputField = $(this).closest('.modal-content').find('.form-control');
+          if (inputField.attr('type') === 'password') {
+              inputField.attr('type', 'text');
+              $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
+          } else {
+              inputField.attr('type', 'password');
+              $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
+          }
+      });
   });
 </script>
 @endsection

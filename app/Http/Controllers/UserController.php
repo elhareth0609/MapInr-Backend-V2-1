@@ -84,21 +84,43 @@ class UserController extends Controller
     ]);
   }
 
-  public function destroy($id) {
-    $user = User::find($id);
-    if ($user) {
-        $user->delete();
+  public function destroy(Request $request,$id) {
 
+    $validator = Validator::make($request->all(), [
+      'password' => 'required|string',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
         return response()->json([
-          'state' => __('Success'),
-          'message' => __('User deleted successfully.'),
-        ]);
-    } else {
-        return response()->json([
-          'status' => __('Success'),
-          'message' => __('Sorry,'),
-          'error' => __('There Is No User To Deleted.'),
-        ],401);
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+      $user = User::find($id);
+      if ($user) {
+          $user->delete();
+
+          return response()->json([
+            'state' => __('Success'),
+            'message' => __('User deleted successfully.'),
+          ]);
+      } else {
+          return response()->json([
+            'status' => __('Success'),
+            'message' => __('Sorry,'),
+            'errors' => __('There Is No User To Deleted.'),
+          ],401);
+      }
+    } catch (\Exception $e) {
+      return response()->json([
+          'status' => 1,
+          'message' => __('Error'),
+          'errors' => $e->getMessage()
+      ], 422);
     }
   }
 
@@ -305,6 +327,7 @@ class UserController extends Controller
         $user->fullname = $request->fullname;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->password = $request->password;
         $user->save();
 
         return response()->json([
