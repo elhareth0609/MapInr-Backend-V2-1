@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 use App\Models\Counter;
-use Illuminate\Support\Facades\Log;
 
 class CounterController extends Controller
 {
@@ -88,7 +87,6 @@ class CounterController extends Controller
   }
 
   public function create_lot(Request $request) {
-    Log::info('Request Before Processing', ['data' => $request->all()]);
     $validator = Validator::make($request->all(), [
         '*.name'      => 'required|string|max:255',
         '*.id' => [
@@ -104,8 +102,6 @@ class CounterController extends Controller
         '*.note'      => 'sometimes|string',
         '*.phone'     => 'sometimes|string'
     ]);
-    Log::info('Request In Processing', [
-      'data' => $request->all()    ]);
 
     if ($validator->fails()) {
         return response()->json([
@@ -155,7 +151,6 @@ class CounterController extends Controller
             $counter->save();
 
         }
-        Log::info('Request after Processing', ['data' => $request->all()]);
 
         return response()->json([
             'status' => 1,
