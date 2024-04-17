@@ -47,10 +47,20 @@ class WalletController extends Controller
 }
 
   public function get(Request $request) {
-    $transactions = Wallet::select('id','amount','transaction_type','description')
+    $transactions = Wallet::select('id','amount','transaction_type','description','created_at')
                           ->where('user_id', $request->user()->id)
                           ->get();
-    $totalAmount = $transactions->sum('amount');
+    $credit = Wallet::select('id','amount','transaction_type','description','created_at')
+                          ->where('user_id', $request->user()->id)
+                          ->where('transaction_type', 'credit')
+                          ->get()->sum('amount');
+
+    $debit = Wallet::select('id','amount','transaction_type','description','created_at')
+                          ->where('user_id', $request->user()->id)
+                          ->where('transaction_type', 'debit')
+                          ->get()->sum('amount');
+
+    $totalAmount = $credit - $debit;
 
     return response()->json([
       'status' => 1,
