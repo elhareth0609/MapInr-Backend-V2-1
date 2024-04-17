@@ -366,7 +366,7 @@ class CounterController extends Controller
   public function share(Request $request) {
 
     $validator = Validator::make($request->all(), [
-      'phone' => 'sometimes|string'
+      'phone' => 'required|string'
     ]);
 
     if ($validator->fails()) {
