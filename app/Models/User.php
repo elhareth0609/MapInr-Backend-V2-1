@@ -48,5 +48,8 @@ class User extends Authenticatable
         return $this->hasMany(Counter::class,'worker_id');
     }
 
-    
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

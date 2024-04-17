@@ -121,7 +121,15 @@
     "Unknown" : "غير معروف",
     "Deleted Successfully" : "تم الحذف بنجاح",
     "There Is No Selected Rows." : "لا توجد صفوف محددة.",
-    "Counters Removed From Worker successfully!" : "تمت إزالة العدادات من العامل بنجاح!"
+    "Counters Removed From Worker successfully!" : "تمت إزالة العدادات من العامل بنجاح!",
+    "All Wallets" : "كل المحافظ",
+    "Wallets" : "المحافظ",
+    "Amount" : "المبلغ",
+    "Description" : "الوصف",
+    "Transaction Type" : "نوع العملية"
+
+
+
 
 
 }

@@ -13,9 +13,15 @@
       "url": "/municipalitys"
     },
     {
+      "name": "Wallets",
+      "icon": "menu-icon tf-icons mdi mdi-wallet-outline",
+      "slug": "wallets-table",
+      "url": "/wallets"
+    },
+    {
       "name": "Counters",
       "icon": "menu-icon tf-icons mdi mdi-map-marker-outline",
-      "slug": "counters",
+      "slug": "counters-table",
       "url": "/counters"
     },
     {

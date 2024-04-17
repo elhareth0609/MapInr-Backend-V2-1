@@ -8,6 +8,7 @@ use App\Models\Municipality;
 use App\Models\Place;
 use App\Models\Place_Worker;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Models\Worker_Counter;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -538,5 +539,35 @@ class DataTablesController extends Controller
 
     return view('dashboard.municipalitys.places')
     ->with('municipality',$municipality);
+  }
+
+  public function wallets(Request $request) {
+    $wallets = Wallet::all();
+    if ($request->ajax()) {
+      return DataTables::of($wallets)
+      ->editColumn('id', function($wallet) {
+        return (string) $wallet->id;
+      })
+      ->editColumn('user_id', function($wallet) {
+        return $wallet->user->fullname;
+      })
+      ->editColumn('amount', function($wallet) {
+        return $wallet->amount;
+      })
+      ->editColumn('transaction_type', function($wallet) {
+        return $wallet->transaction_type;
+      })
+      ->editColumn('description', function($wallet) {
+          return $wallet->description;
+      })
+
+      ->editColumn('created_at', function($wallet) {
+          return $wallet->created_at->format('Y-m-d');
+      })
+      ->make(true);
+
+    }
+      return view('dashboard.wallets.list');
+
   }
 }

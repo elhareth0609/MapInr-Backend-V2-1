@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\CounterController;
+use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,9 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/counters/destroy-lot', [CounterController::class, 'destroy_lot'])->name('counter.destroy.lot');
   Route::post('/v1/counters/update', [CounterController::class, 'update'])->name('counter.update');
   Route::post('/v1/counters/update-lot', [CounterController::class, 'update_lot'])->name('counter.update.lot');
+  Route::post('/v1/counters/share', [CounterController::class, 'share'])->name('counter.share');
+
+  Route::post('/v1/wallets/create', [WalletController::class, 'create'])->name('wallet.create');
+  Route::get('/v1/wallets/get', [WalletController::class, 'get'])->name('wallet.get');
 
 });

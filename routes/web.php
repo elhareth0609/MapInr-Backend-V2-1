@@ -99,6 +99,9 @@ Route::get('/place-counters/{id}', [DataTablesController::class, 'place_counters
 
 Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
 
+Route::get('/wallets', [DataTablesController::class, 'wallets'])->name('wallets-table');
+
+
 Route::get('/municipalitys', [DataTablesController::class, 'municipalitys'])->name('municipalitys');
 Route::get('/municipality/{id}/places', [DataTablesController::class, 'municipality_places'])->name('municipality.places');
 
