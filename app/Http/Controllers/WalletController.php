@@ -44,19 +44,58 @@ class WalletController extends Controller
         'message' => $e->getMessage(),
       ]);
     }
-}
+  }
+
+  public function create_lot(Request $request) {
+
+    $validator = Validator::make($request->all(), [
+      '*.amount' => 'required|numeric',
+      '*.transaction_type' => 'required|string|in:credit,debit',
+      '*.description' => 'nullable|string',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+
+      foreach ($request->all() as $data) {
+        $wallet = new Wallet();
+        $wallet->user_id = $request->user()->id;
+        $wallet->amount = $data['amount'];
+        $wallet->transaction_type = $data['transaction_type'];
+        $wallet->description = $data['description'];
+        $wallet->save();
+      }
+
+      return response()->json([
+          'status' => 1,
+          'message' => 'Created successfully',
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
 
   public function get(Request $request) {
-    $transactions = Wallet::select('id','amount','transaction_type','description','created_at')
+    $transactions = Wallet::select('id','amount','transaction_type','description','status','created_at')
                           ->where('user_id', $request->user()->id)
                           ->get();
-    $credit = Wallet::select('id','amount','transaction_type','description','created_at')
-                          ->where('user_id', $request->user()->id)
+
+
+    $credit = Wallet::where('user_id', $request->user()->id)
                           ->where('transaction_type', 'credit')
                           ->get()->sum('amount');
 
-    $debit = Wallet::select('id','amount','transaction_type','description','created_at')
-                          ->where('user_id', $request->user()->id)
+    $debit = Wallet::where('user_id', $request->user()->id)
                           ->where('transaction_type', 'debit')
                           ->get()->sum('amount');
 
@@ -66,6 +105,6 @@ class WalletController extends Controller
       'status' => 1,
       'totalAmount' => $totalAmount,
       'transactions' => $transactions,
-  ]);
+    ]);
   }
 }

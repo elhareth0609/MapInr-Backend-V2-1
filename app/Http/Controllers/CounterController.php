@@ -164,7 +164,7 @@ class CounterController extends Controller
             'message' => $e->getMessage(),
         ]);
     }
-}
+  }
 
   public function update(Request $request) {
 
@@ -410,5 +410,6 @@ class CounterController extends Controller
       ]);
     }
   }
+
 
 }
