@@ -86,9 +86,11 @@ class WalletController extends Controller
   }
 
   public function get(Request $request) {
-    $transactions = Wallet::select('id','amount','transaction_type','description','status','created_at')
-                          ->where('user_id', $request->user()->id)
-                          ->get();
+    $transactions = Wallet::select('id', 'amount', 'transaction_type', 'description', 'status', 'created_at')
+    ->where('user_id', $request->user()->id)
+    ->latest('created_at')
+    ->get();
+
 
 
     $credit = Wallet::where('user_id', $request->user()->id)
