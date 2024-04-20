@@ -58,23 +58,14 @@ class AuthController extends Controller
       }
   }
 
-  public function search(Request $request) {
-    $validator = Validator::make($request->all(), [
-      'phone' => 'required|string'
-    ]);
-
-    if ($validator->fails()) {
-      return response()->json([
-        'status' => 0,
-        'message' => 'Validation failed : ' . $validator->errors()->first(),
-        'error' => $validator->errors()->first(),
-      ], 422);
-    }
+  public function all(Request $request) {
 
     try {
-      $workers = User::select('id', 'fullname', 'phone')
-                      ->where('phone', 'LIKE', '%' . $request->phone . '%')
-                      ->get();
+      $workers = User::select('id','fullname','phone','role')->where('role','worker')->get();
+
+      foreach ($workers as $worker) {
+        unset($worker->role);
+      }
 
       return response()->json([
           'status' => 1,
