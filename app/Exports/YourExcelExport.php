@@ -33,12 +33,13 @@ class YourExcelExport implements FromCollection, WithEvents
                 'Longitude' => (string) $counter->longitude, // Convert to string
                 'Latitude' => (string) $counter->latitude,   // Convert to string
                 'Phone' => $counter->phone,
+                'Created At' => $counter->created_at,
             ];
         });
 
         // Add headers to the collection
         $headers = [
-            'R', 'Name','Longitude', 'Latitude', 'Phone',
+            'R', 'Name','Longitude', 'Latitude', 'Phone', 'Created At',
         ];
 
         // Prepend headers to the data collection
