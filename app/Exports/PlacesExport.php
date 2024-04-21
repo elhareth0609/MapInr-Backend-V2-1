@@ -29,8 +29,8 @@ class PlacesExport implements FromCollection, WithEvents
           return [
             'R' => $counter->counter_id,
             'Name' => $counter->name,
-            'Longitude' => $counter->longitude,
-            'Latitude' => $counter->latitude,
+            'Longitude' => (string) $counter->longitude, // Convert to string
+            'Latitude' => (string) $counter->latitude,   // Convert to string
             'Phone' => $counter->phone,
           ];
         });
