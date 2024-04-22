@@ -367,7 +367,7 @@ class CounterController extends Controller
 
     $validator = Validator::make($request->all(), [
       'user_id' => 'required|string',
-      'counter_id' => 'required|string',
+      'id' => 'required|string',
     ]);
 
     if ($validator->fails()) {
