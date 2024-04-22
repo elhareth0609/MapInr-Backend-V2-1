@@ -176,7 +176,7 @@ Route::post('/check-password', [UserController::class, 'check_password'])->name(
 // Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 
 // // cards
-Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
+// Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
 
 // // User Interface
 // Route::get('/ui/accordion', [Accordion::class, 'index'])->name('ui-accordion');
