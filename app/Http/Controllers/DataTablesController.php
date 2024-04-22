@@ -647,8 +647,49 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($wallet) {
         return '
-        <a href="' . url("/place/{$wallet->id}/counters") . '" data-place-id="' . $wallet->id . '"><icon class="mdi mdi-pen"></icon></a>
-        ';
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <form class="modal-content" id="editTransaction-' . $wallet->id . '">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Edit Transaction") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <div class="row">
+                    <div class="col mb-4 mt-2">
+                    <div class="form-floating form-floating-outline mb-4">
+                      <input class="form-control" type="number" placeholder="18" name="amount-' . $wallet->id . '" min="0" value="' . $wallet->amount . '" id="html5-number-input" />
+                      <label for="html5-number-input">' .  __("Amount") . '</label>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col mb-4 mt-2">
+                      <div class="form-floating form-floating-outline mb-4">
+                        <textarea class="form-control h-px-100" id="exampleFormControlTextarea1" name="description-' . $wallet->id . '" placeholder="' .  __("Comments here...") . '">' . $wallet->description . '</textarea>
+                        <label for="exampleFormControlTextarea1">' .  __("Description") . '</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <select id="largeSelect" class="form-select form-select-lg" name="type-' . $wallet->id . '">
+                      <option value="credit" ' . ($wallet->transaction_type == 'credit'? 'selected' : '') . '>' .  __("Credit") . '</option>
+                      <option value="debit" ' . ($wallet->transaction_type == 'debit'? 'selected' : '') . '>' .  __("Debit") . '</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction(' . $wallet->id . ')">'. __("Accept") .'</button>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="rejectTransaction(' . $wallet->id . ')">'. __("Reject") .'</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      ';
       })
       ->editColumn('created_at', function($wallet) {
           return $wallet->created_at->format('Y-m-d');

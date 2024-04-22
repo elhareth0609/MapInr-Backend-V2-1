@@ -109,4 +109,48 @@ class WalletController extends Controller
       'transactions' => $transactions,
     ]);
   }
+
+  public function reject(Request $request,$id) {
+    $transaction = Wallet::find($id);
+    $transaction->status = 'rejected';
+    $transaction->save();
+    return response()->json([
+      'state' => __("Success"),
+      'message' => __("Rejected Successful."),
+    ], 200);
+  }
+
+  public function accept(Request $request,$id) {
+    $validator = Validator::make($request->all(), [
+      'amount' => 'required|string',
+      'type' => 'required|string',
+      'description' => 'required|string'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+          'state' => __('Validation failed'),
+          'message' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+      $transaction = Wallet::find($id);
+      $transaction->transaction_type = $request->type;
+      $transaction->amount = $request->amount;
+      $transaction->status = 'completed';
+      $transaction->description = $request->description;
+      $transaction->save();
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Accepted Successful."),
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage()
+      ], 200);
+    }
+  }
 }

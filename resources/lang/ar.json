@@ -134,7 +134,12 @@
     "Pending": "قيد الانتظار",
     "Completed": "مكتمل",
     "Rejected": "مرفوض",
-    "All": "الكل"
+    "All": "الكل",
+    "Edit Transaction": "تحرير العملية",
+    "Accept": "قبول",
+    "Reject": "رفض",
+    "Accepted Successful.": "تم القبول بنجاح.",
+    "Rejected Successful.": "تم الرفض بنجاح."
 
 
 

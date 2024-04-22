@@ -1,21 +1,36 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\dashboard\Analytics;
-use App\Http\Controllers\layouts\WithoutMenu;
-use App\Http\Controllers\layouts\WithoutNavbar;
-use App\Http\Controllers\layouts\Fluid;
-use App\Http\Controllers\layouts\Container;
-use App\Http\Controllers\layouts\Blank;
-use App\Http\Controllers\pages\AccountSettingsAccount;
-use App\Http\Controllers\pages\AccountSettingsNotifications;
-use App\Http\Controllers\pages\AccountSettingsConnections;
-use App\Http\Controllers\pages\MiscError;
-use App\Http\Controllers\pages\MiscUnderMaintenance;
+use App\Http\Controllers\authentications\ForgotPasswordBasic;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
-use App\Http\Controllers\authentications\ForgotPasswordBasic;
 use App\Http\Controllers\cards\CardBasic;
+use App\Http\Controllers\CounterController;
+use App\Http\Controllers\dashboard\Analytics;
+use App\Http\Controllers\DataTablesController;
+use App\Http\Controllers\ExelController;
+use App\Http\Controllers\extended_ui\PerfectScrollbar;
+use App\Http\Controllers\extended_ui\TextDivider;
+use App\Http\Controllers\form_elements\BasicInput;
+use App\Http\Controllers\form_elements\InputGroups;
+use App\Http\Controllers\form_layouts\HorizontalForm;
+use App\Http\Controllers\form_layouts\VerticalForm;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\icons\MdiIcons;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\layouts\Blank;
+use App\Http\Controllers\layouts\Container;
+use App\Http\Controllers\layouts\Fluid;
+use App\Http\Controllers\layouts\WithoutMenu;
+use App\Http\Controllers\layouts\WithoutNavbar;
+use App\Http\Controllers\MunicipalityController;
+use App\Http\Controllers\pages\AccountSettingsAccount;
+use App\Http\Controllers\pages\AccountSettingsConnections;
+use App\Http\Controllers\pages\AccountSettingsNotifications;
+use App\Http\Controllers\pages\MiscError;
+use App\Http\Controllers\pages\MiscUnderMaintenance;
+use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\tables\Basic as TablesBasic;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
 use App\Http\Controllers\user_interface\Badges;
@@ -35,23 +50,10 @@ use App\Http\Controllers\user_interface\TabsPills;
 use App\Http\Controllers\user_interface\Toasts;
 use App\Http\Controllers\user_interface\TooltipsPopovers;
 use App\Http\Controllers\user_interface\Typography;
-use App\Http\Controllers\extended_ui\PerfectScrollbar;
-use App\Http\Controllers\extended_ui\TextDivider;
-use App\Http\Controllers\icons\MdiIcons;
-use App\Http\Controllers\form_elements\BasicInput;
-use App\Http\Controllers\form_elements\InputGroups;
-use App\Http\Controllers\form_layouts\VerticalForm;
-use App\Http\Controllers\form_layouts\HorizontalForm;
-use App\Http\Controllers\tables\Basic as TablesBasic;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\CounterController;
-use App\Http\Controllers\DataTablesController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ExelController;
-use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\MunicipalityController;
+use App\Http\Controllers\WalletController;
+use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -146,6 +148,8 @@ Route::post('/check-password', [UserController::class, 'check_password'])->name(
 
 
 
+Route::get('wallets/{id}/reject', [WalletController::class, 'reject'])->name('wallet.reject');
+Route::post('wallets/{id}/accept', [WalletController::class, 'accept'])->name('wallet.accept');
 
 
 

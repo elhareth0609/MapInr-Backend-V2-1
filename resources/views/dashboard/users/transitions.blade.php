@@ -578,6 +578,65 @@ var select = $('select[multiple]');
         });
     }
 
+    function acceptTransaction(id) {
+        var amount = $('input[name="amount-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+        var description = $('textarea[name="description-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+        var type = $('select[name="type-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
+          $.ajax({
+              type: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              data: {
+                amount: amount,
+                description: description,
+                type: type
+              },
+              url: '/wallets/' + id + '/accept',
+              success: function (response) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: response.state,
+                      text: response.message,
+                  });
+                  dataTable.ajax.reload();
+              },
+              error: function (error) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: error.responseJSON.state,
+                      text: error.responseJSON.message,
+                  });
+              }
+          });
+    }
+
+    function rejectTransaction(id) {
+
+          $.ajax({
+              type: 'GET',
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: '/wallets/' + id + '/reject',
+              success: function (response) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: response.state,
+                      text: response.message,
+                  });
+                  dataTable.ajax.reload();
+              },
+              error: function (error) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: error.responseJSON.status,
+                      text: error.responseJSON.errors,
+                  });
+              }
+          });
+    }
 
   $(document).ready( function () {
       $.ajaxSetup({
