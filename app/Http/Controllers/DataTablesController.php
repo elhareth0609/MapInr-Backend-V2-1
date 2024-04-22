@@ -542,32 +542,123 @@ class DataTablesController extends Controller
   }
 
   public function wallets(Request $request) {
-    $wallets = Wallet::all();
+    $wallets = Wallet::query();
+      $status = $request->input('status');
+      $type = $request->input('type');
+
+      if ($status) {
+        $wallets->where('status', $status);
+      }
+      if ($type) {
+        $wallets->where('transaction_type', $type);
+      }
+
     if ($request->ajax()) {
+
       return DataTables::of($wallets)
       ->editColumn('id', function($wallet) {
         return (string) $wallet->id;
       })
       ->editColumn('user_id', function($wallet) {
-        return $wallet->user->fullname;
+        return '
+        <a href="' . url("/user/{$wallet->user->id}/transitions") . '" >' . $wallet->user->fullname . '</a>
+        ';
       })
       ->editColumn('amount', function($wallet) {
         return $wallet->amount;
       })
       ->editColumn('transaction_type', function($wallet) {
-        return $wallet->transaction_type;
+        if ($wallet->transaction_type === 'credit') {
+          return '<span class="badge rounded-pill bg-label-info me-1">' . __("Credit"). '</span>';
+        } else if ($wallet->transaction_type === 'debit') {
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("Debit"). '</span>';
+        }
+      })
+      ->editColumn('status', function($wallet) {
+        if ($wallet->status === 'pending') {
+          return '<span class="badge rounded-pill bg-label-info me-1">' . __("Pending"). '</span>';
+        } else if ($wallet->status === 'completed') {
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("Completed"). '</span>';
+        } else if ($wallet->status === 'rejected') {
+        return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+        }
       })
       ->editColumn('description', function($wallet) {
           return $wallet->description;
       })
-
+      ->addColumn('actions', function($wallet) {
+        return '
+        <a href="' . url("/place/{$wallet->id}/counters") . '" data-place-id="' . $wallet->id . '"><icon class="mdi mdi-pen"></icon></a>
+        ';
+      })
       ->editColumn('created_at', function($wallet) {
           return $wallet->created_at->format('Y-m-d');
       })
+      ->rawColumns(['actions','transaction_type','user_id','status'])
       ->make(true);
 
     }
       return view('dashboard.wallets.list');
+
+  }
+
+  public function user_transitions(Request $request,$id) {
+    $wallets = Wallet::where('user_id', $request->id);
+    $user = User::find($request->id);
+
+    $status = $request->input('status');
+    $type = $request->input('type');
+
+    if ($status) {
+      $wallets->where('status', $status);
+    }
+    if ($type) {
+      $wallets->where('transaction_type', $type);
+    }
+
+    $wallets->get();
+
+    if ($request->ajax()) {
+      return DataTables::of($wallets)
+      ->editColumn('id', function($wallet) {
+        return (string) $wallet->id;
+      })
+      ->editColumn('amount', function($wallet) {
+        return $wallet->amount;
+      })
+      ->editColumn('transaction_type', function($wallet) {
+          if ($wallet->transaction_type === 'credit') {
+            return '<span class="badge rounded-pill bg-label-info me-1">' . __("Credit"). '</span>';
+          } else if ($wallet->transaction_type === 'debit') {
+            return '<span class="badge rounded-pill bg-label-success me-1">' . __("Debit"). '</span>';
+          }
+      })
+      ->editColumn('status', function($wallet) {
+        if ($wallet->status === 'pending') {
+          return '<span class="badge rounded-pill bg-label-info me-1">' . __("Pending"). '</span>';
+        } else if ($wallet->status === 'completed') {
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("Completed"). '</span>';
+        } else if ($wallet->status === 'rejected') {
+        return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+        }
+      })
+      ->editColumn('description', function($wallet) {
+          return $wallet->description;
+      })
+      ->addColumn('actions', function($wallet) {
+        return '
+        <a href="' . url("/place/{$wallet->id}/counters") . '" data-place-id="' . $wallet->id . '"><icon class="mdi mdi-pen"></icon></a>
+        ';
+      })
+      ->editColumn('created_at', function($wallet) {
+          return $wallet->created_at->format('Y-m-d');
+      })
+      ->rawColumns(['actions','transaction_type','status'])
+      ->make(true);
+
+    }
+      return view('dashboard.users.transitions')
+      ->with('user',$user);
 
   }
 }

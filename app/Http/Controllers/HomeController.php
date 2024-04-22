@@ -10,6 +10,7 @@ class HomeController extends Controller
 {
   public function index(){
     return redirect()->route('auth-login-basic');
+
   }
 
   public function ddd(){

@@ -1,11 +1,11 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'All Wallets')
+@section('title', 'All Transitions')
 
 @section('content')
   <div class="row w-100 d-flex align-items-baseline mb-2">
     <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
-      <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Wallets')}}
+      <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Transitions')}}
     </h4>
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
       {{-- <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12">
@@ -33,19 +33,36 @@
           <option value="100" selected>100</option>
         </select>
       </div>
-      <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Wallets')}}</h5>
+      <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
+        <select id="statusFilter" class="form-select form-select-lg">
+          <option value="">{{ __('All') }}</option>
+          <option value="pending">{{ __('Pending') }}</option>
+          <option value="completed">{{ __('Completed') }}</option>
+          <option value="rejected">{{ __('Rejected') }}</option>
+        </select>
+      </div>
+      <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
+        <select id="typeFilter" class="form-select form-select-lg">
+          <option value="">{{ __('All') }}</option>
+          <option value="credit">{{ __('Credit') }}</option>
+          <option value="debit">{{ __('Debit') }}</option>
+        </select>
+      </div>
+
+      <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Transitions')}}</h5>
     </div>
     <div class="table-responsive text-nowrap">
       <table class="table table-striped w-100" id="wallets" dir="rtl">
         <thead>
           <tr class="text-nowrap">
             <th>#</th>
-            <th>{{__('Full Name')}}</th>
-            <th>{{__('Amount')}}</th>
+            <th>{{__('Name')}}</th>
             <th>{{__('Transaction Type')}}</th>
+            <th>{{__('Status')}}</th>
+            <th>{{__('Amount')}}</th>
             <th>{{__('Description')}}</th>
             <th>{{__('Created At')}}</th>
-            {{-- <th>{{__('Actions')}}</th> --}}
+            <th>{{__('Actions')}}</th>
           </tr>
         </thead>
       </table>
@@ -105,16 +122,24 @@ $(document).ready( function () {
       language: {
         info: "_START_-_END_ of _TOTAL_",
       },
-      ajax: '{{ route("wallets-table") }}',
+      ajax: {
+        url: '{{ route("wallets-table") }}',
+        data: function(d) {
+            d.status = $('#statusFilter').val();
+            d.type = $('#typeFilter').val();
+        }
+      },
       columns: [
         { data: 'id', title: '#' },
-        { data: 'amount', title: '{{__("Amount")}}' },
-        { data: 'user_id', title: '{{__("Full Name")}}' },
+        { data: 'user_id', title: '{{__("Name")}}' },
         { data: 'transaction_type', title: '{{__("Transaction Type")}}' },
+        { data: 'amount', title: '{{__("Amount")}}' },
+        { data: 'status', title: '{{__("Status")}}' },
         { data: 'description', title: '{{__("Description")}}' },
-        { data: 'created_at', title: '{{__("Created At")}}' }
+        { data: 'created_at', title: '{{__("Created At")}}' },
+        { data: 'actions', title: '{{__("Actions")}}' }
       ],
-      "order": [[5, "desc"]],
+      "order": [[7, "desc"]],
     //   select: {
     //     style: 'multi',
     //   },
@@ -187,6 +212,14 @@ $(document).ready( function () {
     });
     $('#RowSelect').on('change', function () {
       dataTable.page.len(this.value).draw();
+    });
+
+    $('#statusFilter').on('change', function() {
+      dataTable.ajax.reload();
+    });
+
+    $('#typeFilter').on('change', function() {
+      dataTable.ajax.reload();
     });
 
     updateCustomPagination();

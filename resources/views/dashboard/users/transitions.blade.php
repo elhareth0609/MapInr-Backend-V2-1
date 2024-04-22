@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', ' User - Places')
+@section('title', ' User - Transitions')
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
@@ -12,15 +12,15 @@
       <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
         <span class="text-muted fw-light">{{ __('User Settings') }} /</span> {{ $user->fullname }}
       </h4>
-      <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
+      {{-- <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
         <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12" data-bs-toggle="modal" data-bs-target="#addPlace">
           <span class="tf-icons mdi mdi-plus-outline me-1"></span>{{__('Add')}}
         </button>
-      </div>
+      </div> --}}
     </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="addPlace" data-bs-backdrop="static" tabindex="-1">
+        {{-- <div class="modal fade" id="addPlace" data-bs-backdrop="static" tabindex="-1">
           <div class="modal-dialog">
             <form class="modal-content" id="addWorkerPlace" action="{{ route('add.worker.place') }}" method="POST" enctype="multipart/form-data">
               @csrf
@@ -30,11 +30,6 @@
               <div class="modal-body">
 
                 <select class="select-mult" multiple data-placeholder="Choose Places ..." name="selectedPlaces[]">
-                  {{-- @foreach ($allplaces as $placeName => $placeId)
-                      <option value="{{ $placeId }}" {{ in_array($placeId, $places->toArray()) ? 'selected' : '' }}>
-                          {{ $placeName }}
-                      </option>
-                  @endforeach --}}
                   @foreach ($allplaces as $place)
                       <option value="{{ $place['id'] }}" {{ in_array($place['id'], $places->toArray()) ? 'selected' : '' }}>
                           {{ $place['name'] }}
@@ -50,16 +45,16 @@
               </div>
             </form>
           </div>
-        </div>
+        </div> --}}
         <div class="row">
-  <div class="col-md-12">
-    <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
-      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/transitions')}}"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
+          <div class="col-md-12">
+            <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
+              <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
+              <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
 
-    </ul>
+            </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Counters')}}</h4> --}}
       <!-- Account -->
@@ -81,17 +76,36 @@
                 <option value="100">100</option>
               </select>
             </div>
-            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Places')}}</h5>
+            <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
+              <select id="statusFilter" class="form-select form-select-lg">
+                <option value="">{{ __('All') }}</option>
+                <option value="pending">{{ __('Pending') }}</option>
+                <option value="completed">{{ __('Completed') }}</option>
+                <option value="rejected">{{ __('Rejected') }}</option>
+              </select>
+            </div>
+            <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
+              <select id="typeFilter" class="form-select form-select-lg">
+                <option value="">{{ __('All') }}</option>
+                <option value="credit">{{ __('Credit') }}</option>
+                <option value="debit">{{ __('Debit') }}</option>
+              </select>
+            </div>
+
+            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Transitions')}}</h5>
           </div>
           <div class="table-responsive text-nowrap">
-            <table class="table table-striped w-100" id="userPlaces" dir="rtl">
+            <table class="table table-striped w-100" id="userTransitions" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
-                  <th>{{__('Place Number')}}</th>
-                  <th>{{__('Counters')}}</th>
-                  <th>{{__('Workers')}}</th>
+                  <th>#</th>
+                  <th>{{__('Transaction Type')}}</th>
+                  <th>{{__('Status')}}</th>
+                  <th>{{__('Amount')}}</th>
+                  <th>{{__('Description')}}</th>
+                  <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
-                </tr>
+                      </tr>
               </thead>
             </table>
             <div class="row w-100 d-flex align-items-baseline justify-content-end ">
@@ -109,18 +123,18 @@
 
         <!--/ Responsive Table -->
         <style>
-        #userPlaces_length {
+        #userTransitions_length {
           display: none;
         }
 
-        #userPlaces_filter {
+        #userTransitions_filter {
           display: none;
         }
 
-        #userPlaces_paginate {
+        #userTransitions_paginate {
           display: none;
         }
-        #userPlaces_info {
+        #userTransitions_info {
           display: none;
         }
         .delete-alert-span::before {
@@ -537,7 +551,7 @@ var select = $('select[multiple]');
     });
 
 
-      var userPlacesdataTable;
+      var dataTable;
     function submitRemovePlaceWorker(placeid, userid) {
 
         $.ajax({
@@ -552,7 +566,7 @@ var select = $('select[multiple]');
                     title: response.state,
                     text: response.message,
                 });
-                userPlacesdataTable.ajax.reload();
+                dataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
@@ -589,7 +603,7 @@ var select = $('select[multiple]');
                     title: response.state,
                     text:  response.message,
                 });
-                userPlacesdataTable.ajax.reload();
+                dataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
@@ -602,7 +616,7 @@ var select = $('select[multiple]');
         });
 
       $.noConflict();
-      userPlacesdataTable = $('#userPlaces').DataTable({
+      dataTable = $('#userTransitions').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
@@ -610,13 +624,25 @@ var select = $('select[multiple]');
         language: {
           info: "_START_-_END_ of _TOTAL_",
         },
-        ajax: '{{ url("worker-places/" . $user->id) }}',
+        ajax: {
+          url: '{{ url("user/" . $user->id . "/transitions") }}',
+          data: function(d) {
+              d.status = $('#statusFilter').val();
+              d.type = $('#typeFilter').val();
+          }
+        },
+
         columns: [
-          { data: 'place_id', title: '{{__("Place Id")}}' },
-          { data: 'counters', title: '{{__("Counters")}}' },
-          { data: 'workers', title: '{{__("Workers")}}' },
-          { data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false },
+          { data: 'id', title: '#' },
+          { data: 'transaction_type', title: '{{__("Transaction Type")}}' },
+          { data: 'amount', title: '{{__("Amount")}}' },
+          { data: 'status', title: '{{__("Status")}}' },
+          { data: 'description', title: '{{__("Description")}}' },
+          { data: 'created_at', title: '{{__("Created At")}}' },
+          { data: 'actions', title: '{{__("Actions")}}' }
         ],
+        "order": [[6, "desc"]],
+
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
@@ -634,10 +660,17 @@ var select = $('select[multiple]');
         },
       });
       $('#customSearch').on('keyup', function () {
-        userPlacesdataTable.search(this.value).draw();
+        dataTable.search(this.value).draw();
       });
       $('#RowSelect').on('change', function () {
-        userPlacesdataTable.page.len(this.value).draw();
+        dataTable.page.len(this.value).draw();
+      });
+      $('#statusFilter').on('change', function() {
+        dataTable.ajax.reload();
+      });
+
+      $('#typeFilter').on('change', function() {
+        dataTable.ajax.reload();
       });
 
       updateCustomPagination();
@@ -645,7 +678,7 @@ var select = $('select[multiple]');
       // Function to update custom pagination
       function updateCustomPagination() {
           var customPaginationContainer = $('#custom-pagination');
-          var pageInfo = userPlacesdataTable.page.info();
+          var pageInfo = dataTable.page.info();
 
           // Clear existing pagination items
           customPaginationContainer.empty();
@@ -676,7 +709,7 @@ var select = $('select[multiple]');
 
       // Function to handle page change
       window.changePage = function (page) {
-        userPlacesdataTable.page(page).draw(false);
+        dataTable.page(page).draw(false);
       };
 
 

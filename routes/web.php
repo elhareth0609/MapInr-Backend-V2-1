@@ -114,6 +114,7 @@ Route::delete('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name(
 Route::get('/user/{id}', [UserController::class, 'user'])->name('user');
 Route::get('/user/{id}/places', [UserController::class, 'user_places'])->name('user_places');
 Route::get('/user/{id}/counters', [UserController::class, 'user_counters'])->name('user_counters');
+Route::get('/user/{id}/transitions', [DataTablesController::class, 'user_transitions'])->name('user_transitions');
 Route::post('/user/create', [UserController::class, 'create'])->name('user-create');
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
@@ -175,7 +176,7 @@ Route::post('/check-password', [UserController::class, 'check_password'])->name(
 // Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 
 // // cards
-// Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
+Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
 
 // // User Interface
 // Route::get('/ui/accordion', [Accordion::class, 'index'])->name('ui-accordion');
