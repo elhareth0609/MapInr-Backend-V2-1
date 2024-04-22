@@ -95,10 +95,12 @@ class WalletController extends Controller
 
     $credit = Wallet::where('user_id', $request->user()->id)
                           ->where('transaction_type', 'credit')
+                          ->where('status', 'completed')
                           ->get()->sum('amount');
 
     $debit = Wallet::where('user_id', $request->user()->id)
                           ->where('transaction_type', 'debit')
+                          ->where('status', 'completed')
                           ->get()->sum('amount');
 
     $totalAmount = $credit - $debit;
