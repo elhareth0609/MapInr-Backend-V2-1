@@ -32,7 +32,7 @@ class PlacesExport implements FromCollection, WithEvents
             'Longitude' => (string) $counter->longitude, // Convert to string
             'Latitude' => (string) $counter->latitude,   // Convert to string
             'Phone' => $counter->phone,
-            'Created At' => $counter->created_at,
+            'Created At' => $counter->created_at
           ];
         });
 

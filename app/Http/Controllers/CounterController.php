@@ -366,7 +366,8 @@ class CounterController extends Controller
   public function share(Request $request) {
 
     $validator = Validator::make($request->all(), [
-      'user_id' => 'required|string'
+      'user_id' => 'required|string',
+      'counter_id' => 'required|string',
     ]);
 
     if ($validator->fails()) {
@@ -379,7 +380,7 @@ class CounterController extends Controller
 
     try {
       $worker = User::find($request->user_id);
-      $counter = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
+      $counter = Counter::find($request->id);
 
       $newCounter = $counter->replicate();
       if($counter->picture) {
