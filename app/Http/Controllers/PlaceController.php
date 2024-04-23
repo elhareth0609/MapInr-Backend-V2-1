@@ -81,8 +81,8 @@ class PlaceController extends Controller
         })
         ->reject(function ($value) {
           return is_null($value);
-      })
-      ->values(), // Reset keys
+        })
+        ->values(), // Reset keys
 
       ];
     }
@@ -111,14 +111,15 @@ class PlaceController extends Controller
                 })
                 ->get();
 
-                $counters = $counters->filter(function ($counter) {
-                  return !$counter->shared()->exists();
-                });
+                // $counters = $counters->filter(function ($counter) {
+                //   return !$counter->shared()->exists();
+                // });
 
                 $responseData['data']['place']->push([
                     'id' => $place->id,
                     'place_id' => $place->place_id,
                     'counters' => $counters->map(function ($counter) {
+                      if (!$counter->shared()->exists()) {
                         return [
                             'id' => $counter->id,
                             'counter_id' => $counter->counter_id,
@@ -128,7 +129,15 @@ class PlaceController extends Controller
                             'latitude' => $counter->latitude,
                             'longitude' => $counter->longitude,
                         ];
-                    }),
+                      } else {
+                        unset($counter);
+                      }
+                    })
+                    ->reject(function ($value) {
+                      return is_null($value);
+                    })
+                    ->values(), // Reset keys
+
                 ]);
             }
         }
