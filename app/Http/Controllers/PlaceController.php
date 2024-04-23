@@ -59,7 +59,7 @@ class PlaceController extends Controller
     ->get()
     ->sortBy('place_id');
 
-      // foreach ($workerPlaces as $workerPlace) {
+      foreach ($workerPlaces as $workerPlace) {
       //   $workerPlaceCounter = $workerPlace->place->counters->filter(function ($counter) {
       //     return !$counter->shared()->exists();
       // });
