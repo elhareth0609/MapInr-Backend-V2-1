@@ -114,8 +114,8 @@ $(document).ready( function () {
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
-        { data: 'longitude', title: '{{__("Longitude")}}' },
-        { data: 'latitude', title: '{{__("Latitude")}}' },
+        { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
+        { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' }
       ],

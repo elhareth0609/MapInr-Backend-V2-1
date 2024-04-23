@@ -55,7 +55,6 @@
                   <th>{{__('Phone')}}</th>
                   <th>{{__('Status')}}</th>
                   <th>{{__('Created At')}}</th>
-                  {{-- <th>{{__('Actions')}}</th> --}}
                 </tr>
               </thead>
             </table>
@@ -189,12 +188,11 @@ function submitRemoveCounterWorker(userid, counterid) {
           { data: 'id', title: '{{__("Id")}}' },
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'name', title: '{{__("Name")}}' },
-          { data: 'longitude', title: '{{__("Longitude")}}' },
-          { data: 'latitude', title: '{{__("Latitude")}}' },
+          { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
+          { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'phone', title: '{{__("Phone")}}' },
           { data: 'status', title: '{{__("Status")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
-          // { data: 'actions', title: '{{__("Actions")}}' }
         ],
         "order": [[7, "desc"]],
         select: {

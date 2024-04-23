@@ -577,11 +577,10 @@
         ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
-          { data: 'longitude', title: '{{__("Longitude")}}' },
-          { data: 'latitude', title: '{{__("Latitude")}}' },
+          { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
+          { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
-
         "drawCallback": function () {
           updateCustomPagination();
           initializeCustomSelects();
