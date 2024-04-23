@@ -81,7 +81,9 @@ class PlaceController extends Controller
             } else {
               unset($counter);
             }
-          }),
+          })
+          ->filter(), // Filter out null values
+
       ];
     }
 
