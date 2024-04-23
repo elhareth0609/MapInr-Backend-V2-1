@@ -68,15 +68,19 @@ class PlaceController extends Controller
         //   return $counter->shared()->exists();
         // })
           ->map(function ($counter) {
-            return [
-              'id' => $counter->id,
-              'counter_id' => $counter->counter_id,
-              'place_id' => $counter->place_id,
-              'phone' => $counter->phone,
-              'name' => $counter->name,
-              'latitude' => $counter->latitude,
-              'longitude' => $counter->longitude,
-            ];
+            if (!$counter->shared()->exists()) {
+              return [
+                'id' => $counter->id,
+                'counter_id' => $counter->counter_id,
+                'place_id' => $counter->place_id,
+                'phone' => $counter->phone,
+                'name' => $counter->name,
+                'latitude' => $counter->latitude,
+                'longitude' => $counter->longitude,
+              ];
+            } else {
+              unset($counter);
+            }
           }),
       ];
     }
