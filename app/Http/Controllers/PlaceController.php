@@ -34,7 +34,7 @@ class PlaceController extends Controller
 
     $responseData['data']['place'][] = [
       'id' => 999999999999999999,
-      'place_id' => '0099',
+      'place_id' => '999999999999999999',
       'counters' => $sharedCounters->map(function ($counter) {
         return [
           'id' => $counter->id,
