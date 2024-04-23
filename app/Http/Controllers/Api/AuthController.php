@@ -61,7 +61,10 @@ class AuthController extends Controller
   public function all(Request $request) {
 
     try {
-      $workers = User::select('id','fullname','phone','role')->where('role','worker')->get();
+      $workers = User::select('id','fullname','phone','role')
+                      ->where('role','worker')
+                      ->whereNotIn('id', [$request->user()->id])
+                      ->get();
 
       foreach ($workers as $worker) {
         unset($worker->role);
