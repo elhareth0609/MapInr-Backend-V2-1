@@ -58,6 +58,7 @@ class PlaceController extends Controller
     ->where('worker_id', $request->user()->id)
     ->get()
     ->sortBy('place_id');
+
     foreach ($workerPlaces as $workerPlace) {
       $workerPlaceCounter = $workerPlace->place->counters->filter(function ($counter) {
         return !$counter->shared()->exists();
@@ -76,8 +77,7 @@ class PlaceController extends Controller
               'latitude' => $counter->latitude,
               'longitude' => $counter->longitude,
             ];
-          })
-          ->all(),
+          }),
       ];
     }
 
