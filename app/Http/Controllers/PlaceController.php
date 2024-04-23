@@ -66,7 +66,7 @@ class PlaceController extends Controller
       $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
-        'counters' => $workerPlaceCounter
+        'counters' => $workerPlace->place->counters
           ->map(function ($counter) {
             return [
               'id' => $counter->id,
