@@ -59,10 +59,10 @@ class PlaceController extends Controller
     ->get()
     ->sortBy('place_id');
 
-    foreach ($workerPlaces as $workerPlace) {
-      $workerPlaceCounter = $workerPlace->place->counters->filter(function ($counter) {
-        return !$counter->shared()->exists();
-      });
+      // foreach ($workerPlaces as $workerPlace) {
+      //   $workerPlaceCounter = $workerPlace->place->counters->filter(function ($counter) {
+      //     return !$counter->shared()->exists();
+      // });
       $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
