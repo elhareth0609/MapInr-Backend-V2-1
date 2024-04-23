@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Counter;
+use App\Models\Shared;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -399,6 +400,9 @@ class CounterController extends Controller
       $newCounter->worker_id = $worker->id;
       $newCounter->save();
 
+      $share = new Shared();
+      $share->counter_id = $newCounter->id;
+      $share->save();
 
       return response()->json([
           'status' => 1,
@@ -411,6 +415,5 @@ class CounterController extends Controller
       ]);
     }
   }
-
 
 }

@@ -21,14 +21,6 @@ class PlaceController extends Controller
 
   public function all_places(Request $request)
   {
-    $workerPlaces = Place_Worker::with([
-      'place.counters' => function ($query) use ($request) {
-        $query->where('worker_id', $request->user()->id)->orWhere('status', '1');
-      },
-    ])
-      ->where('worker_id', $request->user()->id)
-      ->get()
-      ->sortBy('place_id');
 
     $responseData = [
       'status' => 1,
@@ -37,12 +29,43 @@ class PlaceController extends Controller
       ],
     ];
 
-    foreach ($workerPlaces as $workerPlace) {
+    // shared
+    $sharedCounters = Counter::has('shared')->with('shared')->get();
 
+    $responseData['data']['place'][] = [
+      'id' => 'shared',
+      'place_id' => 'shared',
+      'counters' => $sharedCounters->map(function ($counter) {
+        return [
+          'id' => $counter->id,
+          'counter_id' => $counter->counter_id,
+          'place_id' => $counter->place_id,
+          'phone' => $counter->phone,
+          'name' => $counter->name,
+          'latitude' => $counter->latitude,
+          'longitude' => $counter->longitude,
+        ];
+      }),
+    ];
+
+    // workerPalces
+    $workerPlaces = Place_Worker::with([
+      'place.counters' => function ($query) use ($request) {
+        $query->where('worker_id', $request->user()->id)
+              ->orWhere('status', '1');
+      },
+    ])
+    ->where('worker_id', $request->user()->id)
+    ->get()
+    ->sortBy('place_id');
+    foreach ($workerPlaces as $workerPlace) {
+      $workerPlaceCounter = $workerPlace->place->counters->filter(function ($counter) {
+        return !$counter->shared()->exists();
+      });
       $responseData['data']['place'][] = [
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
-        'counters' => $workerPlace->place->counters
+        'counters' => $workerPlaceCounter
           ->map(function ($counter) {
             return [
               'id' => $counter->id,
@@ -58,6 +81,7 @@ class PlaceController extends Controller
       ];
     }
 
+    // workerCounters
     $workerCounters = Worker_Counter::where('worker_id', $request->user()->id)->pluck('counter_id');
 
     $placeIdsFirst = Counter::whereIn('id', $workerCounters)
@@ -81,6 +105,10 @@ class PlaceController extends Controller
                 })
                 ->get();
 
+                $counters = $counters->filter(function ($counter) {
+                  return !$counter->shared()->exists();
+                });
+
                 $responseData['data']['place']->push([
                     'id' => $place->id,
                     'place_id' => $place->place_id,
@@ -101,11 +129,11 @@ class PlaceController extends Controller
     }
 
 
+
     return response()->json($responseData);
   }
 
-  public function place_workers($id, Request $request)
-  {
+  public function place_workers($id, Request $request) {
     $place = Place::where('id', $id)->first();
     $workers = Place_Worker::where('place_id', $id)->pluck('worker_id');
     $users = User::where('role','!=','admin')->pluck('id', 'fullname');
@@ -116,15 +144,13 @@ class PlaceController extends Controller
       ->with('users', $users);
   }
 
-  public function place_counters($id, Request $request)
-  {
+  public function place_counters($id, Request $request) {
     $place = Place::where('id', $id)->first();
 
     return view('dashboard.places.counters')->with('place', $place);
   }
 
-  public function destroy(Request $request,$id)
-  {
+  public function destroy(Request $request,$id) {
 
     $validator = Validator::make($request->all(), [
       'password' => 'required|string',

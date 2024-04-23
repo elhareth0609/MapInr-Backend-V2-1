@@ -37,4 +37,9 @@ class Counter extends Model
     {
         return $this->hasMany(Worker_Counter::class);
     }
+
+    public function shared() {
+      return $this->hasOne(Shared::class,'counter_id');
+    }
+
 }
