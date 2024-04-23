@@ -39,7 +39,7 @@ class PlaceController extends Controller
         return [
           'id' => $counter->id,
           'counter_id' => $counter->counter_id,
-          'place_id' => $counter->place_id,
+          'place_id' => 999999999999999999,
           'phone' => $counter->phone,
           'name' => $counter->name,
           'latitude' => $counter->latitude,
