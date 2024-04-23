@@ -67,8 +67,11 @@ class PlaceController extends Controller
         'id' => $workerPlace->place->id,
         'place_id' => $workerPlace->place->place_id,
         'counters' => $workerPlace->place->counters
+        ->reject(function ($counter) {
+          return $counter->shared()->exists();
+        })
           ->map(function ($counter) {
-            if ( !$counter->shared()->exists()) {
+            // if ( !$counter->shared()->exists()) {
             return [
               'id' => $counter->id,
               'counter_id' => $counter->counter_id,
@@ -78,7 +81,7 @@ class PlaceController extends Controller
               'latitude' => $counter->latitude,
               'longitude' => $counter->longitude,
             ];
-          }
+          // }
           }),
       ];
     }
