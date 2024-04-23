@@ -33,8 +33,8 @@ class PlaceController extends Controller
     $sharedCounters = Counter::has('shared')->with('shared')->get();
 
     $responseData['data']['place'][] = [
-      'id' => 'shared',
-      'place_id' => 'shared',
+      'id' => 999999999999999999,
+      'place_id' => '0099',
       'counters' => $sharedCounters->map(function ($counter) {
         return [
           'id' => $counter->id,

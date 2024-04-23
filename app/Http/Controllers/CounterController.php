@@ -13,80 +13,80 @@ use Illuminate\Validation\Rule;
 
 class CounterController extends Controller
 {
-    public function create(Request $request) {
+  public function create(Request $request) {
 
-      $validator = Validator::make($request->all(), [
-          'name'      => 'required|string|max:255',
-          'longitude' => 'required|numeric',
-          'id' => [
-            'sometimes',
-            'numeric',
-            Rule::exists('counters', 'id')->where(function ($query) {
-              $query->where('status', '1');
-            }),
-          ],
-          'latitude'  => 'required|numeric',
-          'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
-          'note'      => 'sometimes|string',
-          'phone'     => 'sometimes|string'
-      ]);
+    $validator = Validator::make($request->all(), [
+        'name'      => 'required|string|max:255',
+        'longitude' => 'required|numeric',
+        'id' => [
+          'sometimes',
+          'numeric',
+          Rule::exists('counters', 'id')->where(function ($query) {
+            $query->where('status', '1');
+          }),
+        ],
+        'latitude'  => 'required|numeric',
+        'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+        'note'      => 'sometimes|string',
+        'phone'     => 'sometimes|string'
+    ]);
 
-      if ($validator->fails()) {
-        return response()->json([
-          'status' => 0,
-          'message' => 'Validation failed : ' . $validator->errors()->first(),
-          'error' => $validator->errors()->first(),
-        ], 422);
-      }
-
-      try {
-
-        $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
-        if($place) {
-          $place->counter_id;
-        }
-        $uniqueName = null;
-        // if ! $request->id do this
-        if ($request->has('photo')) {
-          $timeName      = time();
-          $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
-          $fileExtension = $request->file('photo')->getClientOriginalExtension();
-          $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
-          $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
-        }
-
-        if ($request->id) {
-          $counterSelected = Counter::find($request->id);
-          $id = $counterSelected->counter_id;
-        } else {
-          $id = 0;
-        }
-
-        $counter = new Counter();
-        $counter->name = $request->name;
-        $counter->place_id = 0;
-        $counter->worker_id = $request->user()->id;
-        $counter->counter_id = $id;
-        $counter->longitude = $request->longitude;
-        $counter->latitude = $request->latitude;
-        $counter->picture = $uniqueName ;
-        $counter->phone = $request->phone;
-        $counter->note = $request->note;
-        $counter->status = '0';
-        $counter->save();
-
-        return response()->json([
-            'status' => 1,
-            'message' => 'Created successfully',
-            'counter' => $counter->id
-        ]);
-      } catch (\Exception $e) {
-        return response()->json([
-          'status' => 0,
-          'message' => $e->getMessage(),
-        ]);
-      }
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
     }
+
+    try {
+
+      $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
+      if($place) {
+        $place->counter_id;
+      }
+      $uniqueName = null;
+      // if ! $request->id do this
+      if ($request->has('photo')) {
+        $timeName      = time();
+        $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
+        $fileExtension = $request->file('photo')->getClientOriginalExtension();
+        $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
+        $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+      }
+
+      if ($request->id) {
+        $counterSelected = Counter::find($request->id);
+        $id = $counterSelected->counter_id;
+      } else {
+        $id = 0;
+      }
+
+      $counter = new Counter();
+      $counter->name = $request->name;
+      $counter->place_id = 0;
+      $counter->worker_id = $request->user()->id;
+      $counter->counter_id = $id;
+      $counter->longitude = $request->longitude;
+      $counter->latitude = $request->latitude;
+      $counter->picture = $uniqueName ;
+      $counter->phone = $request->phone;
+      $counter->note = $request->note;
+      $counter->status = '0';
+      $counter->save();
+
+      return response()->json([
+          'status' => 1,
+          'message' => 'Created successfully',
+          'counter' => $counter->id
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
 
   public function create_lot(Request $request) {
     $validator = Validator::make($request->all(), [
