@@ -30,7 +30,12 @@ class PlaceController extends Controller
     ];
 
     // shared
-    $sharedCounters = Counter::has('shared')->with('shared')->get();
+    $sharedCounters = Counter::has('shared')
+    ->with('shared')
+    ->whereHas('shared', function ($query) use ($request) {
+        $query->where('user_id', $request->user()->id);
+    })
+    ->get();
 
     $responseData['data']['place'][] = [
       'id' => 999999999999999999,

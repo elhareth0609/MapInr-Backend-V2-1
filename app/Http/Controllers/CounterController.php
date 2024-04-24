@@ -402,6 +402,7 @@ class CounterController extends Controller
 
       $share = new Shared();
       $share->counter_id = $newCounter->id;
+      $share->user_id = $worker->id;
       $share->save();
 
       return response()->json([

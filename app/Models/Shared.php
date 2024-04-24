@@ -10,7 +10,8 @@ class Shared extends Model
     use HasFactory;
 
     protected $fillable = [
-      'counter_id'
+      'counter_id',
+      'user_id'
     ];
 
     public function counter()
