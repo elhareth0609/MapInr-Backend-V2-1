@@ -398,6 +398,7 @@ class CounterController extends Controller
         $newCounter->picture = $uniqueName;
       }
       $newCounter->worker_id = $worker->id;
+      $newCounter->status = '0';
       $newCounter->save();
 
       $share = new Shared();
