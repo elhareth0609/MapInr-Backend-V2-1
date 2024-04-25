@@ -552,6 +552,7 @@ class DataTablesController extends Controller
       if ($type) {
         $wallets->where('transaction_type', $type);
       }
+      $wallets->orderBy('created_at', 'desc');
 
     if ($request->ajax()) {
 
@@ -656,8 +657,8 @@ class DataTablesController extends Controller
     if ($type) {
       $wallets->where('transaction_type', $type);
     }
+    $wallets->orderBy('created_at', 'desc');
 
-    $wallets->get();
 
     if ($request->ajax()) {
       return DataTables::of($wallets)

@@ -348,7 +348,14 @@ class CounterController extends Controller
       foreach ($request->ids as $id) {
           $counter = Counter::find($id);
           if ($counter) {
-              $counter->delete();
+            $photoPath = 'public/assets/img/counters/' . $counter->picture;
+
+            // Check if the photo exists and delete it
+            if ($counter->picture && Storage::exists($photoPath)) {
+                Storage::delete($photoPath);
+            }
+
+            $counter->delete();
           }
       }
 
