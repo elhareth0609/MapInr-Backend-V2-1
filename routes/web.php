@@ -150,8 +150,8 @@ Route::post('/check-password', [UserController::class, 'check_password'])->name(
 
 Route::get('wallets/{id}/reject', [WalletController::class, 'reject'])->name('wallet.reject');
 Route::post('wallets/{id}/accept', [WalletController::class, 'accept'])->name('wallet.accept');
-Route::post('wallets/{id}/delete', [WalletController::class, 'delete'])->name('wallet.delete');
-Route::post('wallets/{id}/hide', [WalletController::class, 'hide'])->name('wallet.hide');
+Route::delete('wallets/{id}/delete', [WalletController::class, 'delete'])->name('wallet.delete');
+Route::get('wallets/{id}/hide', [WalletController::class, 'hide'])->name('wallet.hide');
 
 
 

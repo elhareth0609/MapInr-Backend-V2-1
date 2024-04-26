@@ -139,7 +139,12 @@
     "Accept": "قبول",
     "Reject": "رفض",
     "Accepted Successful.": "تم القبول بنجاح.",
-    "Rejected Successful.": "تم الرفض بنجاح."
+    "Rejected Successful.": "تم الرفض بنجاح.",
+    "Hidden" : "مخفي",
+    "Hide" : "إخفاء",
+    "Transaction Delete" : "حذف العملية",
+    "Do You Really want to delete This Transaction." : "هل تريد حقًا حذف هذا العملية؟",
+    "Hidden Successfully" : "تم الإخفاء بنجاح."
 
 
 

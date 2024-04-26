@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
@@ -163,17 +166,52 @@ class WalletController extends Controller
     $transaction->save();
     return response()->json([
       'state' => __("Success"),
-      'message' => __("Hidden Successful."),
+      'message' => __("Hidden Successfully"),
     ], 200);
   }
 
   public function delete(Request $request,$id) {
-    $transaction = Wallet::find($id);
-    $transaction->delete();
-    return response()->json([
-      'state' => __("Success"),
-      'message' => __("Deleted Successful."),
-    ], 200);
+    $validator = Validator::make($request->all(), [
+        'password' => 'required|string',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+          // Check if the password is correct
+          $admin = User::find(Auth::user()->id);
+        if ($admin && Hash::check($request->password, $admin->password)) {
+
+          $transaction = Wallet::find($id);
+          $transaction->delete();
+          return response()->json([
+            'state' => __("Success"),
+            'message' => __("Deleted Successfully"),
+          ], 200);
+        } else {
+          // Password is incorrect
+          return response()->json([
+              'status' => 1,
+              'message' => __('Error'),
+              'errors' => __('Password Incorrect')
+          ], 422);
+      }
+    } catch (\Exception $e) {
+        // Handle any other exceptions
+        return response()->json([
+            'status' => 1,
+            'message' => __('Error'),
+            'errors' => $e->getMessage()
+        ], 422);
+    }
+
   }
 
 }

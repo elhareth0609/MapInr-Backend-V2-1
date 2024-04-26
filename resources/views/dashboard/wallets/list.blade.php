@@ -3,10 +3,117 @@
 @section('title', 'All Transitions')
 
 @section('content')
-  <div class="row w-100 d-flex align-items-baseline mb-2">
-    <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
-      <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Transitions')}}
-    </h4>
+
+
+<div class="row w-100 d-flex align-items-baseline mb-2">
+  <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
+    <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Transitions')}}
+  </h4>
+  
+</div>
+
+
+        <div class="row w-100 mx-auto">
+          <div class="col-md-3 col-sm-4 my-1 px-0">
+            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="card-title widget-card-title mb-3">{{ __('Pending') }}</h5>
+                    @if ($data->pending > 0)
+                      <h4 class="card-subtitle text-success m-0">{{ $data->pending }} د.ج</h4>
+                    @else
+                      <h4 class="card-subtitle text-danger m-0">{{ $data->pending * -1 }} د.ج</h4>
+                    @endif
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                        <i class="mdi mdi-clock-time-eight-outline fs-4"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-4 my-1 px-0">
+            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="card-title widget-card-title mb-3">{{ __('Completed') }}</h5>
+                    @if ($data->completed > 0)
+                      <h4 class="card-subtitle text-success m-0">{{ $data->completed }} د.ج</h4>
+                    @else
+                      <h4 class="card-subtitle text-danger m-0">{{ $data->completed * -1 }} د.ج</h4>
+                    @endif
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                        <i class="mdi mdi-check-all fs-4"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-4 my-1 px-0">
+            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="card-title widget-card-title mb-3">{{ __('Rejected') }}</h5>
+                    @if ($data->rejected > 0)
+                      <h4 class="card-subtitle text-success m-0">{{ $data->rejected }} د.ج</h4>
+                    @else
+                      <h4 class="card-subtitle text-danger m-0">{{ $data->rejected * -1 }} د.ج</h4>
+                    @endif
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                        <i class="mdi mdi-alert-outline fs-4"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-4 my-1 px-0">
+            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="card-title widget-card-title mb-3">{{ __('Hidden') }}</h5>
+                    @if ($data->hidden > 0)
+                    <h4 class="card-subtitle text-success m-0">{{ $data->hidden }} د.ج</h4>
+                    @else
+                    <h4 class="card-subtitle text-danger m-0">{{ $data->hidden * -1 }} د.ج</h4>
+                    @endif
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                        <i class="mdi mdi-circle-off-outline fs-4"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
       {{-- <button type="button" class="m-1 btn btn-outline-primary col-lg-2 col-xl-2 col-md-3 col-sm-3 col-12">
         <span class="tf-icons mdi mdi-upload me-1"></span>{{__('Import')}}
@@ -15,7 +122,6 @@
         <span class="tf-icons mdi mdi-plus-outline me-1"></span>{{__('Add')}}
       </button> --}}
     </div>
-  </div>
 <!-- Responsive Table -->
   <div class="card">
     <div class="row w-100">
@@ -39,6 +145,7 @@
           <option value="pending">{{ __('Pending') }}</option>
           <option value="completed">{{ __('Completed') }}</option>
           <option value="rejected">{{ __('Rejected') }}</option>
+          <option value="hidden">{{ __('Hidden') }}</option>
         </select>
       </div>
       <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
@@ -110,7 +217,7 @@ var dataTable;
 
 
 
-function acceptTransaction(id) {
+    function acceptTransaction(id) {
         var amount = $('input[name="amount-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
         var description = $('textarea[name="description-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
         var type = $('select[name="type-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
@@ -169,6 +276,63 @@ function acceptTransaction(id) {
               }
           });
     }
+
+    function hideTransaction(id) {
+
+        $.ajax({
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/wallets/' + id + '/hide',
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                dataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.responseJSON.status,
+                    text: error.responseJSON.errors,
+                });
+            }
+        });
+    }
+
+    function submitDistroyTransaction(id) {
+      var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
+      $.ajax({
+          type: 'DELETE',
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            password: password
+          },
+          url: '/wallets/' + id + '/delete',
+          success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+              });
+              dataTable.ajax.reload();
+          },
+          error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.message,
+                  text: error.responseJSON.errors,
+              });
+          }
+      });
+    }
+
 $(document).ready( function () {
     $.ajaxSetup({
         headers: {

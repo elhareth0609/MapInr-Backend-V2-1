@@ -522,6 +522,12 @@ class DataTablesController extends Controller
       }
       $wallets->orderBy('created_at', 'desc');
 
+      $data = new \stdClass();
+      $data->pending = User::allProfit('pending');
+      $data->completed = User::allProfit('completed');
+      $data->rejected = User::allProfit('rejected');
+      $data->hidden = User::allProfit('hidden');
+  
     if ($request->ajax()) {
 
       return DataTables::of($wallets)
@@ -549,7 +555,9 @@ class DataTablesController extends Controller
         } else if ($wallet->status === 'completed') {
           return '<span class="badge rounded-pill bg-label-success me-1">' . __("Completed"). '</span>';
         } else if ($wallet->status === 'rejected') {
-        return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+        } else if ($wallet->status === 'hidden') {
+          return '<span class="badge rounded-pill bg-label-warning me-1">' . __("Hidden"). '</span>';
         }
       })
       ->editColumn('description', function($wallet) {
@@ -558,6 +566,7 @@ class DataTablesController extends Controller
       ->addColumn('actions', function($wallet) {
         return '
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-delete-modal-' . $wallet->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
         <!-- Modal -->
         <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
@@ -592,13 +601,56 @@ class DataTablesController extends Controller
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction(' . $wallet->id . ')">'. __("Accept") .'</button>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="rejectTransaction(' . $wallet->id . ')">'. __("Reject") .'</button>
-                </div>
+                ' . ($wallet->status == 'hidden' ? '
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                ' : ($wallet->status == 'rejected' ? '
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
+                ' : ($wallet->status == 'completed' ? '
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
+                ' : '
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                '))) . '
+            </div>
               </form>
             </div>
           </div>
         </div>
+
+
+
+
+
+        <div class="modal fade" id="transaction-delete-modal-' . $wallet->id . '" tabindex="-1" data-bs-backdrop="static" >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <form class="modal-content" id="deleteTransaction' . $wallet->id . '">
+            <div class="modal-header">
+              <h4 class="modal-title">' .  __("Transaction Delete") . '</h4>
+            </div>
+            <div class="modal-body text-center">
+              <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+              <div class="row justify-content-center text-wrap">
+                '. __("Do You Really want to delete This Transaction.") .'
+              </div>
+              <div class="row">
+                <div class="col mb-4 mt-2">
+                  <div class="input-group" dir="ltr">
+                    <input type="password" class="form-control" id="show-password-transaction-' . $wallet->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $wallet->id . '" name="password-' . $wallet->id . '" required />
+                    <span class="input-group-text cursor-pointer show-password" data-transition-id="' . $wallet->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyTransaction(' . $wallet->id . ')">'. __("Submit") .'</button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+            </div>
+          </form>
+        </div>
+      </div>
         ';
       })
       ->editColumn('created_at', function($wallet) {
@@ -608,7 +660,8 @@ class DataTablesController extends Controller
       ->make(true);
 
     }
-      return view('dashboard.wallets.list');
+      return view('dashboard.wallets.list')
+      ->with('data', $data);
 
   }
 
@@ -627,6 +680,12 @@ class DataTablesController extends Controller
     }
     $wallets->orderBy('created_at', 'desc');
 
+
+    $data = new \stdClass();
+    $data->pending = User::userProfit('pending',$request->id);
+    $data->completed = User::userProfit('completed',$request->id);
+    $data->rejected = User::userProfit('rejected',$request->id);
+    $data->hidden = User::userProfit('hidden',$request->id);
 
     if ($request->ajax()) {
       return DataTables::of($wallets)
@@ -649,7 +708,9 @@ class DataTablesController extends Controller
         } else if ($wallet->status === 'completed') {
           return '<span class="badge rounded-pill bg-label-success me-1">' . __("Completed"). '</span>';
         } else if ($wallet->status === 'rejected') {
-        return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+          return '<span class="badge rounded-pill bg-label-danger me-1">' . __("Rejected"). '</span>';
+        } else if ($wallet->status === 'hidden') {
+          return '<span class="badge rounded-pill bg-label-warning me-1">' . __("Hidden"). '</span>';
         }
       })
       ->editColumn('description', function($wallet) {
@@ -657,50 +718,96 @@ class DataTablesController extends Controller
       })
       ->addColumn('actions', function($wallet) {
         return '
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
+            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
+            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-delete-modal-' . $wallet->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
-        <!-- Modal -->
-        <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <form class="modal-content" id="editTransaction-' . $wallet->id . '">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Edit Transaction") . '</h4>
+            <!-- Modal -->
+            <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <form class="modal-content" id="editTransaction-' . $wallet->id . '">
+                    <div class="modal-header">
+                      <h4 class="modal-title" >' .  __("Edit Transaction") . '</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                      <div class="row">
+                        <div class="col mb-4 mt-2">
+                        <div class="form-floating form-floating-outline mb-4">
+                          <input class="form-control" type="number" placeholder="18" name="amount-' . $wallet->id . '" min="0" value="' . $wallet->amount . '"  />
+                          <label for="html5-number-input">' .  __("Amount") . '</label>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-4 mt-2">
+                          <div class="form-floating form-floating-outline mb-4">
+                            <textarea class="form-control h-px-100" id="exampleFormControlTextarea'. $wallet->id .'" name="description-' . $wallet->id . '" placeholder="' .  __("Comments here...") . '">' . $wallet->description . '</textarea>
+                            <label for="exampleFormControlTextarea1">' .  __("Description") . '</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <select class="form-select form-select-lg" name="type-' . $wallet->id . '">
+                          <option value="credit" ' . ($wallet->transaction_type == 'credit'? 'selected' : '') . '>' .  __("Credit") . '</option>
+                          <option value="debit" ' . ($wallet->transaction_type == 'debit'? 'selected' : '') . '>' .  __("Debit") . '</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                    ' . ($wallet->status == 'hidden' ? '
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                    ' : ($wallet->status == 'rejected' ? '
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
+                    ' : ($wallet->status == 'completed' ? '
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
+                    ' : '
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
+                    '))) . '
                 </div>
-                <div class="modal-body text-center">
-                  <div class="row">
-                    <div class="col mb-4 mt-2">
-                    <div class="form-floating form-floating-outline mb-4">
-                      <input class="form-control" type="number" placeholder="18" name="amount-' . $wallet->id . '" min="0" value="' . $wallet->amount . '" id="html5-number-input" />
-                      <label for="html5-number-input">' .  __("Amount") . '</label>
-                    </div>
-                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <!-- Modal -->
+  
+            <div class="modal fade" id="transaction-delete-modal-' . $wallet->id . '" tabindex="-1" data-bs-backdrop="static" >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <form class="modal-content" id="deleteTransaction' . $wallet->id . '">
+                  <div class="modal-header">
+                    <h4 class="modal-title">' .  __("Transaction Delete") . '</h4>
                   </div>
-                  <div class="row">
-                    <div class="col mb-4 mt-2">
-                      <div class="form-floating form-floating-outline mb-4">
-                        <textarea class="form-control h-px-100" id="exampleFormControlTextarea1" name="description-' . $wallet->id . '" placeholder="' .  __("Comments here...") . '">' . $wallet->description . '</textarea>
-                        <label for="exampleFormControlTextarea1">' .  __("Description") . '</label>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do You Really want to delete This Transaction.") .'
+                    </div>
+                    <div class="row">
+                      <div class="col mb-4 mt-2">
+                        <div class="input-group" dir="ltr">
+                          <input type="password" class="form-control" id="show-password-transaction-' . $wallet->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $wallet->id . '" name="password-' . $wallet->id . '" required />
+                          <span class="input-group-text cursor-pointer show-password" data-transition-id="' . $wallet->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <select id="largeSelect" class="form-select form-select-lg" name="type-' . $wallet->id . '">
-                      <option value="credit" ' . ($wallet->transaction_type == 'credit'? 'selected' : '') . '>' .  __("Credit") . '</option>
-                      <option value="debit" ' . ($wallet->transaction_type == 'debit'? 'selected' : '') . '>' .  __("Debit") . '</option>
-                    </select>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyTransaction(' . $wallet->id . ')">'. __("Submit") .'</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction(' . $wallet->id . ')">'. __("Accept") .'</button>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="rejectTransaction(' . $wallet->id . ')">'. __("Reject") .'</button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
-          </div>
-        </div>
         ';
-      })
+    })
+    
       ->editColumn('created_at', function($wallet) {
           return $wallet->created_at->format('Y-m-d');
       })
@@ -709,7 +816,8 @@ class DataTablesController extends Controller
 
     }
       return view('dashboard.users.transitions')
-      ->with('user',$user);
+      ->with('user',$user)
+      ->with('data',$data);
 
   }
 }

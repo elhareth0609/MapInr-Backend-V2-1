@@ -52,4 +52,37 @@ class User extends Authenticatable
     {
         return $this->hasMany(Wallet::class);
     }
+
+    public static function userProfit($type,$id) {
+
+      $credit = Wallet::where('user_id', $id)
+      ->where('transaction_type', 'credit')
+      ->where('status', $type)
+      ->get()->sum('amount');
+
+      $debit = Wallet::where('user_id', $id)
+            ->where('transaction_type', 'debit')
+            ->where('status', $type)
+            ->get()->sum('amount');
+
+      $totalAmount = $credit - $debit;
+
+      return $totalAmount;
+    }
+  
+    public static function allProfit($type) {
+  
+      $credit = Wallet::where('transaction_type', 'credit')
+      ->where('status', $type)
+      ->get()->sum('amount');
+
+      $debit = Wallet::where('transaction_type', 'debit')
+            ->where('status', $type)
+            ->get()->sum('amount');
+
+      $totalAmount = $credit - $debit;
+
+      return $totalAmount;
+  }
+  
 }
