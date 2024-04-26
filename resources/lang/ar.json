@@ -144,7 +144,10 @@
     "Hide" : "إخفاء",
     "Transaction Delete" : "حذف العملية",
     "Do You Really want to delete This Transaction." : "هل تريد حقًا حذف هذا العملية؟",
-    "Hidden Successfully" : "تم الإخفاء بنجاح."
+    "Hidden Successfully" : "تم الإخفاء بنجاح.",
+    "Delete Account" : "حذف الحساب",
+    "Are you sure you want to delete your account?" : "هل أنت متأكد أنك تريد حذف حسابك؟",
+    "Once you delete your account, there is no going back. Please be certain." : "بمجرد حذف حسابك، لا يمكن العودة. يرجى التأكد بدقة."
 
 
 
