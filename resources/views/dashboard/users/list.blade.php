@@ -139,46 +139,13 @@
   #users_info {
     display: none;
   }
-  .delete-alert-span::before {
-    font-size: 110px;
-  }
+
   td , tr{
     text-align: center;
   }
 </style>
 <script>
   var dataTable;
-        // function submitDistroyUser(id) {
-        //   var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
-
-        //     $.ajax({
-        //         type: 'DELETE',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         data: {
-        //           password: password
-        //         },
-        //         url: '/user/destroy/' + id,
-        //         success: function (response) {
-        //             Swal.fire({
-        //                 icon: 'success',
-        //                 title: response.state,
-        //                 text: response.message,
-        //             });
-        //             dataTable.ajax.reload();
-        //         },
-        //         error: function (error) {
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: error.responseJSON.status,
-        //                 text: error.responseJSON.errors,
-        //             });
-        //         }
-        //     });
-        // }
-
-
 
 
 $(document).ready( function () {
