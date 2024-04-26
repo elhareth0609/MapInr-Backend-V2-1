@@ -66,10 +66,102 @@
       </div>
       <!-- /Account -->
     </div>
+    <div class="card">
+      <h5 class="card-header fw-normal">{{ __('Delete Account') }}</h5>
+      <div class="card-body">
+        <div class="mb-3 col-12 mb-0">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading mb-1">{{ __('Are you sure you want to delete your account?') }}</h6>
+            <p class="mb-0">{{ __('Once you delete your account, there is no going back. Please be certain.') }}</p>
+          </div>
+        </div>
+        <div >
+          {{-- <div class="form-check mb-3 ms-3">
+            <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation" />
+            <label class="form-check-label" for="accountActivation">{{ __('I confirm my account deleted') }}</label>
+          </div> --}}
+          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user-delete-modal">{{ __('Delete Account') }}</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+
+
+<style>
+    .delete-alert-span::before {
+    font-size: 110px;
+  }
+</style>
+
+      <!-- Modal -->
+      <div class="modal fade" id="user-delete-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form class="modal-content" id="createNewMunicipality">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalCenterTitle">{{  __('User Delete') }}</h4>
+              </div>
+              <div class="modal-body text-center">
+                <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                <div class="row justify-content-center text-wrap">
+                  {{  __('Do You Really want to delete This User.') }}
+                </div>
+                <div class="row">
+                  <div class="col mb-4 mt-2">
+                    <div class="input-group" dir="ltr">
+                      {{-- <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required /> --}}
+                      <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password" required />
+                      <span class="input-group-text cursor-pointer show-password" ><i class="mdi mdi-lock-outline"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser({{  $user->id }})">{{ __('Submit') }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{  __('Close') }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
 <script type="text/javascript">
+
+
+function submitDistroyUser(id) {
+          var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
+
+            $.ajax({
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                  password: password
+                },
+                url: '/user/destroy/' + id,
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.state,
+                        text: response.message,
+                      }).then(() => {
+                          window.location.href = '/users';
+                      });
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: error.responseJSON.status,
+                        text: error.responseJSON.errors,
+                    });
+                }
+            });
+        }
+
 $(document).ready( function () {
     $.ajaxSetup({
         headers: {

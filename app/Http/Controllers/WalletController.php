@@ -88,6 +88,7 @@ class WalletController extends Controller
   public function get(Request $request) {
     $transactions = Wallet::select('id', 'amount', 'transaction_type', 'description', 'status', 'created_at')
     ->where('user_id', $request->user()->id)
+    ->where('status', '!=','hidden')
     ->latest('created_at')
     ->get();
 
@@ -155,4 +156,24 @@ class WalletController extends Controller
       ], 200);
     }
   }
+
+  public function hide(Request $request,$id) {
+    $transaction = Wallet::find($id);
+    $transaction->status = 'hidden';
+    $transaction->save();
+    return response()->json([
+      'state' => __("Success"),
+      'message' => __("Hidden Successful."),
+    ], 200);
+  }
+
+  public function delete(Request $request,$id) {
+    $transaction = Wallet::find($id);
+    $transaction->delete();
+    return response()->json([
+      'state' => __("Success"),
+      'message' => __("Deleted Successful."),
+    ], 200);
+  }
+
 }
