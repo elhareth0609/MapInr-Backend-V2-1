@@ -155,37 +155,6 @@
     var dataTable;
 
 
-      function submitDistroyMunicipality(id) {
-        var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
-
-          $.ajax({
-              type: 'DELETE',
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              data: {
-                password: password
-              },
-              url: '/municipality/destroy/' + id,
-              success: function (response) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: response.state,
-                      text: response.message,
-                  });
-                  dataTable.ajax.reload();
-              },
-              error: function (error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: error.responseJSON.message,
-                      text: error.responseJSON.errors,
-                  });
-              }
-          });
-      }
-
-
       function downloadOnesMunicipality(id) {
         $.ajax({
             url: '/exoprt-file-zip/' + id,

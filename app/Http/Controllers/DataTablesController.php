@@ -406,36 +406,6 @@ class DataTablesController extends Controller
       ->addColumn('actions', function($municipality) {
         return '
         <a href="' . url("/municipality/{$municipality->id}/places") . '" data-municipality-id="' . $municipality->id . '"><icon class="mdi mdi-pen"></icon></a>
-        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#municipality-delete-modal-' . $municipality->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
-          <!-- Modal -->
-
-          <div class="modal fade" id="municipality-delete-modal-' . $municipality->id . '" tabindex="-1" data-bs-backdrop="static" >
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <form class="modal-content" id="createNewMunicipality">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Municipality Delete") . '</h4>
-                </div>
-                <div class="modal-body text-center">
-                  <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-                  <div class="row justify-content-center text-wrap">
-                    '. __("Do You Really want to delete This Municipality.") .'
-                  </div>
-                  <div class="row">
-                    <div class="col mb-4 mt-2">
-                      <div class="input-group" dir="ltr">
-                        <input type="password" class="form-control" id="show-password-municipality-' . $municipality->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $municipality->id . '" name="password-' . $municipality->id . '" required />
-                        <span class="input-group-text cursor-pointer show-password" data-municipality-id="' . $municipality->id . '"><i class="mdi mdi-lock-outline"></i></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyMunicipality(' . $municipality->id . ')">'. __("Submit") .'</button>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
-                </div>
-              </form>
-            </div>
-          </div>
               ';
         })
       ->rawColumns(['actions'])
@@ -527,7 +497,7 @@ class DataTablesController extends Controller
       $data->completed = User::allProfit('completed');
       $data->rejected = User::allProfit('rejected');
       $data->hidden = User::allProfit('hidden');
-  
+
     if ($request->ajax()) {
 
       return DataTables::of($wallets)
@@ -777,7 +747,7 @@ class DataTablesController extends Controller
 
 
             <!-- Modal -->
-  
+
             <div class="modal fade" id="transaction-delete-modal-' . $wallet->id . '" tabindex="-1" data-bs-backdrop="static" >
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <form class="modal-content" id="deleteTransaction' . $wallet->id . '">
@@ -807,7 +777,7 @@ class DataTablesController extends Controller
             </div>
         ';
     })
-    
+
       ->editColumn('created_at', function($wallet) {
           return $wallet->created_at->format('Y-m-d');
       })

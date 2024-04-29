@@ -76,10 +76,6 @@
           </div>
         </div>
         <div >
-          {{-- <div class="form-check mb-3 ms-3">
-            <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation" />
-            <label class="form-check-label" for="accountActivation">{{ __('I confirm my account deleted') }}</label>
-          </div> --}}
           <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user-delete-modal">{{ __('Delete Account') }}</button>
         </div>
       </div>
@@ -95,37 +91,37 @@
   }
 </style>
 
-      <!-- Modal -->
-      <div class="modal fade" id="user-delete-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <form class="modal-content" id="createNewMunicipality">
-              <div class="modal-header">
-                <h4 class="modal-title" id="modalCenterTitle">{{  __('User Delete') }}</h4>
+<!-- Modal -->
+<div class="modal fade" id="user-delete-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form class="modal-content" id="createNewMunicipality">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalCenterTitle">{{  __('User Delete') }}</h4>
+        </div>
+        <div class="modal-body text-center">
+          <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+          <div class="row justify-content-center text-wrap">
+            {{  __('Do You Really want to delete This User.') }}
+          </div>
+          <div class="row">
+            <div class="col mb-4 mt-2">
+              <div class="input-group" dir="ltr">
+                {{-- <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required /> --}}
+                <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password" required />
+                <span class="input-group-text cursor-pointer show-password" ><i class="mdi mdi-lock-outline"></i></span>
               </div>
-              <div class="modal-body text-center">
-                <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-                <div class="row justify-content-center text-wrap">
-                  {{  __('Do You Really want to delete This User.') }}
-                </div>
-                <div class="row">
-                  <div class="col mb-4 mt-2">
-                    <div class="input-group" dir="ltr">
-                      {{-- <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required /> --}}
-                      <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password" required />
-                      <span class="input-group-text cursor-pointer show-password" ><i class="mdi mdi-lock-outline"></i></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser({{  $user->id }})">{{ __('Submit') }}</button>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{  __('Close') }}</button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyUser({{  $user->id }})">{{ __('Submit') }}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{  __('Close') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 <script type="text/javascript">
@@ -168,6 +164,17 @@ $(document).ready( function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $(document).on('click', '.show-password', function () {
+        var inputField = $(this).closest('.modal-content').find('.form-control');
+          if (inputField.attr('type') === 'password') {
+              inputField.attr('type', 'text');
+              $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
+          } else {
+              inputField.attr('type', 'password');
+              $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
+          }
+      });
 
     $('#copyPassword').on('click', function() {
         var passwordInput = $('#passwordInput');
