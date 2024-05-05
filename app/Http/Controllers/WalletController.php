@@ -11,6 +11,44 @@ use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
 {
+  public function add(Request $request) {
+
+    $validator = Validator::make($request->all(), [
+      'amount' => 'required|numeric',
+      'id' => 'required|numeric',
+      'type' => 'required|string|in:credit,debit',
+      'description' => 'nullable|string',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => __('Validation failed'),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+
+      $wallet = new Wallet();
+      $wallet->user_id = $request->id;
+      $wallet->amount = $request->amount;
+      $wallet->transaction_type = $request->type;
+      $wallet->description = $request->description;
+      $wallet->save();
+
+      return response()->json([
+          'status' => 1,
+          'message' => __("Created Successfully"),
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
   public function create(Request $request) {
 
     $validator = Validator::make($request->all(), [

@@ -152,6 +152,7 @@ Route::get('wallets/{id}/reject', [WalletController::class, 'reject'])->name('wa
 Route::post('wallets/{id}/accept', [WalletController::class, 'accept'])->name('wallet.accept');
 Route::delete('wallets/{id}/delete', [WalletController::class, 'delete'])->name('wallet.delete');
 Route::get('wallets/{id}/hide', [WalletController::class, 'hide'])->name('wallet.hide');
+Route::post('transitions/add', [WalletController::class, 'add'])->name('transitions.add');
 
 
 
