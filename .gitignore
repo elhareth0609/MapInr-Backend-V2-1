@@ -6,6 +6,7 @@
 /storage/*.key
 
 # .env
+.env
 .env.backup
 .env.production
 .phpunit.result.cache
@@ -18,7 +19,6 @@ npm-debug.log
 /package-lock.json
 yarn-error.log
 yarn.lock
-.env
 package-lock.log
 /.idea
 /.vscode
