@@ -19,7 +19,6 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-  //
   public function user($id) {
     $user = User::find($id);
     return view('dashboard.users.index')
@@ -126,6 +125,27 @@ class UserController extends Controller
 
   public function addPlaceWorker(Request $request) {
 
+      $validator = Validator::make($request->all(), [
+        'place_id' => [
+          'required',
+          'integer',
+          'exists:places,id',
+          function($attribute, $value, $fail) {
+              if ($value == 0) {
+                  $fail('The ' . $attribute . ' must not be 0.');
+              }
+          },
+        ],
+      ]);
+
+      if ($validator->fails()) {
+        return response()->json([
+          'status' => 0,
+          'message' => __('Validation failed'),
+          'error' => $validator->errors()->first(),
+        ], 422);
+      }
+
       try {
         Place_Worker::where('place_id', $request->place_id)->delete();
 
@@ -149,7 +169,7 @@ class UserController extends Controller
         return response()->json([
           'status' => 0,
           'error' => $e->getMessage(),
-        ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+        ], 500);
       }
 
   }
@@ -157,7 +177,6 @@ class UserController extends Controller
   public function addWorkerPlace(Request $request) {
 
     try {
-      // Place_Worker::where('worker_id', $request->worker_id)->delete();
       Place_Worker::where('worker_id', $request->worker_id)
       ->where('place_id', '!=', 0)
       ->delete();
@@ -178,13 +197,13 @@ class UserController extends Controller
       ], 200);
 
 
-  } catch (\Exception $e) {
-    return response()->json([
-      'status' => 0,
-      'error' => $e->getMessage(),
-    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
 
-  }
+    }
   }
 
   public function addCounterWorker(Request $request) {
@@ -208,17 +227,26 @@ class UserController extends Controller
       ], 200);
 
 
-  } catch (\Exception $e) {
-    return response()->json([
-      'status' => 0,
-      'error' => $e->getMessage(),
-    ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500); // Assuming 500 is the appropriate HTTP status code for a server error
 
-  }
+    }
   }
 
 
   public function removePlaceWorker($id, $placeId) {
+
+    if ($placeId == 0) {
+      return response()->json([
+          'status' => 0,
+          'message' => __('Validation failed'),
+          'error' => __("Place Id Should Be Not 0."),
+      ], 422);
+    }
+
     try {
       $placeWorker = Place_Worker::where('worker_id', $id)->where('place_id', $placeId)->first();
       $placeWorker->delete();
@@ -268,27 +296,19 @@ class UserController extends Controller
 
   public function user_places($id) {
       $user = User::find($id);
-      $places = Place_Worker::where('worker_id', $id)->pluck('place_id');
-      // $allplaces = Place::pluck('id', 'place_name');
+      $places = Place_Worker::where('worker_id', $id)->where('place_id', '!=', 0)->pluck('place_id');
       $allplaces = Place::with('municipality')->pluck('id', 'place_name');
-      // $allplacesFormatted = $allplaces->map(function ($placeId, $placeName) {
-      //   $place = Place::find($placeId);
-      //   return [
-      //     'id' => $placeId,
-      //     'name' => "{$place->municipality->name} - {$placeName}"
-      //   ];
-      // });
+
       $allplacesFormatted = $allplaces->reject(function ($placeId, $placeName) {
         return $placeId === 0; // Filter out places with place_id equal to 0
-    })->map(function ($placeId, $placeName) {
-        $place = Place::find($placeId);
-        return [
-            'id' => $placeId,
-            'name' => "{$place->municipality->name} - {$placeName}"
-        ];
-    });
+      })->map(function ($placeId, $placeName) {
+          $place = Place::find($placeId);
+          return [
+              'id' => $placeId,
+              'name' => "{$place->municipality->name} - {$placeName}"
+          ];
+      });
 
-      // dd($places);
       return view('dashboard.users.places')
       ->with('places', $places)
       ->with('allplaces', $allplacesFormatted)
@@ -343,12 +363,12 @@ class UserController extends Controller
         ]);
 
     }
-  } catch (\Exception $e) {
-      return response()->json([
-        'status' => 0,
-        'error' => $e->getMessage(),
-      ],401);
-  }
+    } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'error' => $e->getMessage(),
+        ],401);
+    }
 
   }
 

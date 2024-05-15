@@ -54,6 +54,14 @@ class MunicipalityController extends Controller
         ], 422);
     }
 
+    if ($id == 0) {
+      return response()->json([
+          'status' => 0,
+          'message' => __('Validation failed'),
+          'error' => __("Place Id Should Be Not 0."),
+      ], 422);
+    }
+
     try {
         // Check if the password is correct
         $admin = User::find(Auth::user()->id);
@@ -89,7 +97,7 @@ class MunicipalityController extends Controller
             'errors' => $e->getMessage()
         ], 422);
     }
-}
+  }
 
 
   public function update(Request $request) {

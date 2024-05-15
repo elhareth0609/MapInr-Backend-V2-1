@@ -13,14 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class PlaceController extends Controller
 {
-  public function place($id)
-  {
+  public function place($id) {
     $place = Place::where('id', $id)->first();
     return view('dashboard.places.index')->with('place', $place);
   }
 
-  public function all_places(Request $request)
-  {
+  public function all_places(Request $request) {
 
     $responseData = [
       'status' => 1,
@@ -183,6 +181,14 @@ class PlaceController extends Controller
             'message' => __('Validation failed'),
             'errors' => $validator->errors()->first(),
         ], 422);
+    }
+
+    if ($id == 0) {
+      return response()->json([
+          'status' => 0,
+          'message' => __('Validation failed'),
+          'error' => __("Place Id Should Be Not 0."),
+      ], 422);
     }
 
     try {
