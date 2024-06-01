@@ -113,35 +113,35 @@
     var userCountersDataTable;
 
     function saveAudioNumber(counterId) {
-        var number = document.getElementById('audio-number-' + counterId).value;
-        $.ajax({
-            url: '/counter/save-audio-number/',
-            type: 'POST',
-            // headers: {
-            //  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            // },
-            data: {
-              _token: '{{ csrf_token() }}',
-              counter_id: counterId,
-              number: number
-            },
-            success: function (response) {
-              Swal.fire({
-                  icon: 'success',
-                  title: response.state,
-                  text: response.message,
-              });
-              userCountersDataTable.ajax.reload();
-            },
-            error: function (error) {
-              Swal.fire({
-                  icon: 'error',
-                  title: error.responseJSON.title,
-                  text: error.responseJSON.error,
-              });
-            }
-        });
-    }
+    var number = document.getElementById('audio-number-' + counterId).value;
+    $.ajax({
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+            counter_id: counterId,
+            number: number
+        },
+        url: '/counter/save-audio-number/',
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: response.state,
+                text: response.message,
+            });
+            userCountersDataTable.ajax.reload();
+        },
+        error: function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: error.responseJSON.title || 'Error',
+                text: error.responseJSON.error || 'An error occurred',
+            });
+        }
+    });
+}
+
 
     function submitRemoveCounterWorker(userid, counterid) {
 
