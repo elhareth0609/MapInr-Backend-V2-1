@@ -6,8 +6,9 @@ use App\Models\Counter;
 use App\Models\Shared;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -555,35 +556,33 @@ class CounterController extends Controller
     }
   }
 
-  public function saveAudioNumber(Request $request) {
-    $validator = Validator::make($request->all(), [
-      'counter_id' => 'required|exists:counters,id',
-      'number' => 'required|numeric'
-    ]);
+  public function saveAudioNumber(Request $request)
+  {
+      Log::info('Received request:', $request->all());
 
-    if ($validator->fails()) {
-      return response()->json([
-        'status' => 0,
-        'message' => 'Validation failed : ' . $validator->errors()->first(),
-        'error' => $validator->errors()->first(),
-      ], 422);
-    }
-
-    try {
-      $counter = Counter::find($request->counter_id);
-      $counter->name = $request->number;
-      $counter->save();
-
-      return response()->json([
-          'state' => __("Success"),
-          'message' => __("Number Saved Successfully")
-      ]);
-    } catch (\Exception $e) {
-      return response()->json([
-        'state' => __("Error"),
-        'message' => $e->getMessage(),
-      ]);
-    }
+      try {
+          $counter = Counter::find($request->input('counter_id'));
+          if ($counter) {
+              $counter->audio_number = $request->input('number');
+              $counter->save();
+              return response()->json([
+                  'state' => 'Success',
+                  'message' => 'Audio number saved successfully.',
+              ]);
+          } else {
+              return response()->json([
+                  'state' => 'Error',
+                  'message' => 'Counter not found.',
+              ], 404);
+          }
+      } catch (\Exception $e) {
+          Log::error('Error saving audio number:', ['error' => $e->getMessage()]);
+          return response()->json([
+              'state' => 'Error',
+              'message' => 'Failed to save audio number.',
+          ], 500);
+      }
   }
+
 
 }
