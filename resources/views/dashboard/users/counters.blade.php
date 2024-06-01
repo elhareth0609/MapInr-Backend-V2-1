@@ -115,13 +115,16 @@
     function saveAudioNumber(counterId) {
         var number = document.getElementById('audio-number-' + counterId).value;
         $.ajax({
-            url: '/counter/save-audio-number/',
             method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                counter_id: counterId,
-                number: number
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
+            data: {
+              _token: '{{ csrf_token() }}',
+              counter_id: counterId,
+              number: number
+            },
+            url: '/counter/save-audio-number/',
             success: function (response) {
               Swal.fire({
                   icon: 'success',
