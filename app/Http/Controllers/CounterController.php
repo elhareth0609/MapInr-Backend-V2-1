@@ -556,34 +556,34 @@ class CounterController extends Controller
   }
 
   public function saveAudioNumber(Request $request) {
-    // $validator = Validator::make($request->all(), [
-    //   'counter_id' => 'required|exists:counters,id',
-    //     'number' => 'required|numeric'
-    // ]);
+    $validator = Validator::make($request->all(), [
+      'counter_id' => 'required|exists:counters,id',
+        'number' => 'required|numeric'
+    ]);
 
-    // if ($validator->fails()) {
-    //   return response()->json([
-    //     'status' => 0,
-    //     'message' => 'Validation failed : ' . $validator->errors()->first(),
-    //     'error' => $validator->errors()->first(),
-    //   ], 422);
-    // }
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
 
-    // try {
-      // $counter = Counter::find($request->counter_id);
-      // $counter->name = $request->number;
-      // $counter->save();
+    try {
+      $counter = Counter::find($request->counter_id);
+      $counter->name = $request->number;
+      $counter->save();
 
       return response()->json([
           'state' => __("Success"),
           'message' => __("Number Saved Successfully")
       ]);
-    // } catch (\Exception $e) {
-    //   return response()->json([
-    //     'state' => __("Error"),
-    //     'message' => $e->getMessage(),
-    //   ]);
-    // }
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
   }
 
 }

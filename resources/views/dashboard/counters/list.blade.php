@@ -113,7 +113,7 @@ $.ajax({
             title: response.state,
             text: response.message,
         });
-        userCountersDataTable.ajax.reload();
+        dataTable.ajax.reload();
     },
     error: function (error) {
         Swal.fire({
