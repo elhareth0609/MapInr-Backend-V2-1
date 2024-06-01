@@ -123,7 +123,7 @@
             counter_id: counterId,
             number: number
         },
-        url: '/counter/save-audio-number/',
+        url: '/counters/save-audio-number/',
         success: function (response) {
             Swal.fire({
                 icon: 'success',
