@@ -154,6 +154,7 @@
     "Audio" : "التسجيل",
     "Audio for Counter" : "تسجيل العداد",
     "Enter number" : "ادخل العدد",
-    "Number Saved Successfully" : "تم حفظ الرقم"
+    "Number Saved Successfully" : "تم حفظ الرقم",
+    "Transitions Removed From Worker successfully!" : "تم حذف العمليات من العامل بنجاح."
 
 }

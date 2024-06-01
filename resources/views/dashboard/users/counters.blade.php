@@ -245,53 +245,50 @@
       });
 
       $('#delete-button').on('click', function() {
-      var userId = {{ $user->id }};
-      var selectedRowsIds = [];
+        var userId = {{ $user->id }};
+        var selectedRowsIds = [];
 
-      userCountersDataTable.rows().every(function () {
-          var rowNode = this.node(); // Get the row node
-          var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
-          var isChecked = checkbox.prop('checked');
+        userCountersDataTable.rows().every(function () {
+            var rowNode = this.node(); // Get the row node
+            var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
+            var isChecked = checkbox.prop('checked');
 
-          if (isChecked) {
-              selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
-              // console.log('Checkbox in this row is checked',this.data().id);
-          } else {
-              // console.log('Checkbox in this row is not checked');
-          }
-      });
-
-// console.log(selectedRowsIds);
-
-
-
-      var requestData = {
-          _token: '{{ csrf_token() }}',
-          ids: selectedRowsIds,
-          uid: userId
-      };
-
-      $.ajax({
-        url: '{{ route("user.delete.counters.all") }}',
-        type: 'POST',
-        data: requestData,
-        success: function (response) {
-        Swal.fire({
-            icon: 'success',
-            title: response.state,
-            text: response.message,
+            if (isChecked) {
+                selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
+                // console.log('Checkbox in this row is checked',this.data().id);
+            } else {
+                // console.log('Checkbox in this row is not checked');
+            }
         });
-        userCountersDataTable.ajax.reload();
-        },
-        error: function (error) {
+
+
+        var requestData = {
+            _token: '{{ csrf_token() }}',
+            ids: selectedRowsIds,
+            uid: userId
+        };
+
+        $.ajax({
+          url: '{{ route("user.delete.counters.all") }}',
+          type: 'POST',
+          data: requestData,
+          success: function (response) {
           Swal.fire({
-                icon: 'error',
-                title: error.responseJSON.message,
-                text: error.responseJSON.error,
-            });
-        }
+              icon: 'success',
+              title: response.state,
+              text: response.message,
+          });
+          userCountersDataTable.ajax.reload();
+          },
+          error: function (error) {
+            Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.message,
+                  text: error.responseJSON.error,
+              });
+          }
+        });
       });
-  });
 
 
 
