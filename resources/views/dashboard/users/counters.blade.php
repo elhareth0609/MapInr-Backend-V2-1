@@ -115,7 +115,7 @@
     function saveAudioNumber(counterId) {
     var number = document.getElementById('audio-number-' + counterId).value;
     $.ajax({
-        method: 'POST',
+        type: 'POST',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
