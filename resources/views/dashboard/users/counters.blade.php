@@ -126,19 +126,19 @@
             },
             url: '/counter/save-audio-number/',
             success: function (response) {
-              Swal.fire({
-                  icon: 'success',
-                  title: response.state,
-                  text: response.message,
-              });
+              // Swal.fire({
+              //     icon: 'success',
+              //     title: response.state,
+              //     text: response.message,
+              // });
               userCountersDataTable.ajax.reload();
             },
             error: function (error) {
-              Swal.fire({
-                  icon: 'error',
-                  title: error.responseJSON.title,
-                  text: error.responseJSON.error,
-              });
+              // Swal.fire({
+              //     icon: 'error',
+              //     title: error.responseJSON.title,
+              //     text: error.responseJSON.error,
+              // });
             }
         });
     }
