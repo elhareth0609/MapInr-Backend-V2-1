@@ -224,11 +224,11 @@ class CounterController extends Controller
             }
 
             if (isset($data['audio'])) {
-              $timeName      = time();
-              $originalName  = pathinfo($data['audio']->getClientOriginalName(), PATHINFO_FILENAME);
-              $fileExtension = $data['audio']->getClientOriginalExtension();
-              $uniqueAudioName = "{$timeName}_{$originalName}.{$fileExtension}";
-              $data['audio']->storeAs('public/assets/audio/counters/', $uniqueAudioName);
+              $audiotimeName      = time();
+              $audiooriginalName  = pathinfo($data['audio']->getClientOriginalName(), PATHINFO_FILENAME);
+              $audiofileExtension = $data['audio']->getClientOriginalExtension();
+              $audiouniqueAudioName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+              $data['audio']->storeAs('public/assets/audio/counters/', $audiouniqueAudioName);
             }
 
             if (isset($data['id'])) {
@@ -556,10 +556,19 @@ class CounterController extends Controller
   }
 
   public function saveAudioNumber(Request $request) {
-    $request->validate([
-        'counter_id' => 'required|exists:counters,id',
-        'number' => 'required|numeric'
+    $validator = Validator::make($request->all(), [
+      'counter_id' => 'required|exists:counters,id',
+      'number' => 'required|numeric'
     ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
     try {
       $counter = Counter::find($request->counter_id);
       $counter->name = $request->number;
