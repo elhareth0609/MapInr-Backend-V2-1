@@ -13,13 +13,9 @@ use App\Models\Worker_Counter;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class DataTablesController extends Controller
-{
+class DataTablesController extends Controller {
   public function users(Request $request) {
     $users = User::where('role', '!=',  'admin')->get();
-
-
-
 
     if ($request->ajax()) {
       return DataTables::of($users)
@@ -97,9 +93,6 @@ class DataTablesController extends Controller
     $counters = Counter::where('status','0')->get();
     if ($request->ajax()) {
       return DataTables::of($counters)
-      // ->editColumn('id', function($counter) {
-      //   return '<input type="checkbox" class="row-checkbox" name="id[]" value="' . $counter->id . '">';
-      // })
       ->editColumn('counter_id', function($counter) {
         return (string) $counter->counter_id;
       })
@@ -109,9 +102,10 @@ class DataTablesController extends Controller
       ->editColumn('worker_id', function($counter) {
         if ($counter->worker) {
           return $counter->worker->fullname;
-      } else {
+        } else {
           return __("Unknown");
-      }      })
+        }
+      })
       ->editColumn('longitude', function($counter) {
         return $counter->longitude;
       })
@@ -124,7 +118,39 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($counter) {
           return $counter->created_at->format('Y-m-d');
       })
-      // ->rawColumns(['id'])
+      ->editColumn('audio', function($counter) {
+        if ($counter->audio) {
+          # code...
+          return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
+          <i class="mdi mdi-play-circle-outline"></i>
+          </a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <audio controls>
+                    <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
+                  </audio>
+                  <div class="mt-3">
+                    <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
+                </div>
+              </div>
+            </div>
+          </div>';
+        }
+      })
+      ->rawColumns(['audio'])
+
       ->make(true);
 
     }
@@ -326,7 +352,7 @@ class DataTablesController extends Controller
     $counters = Counter::where('counters.worker_id', $id)
     ->orWhere('worker__counters.worker_id', $id)
     ->leftJoin('worker__counters', 'counters.id', '=', 'worker__counters.counter_id')
-    ->select('counters.counter_id', 'counters.longitude', 'counters.latitude', 'counters.status', 'counters.created_at', 'counters.id', 'counters.phone','counters.name')
+    ->select('counters.counter_id', 'counters.longitude', 'counters.latitude', 'counters.status', 'counters.created_at', 'counters.id', 'counters.phone','counters.name','counters.audio')
     ->get();
 
 
@@ -356,34 +382,65 @@ class DataTablesController extends Controller
       ->editColumn('created_at', function($counter) {
           return $counter->created_at->format('Y-m-d');
       })
-      ->addColumn('actions', function($counter) use ($id){
-        return '
-        <a href="javascript:void(0);" class="download-btn" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#worker-counter-remove-modal-' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
-        <!-- Modal -->
-        <div class="modal fade" id="worker-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
-              </div>
-              <div class="modal-body text-center">
-                <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
-                <div class="row justify-content-center text-wrap">
-                  '. __("Do You Really Want To Remove This Counter From Worker.") .'
+      ->editColumn('audio', function($counter) {
+        if ($counter->audio) {
+          return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
+                    <i class="mdi mdi-play-circle-outline"></i>
+                  </a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <audio controls>
+                    <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
+                  </audio>
+                  <div class="mt-3">
+                    <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterWorker(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-        ';
+          </div>';
+        }
       })
-      ->rawColumns(['status','actions'])
+
+    //   ->addColumn('actions', function($counter) use ($id){
+    //     return '
+    //     <a href="javascript:void(0);" class="download-btn" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#worker-counter-remove-modal-' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
+    //     <!-- Modal -->
+    //     <div class="modal fade" id="worker-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+    //       <div class="modal-dialog modal-dialog-centered" role="document">
+    //         <div class="modal-content">
+    //           <div class="modal-header">
+    //             <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
+    //           </div>
+    //           <div class="modal-body text-center">
+    //             <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
+    //             <div class="row justify-content-center text-wrap">
+    //               '. __("Do You Really Want To Remove This Counter From Worker.") .'
+    //             </div>
+    //           </div>
+    //           <div class="modal-footer">
+    //             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+    //             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterWorker(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+    //     ';
+    //   })
+      ->rawColumns(['status','audio'])
       ->make(true);
 
     }

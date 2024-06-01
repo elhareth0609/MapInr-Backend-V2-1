@@ -88,6 +88,95 @@ class CounterController extends Controller
     }
   }
 
+  // public function create(Request $request) {
+
+  //   $validator = Validator::make($request->all(), [
+  //       'name'      => 'required|string|max:255',
+  //       'longitude' => 'required|numeric',
+  //       'id' => [
+  //         'sometimes',
+  //         'numeric',
+  //         Rule::exists('counters', 'id')->where(function ($query) {
+  //           $query->where('status', '1');
+  //         }),
+  //       ],
+  //       'latitude'  => 'required|numeric',
+  //       'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+  //       'audio'     => 'sometimes|file',
+  //       'note'      => 'sometimes|string',
+  //       'phone'     => 'sometimes|string'
+  //   ]);
+
+  //   if ($validator->fails()) {
+  //     return response()->json([
+  //       'status' => 0,
+  //       'message' => 'Validation failed : ' . $validator->errors()->first(),
+  //       'error' => $validator->errors()->first(),
+  //     ], 422);
+  //   }
+
+  //   try {
+
+  //     $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
+
+  //     if($place) {
+  //       $place->counter_id;
+  //     }
+
+  //     $uniqueName = null;
+  //     $uniqueAudioName = null;
+
+  //     if ($request->has('audio')) {
+  //       $timeName      = time();
+  //       $originalName  = pathinfo($request->file('audio')->getClientOriginalName(), PATHINFO_FILENAME);
+  //       $fileExtension = $request->file('audio')->getClientOriginalExtension();
+  //       $uniqueAudioName = "{$timeName}_{$originalName}.{$fileExtension}";
+  //       $request->file('audio')->storeAs('public/assets/audio/counters/', $uniqueAudioName);
+  //     }
+
+  //     if ($request->has('photo')) {
+  //       $timeName      = time();
+  //       $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
+  //       $fileExtension = $request->file('photo')->getClientOriginalExtension();
+  //       $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
+  //       $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
+  //     }
+
+  //     if ($request->id) {
+  //       $counterSelected = Counter::find($request->id);
+  //       $id = $counterSelected->counter_id;
+  //     } else {
+  //       $id = 0;
+  //     }
+
+  //     $counter = new Counter();
+  //     $counter->name = $request->name;
+  //     $counter->place_id = 0;
+  //     $counter->worker_id = $request->user()->id;
+  //     $counter->counter_id = $id;
+  //     $counter->longitude = $request->longitude;
+  //     $counter->latitude = $request->latitude;
+  //     $counter->picture = $uniqueName ;
+  //     $counter->audio = $uniqueAudioName ;
+  //     $counter->phone = $request->phone;
+  //     $counter->note = $request->note;
+  //     $counter->status = '0';
+  //     $counter->save();
+
+  //     return response()->json([
+  //         'status' => 1,
+  //         'message' => 'Created successfully',
+  //         'counter' => $counter->id
+  //     ]);
+  //   } catch (\Exception $e) {
+  //     return response()->json([
+  //       'status' => 0,
+  //       'message' => $e->getMessage(),
+  //     ]);
+  //   }
+  // }
+
+
   public function create_lot(Request $request) {
     $validator = Validator::make($request->all(), [
         '*.name'      => 'required|string|max:255',
@@ -101,6 +190,7 @@ class CounterController extends Controller
         '*.longitude' => 'required|numeric',
         '*.latitude'  => 'required|numeric',
         '*.photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+        '*.audio'     => 'sometimes|file',
         '*.note'      => 'sometimes|string',
         '*.phone'     => 'sometimes|string'
     ]);
@@ -123,13 +213,22 @@ class CounterController extends Controller
 
 
             $uniqueName = null;
-            // if ! isset($data['id']) do this
+            $uniqueAudioName = null;
+
             if (isset($data['photo'])) {
                 $timeName      = time();
                 $originalName  = pathinfo($data['photo']->getClientOriginalName(), PATHINFO_FILENAME);
                 $fileExtension = $data['photo']->getClientOriginalExtension();
                 $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
                 $data['photo']->storeAs('public/assets/img/counters/', $uniqueName);
+            }
+
+            if (isset($data['audio'])) {
+              $timeName      = time();
+              $originalName  = pathinfo($data['audio']->getClientOriginalName(), PATHINFO_FILENAME);
+              $fileExtension = $data['audio']->getClientOriginalExtension();
+              $uniqueAudioName = "{$timeName}_{$originalName}.{$fileExtension}";
+              $data['audio']->storeAs('public/assets/audio/counters/', $uniqueAudioName);
             }
 
             if (isset($data['id'])) {
@@ -147,6 +246,7 @@ class CounterController extends Controller
             $counter->longitude = $data['longitude'];
             $counter->latitude = $data['latitude'];
             $counter->picture = $uniqueName;
+            $counter->audio = $uniqueAudioName;
             $counter->phone = isset($data['phone']) ? $data['phone'] : null;
             $counter->note = isset($data['note']) ? $data['note'] : null;
             $counter->status = '0';
@@ -299,10 +399,15 @@ class CounterController extends Controller
       }
 
       $photoPath = 'public/assets/img/counters/' . $counter->picture;
+      $audioPath = 'public/assets/audio/counters/' . $counter->audio;
 
       // Check if the photo exists and delete it
       if ($counter->picture && Storage::exists($photoPath)) {
           Storage::delete($photoPath);
+      }
+
+      if ($counter->audio && Storage::exists($audioPath)) {
+        Storage::delete($audioPath);
       }
 
       $counter->delete();
@@ -324,11 +429,17 @@ class CounterController extends Controller
       $counter = Counter::find($data['id']);
 
       $photoPath = 'public/assets/img/counters/' . $counter->picture;
+      $audioPath = 'public/assets/audio/counters/' . $counter->audio;
 
       // Check if the photo exists and delete it
       if ($counter->picture && Storage::exists($photoPath)) {
           Storage::delete($photoPath);
       }
+
+      if ($counter->audio && Storage::exists($audioPath)) {
+        Storage::delete($audioPath);
+      }
+
       $counter->delete();
     }
       return response()->json([
@@ -349,10 +460,15 @@ class CounterController extends Controller
           $counter = Counter::find($id);
           if ($counter) {
             $photoPath = 'public/assets/img/counters/' . $counter->picture;
+            $audioPath = 'public/assets/audio/counters/' . $counter->audio;
 
             // Check if the photo exists and delete it
             if ($counter->picture && Storage::exists($photoPath)) {
                 Storage::delete($photoPath);
+            }
+
+            if ($counter->audio && Storage::exists($audioPath)) {
+              Storage::delete($audioPath);
             }
 
             $counter->delete();
@@ -405,6 +521,19 @@ class CounterController extends Controller
         $newCounter->picture = $uniqueName;
       }
 
+      if($counter->audio) {
+        $audiotimeName = time();
+        $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
+        $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
+        $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+
+        $audiosourcePath = storage_path('app/public/assets/img/counters/' . $counter->audio);
+        $audiodestinationPath = storage_path('app/public/assets/img/counters/' . $audiouniqueName);
+        copy($audiosourcePath, $audiodestinationPath);
+
+        $newCounter->audio = $audiouniqueName;
+      }
+
       $newCounter->worker_id = $worker->id;
       $newCounter->status = '0';
       $newCounter->save();
@@ -421,6 +550,28 @@ class CounterController extends Controller
     } catch (\Exception $e) {
       return response()->json([
         'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  public function saveAudioNumber(Request $request) {
+    $request->validate([
+        'counter_id' => 'required|exists:counters,id',
+        'number' => 'required|numeric'
+    ]);
+    try {
+      $counter = Counter::find($request->counter_id);
+      $counter->name = $request->number;
+      $counter->save();
+
+      return response()->json([
+          'state' => __("Success"),
+          'message' => __("Number Saved Successfully")
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
         'message' => $e->getMessage(),
       ]);
     }

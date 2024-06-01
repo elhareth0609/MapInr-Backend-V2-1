@@ -55,6 +55,7 @@
                   <th>{{__('Phone')}}</th>
                   <th>{{__('Status')}}</th>
                   <th>{{__('Created At')}}</th>
+                  <th>{{__('Audio')}}</th>
                 </tr>
               </thead>
             </table>
@@ -109,33 +110,61 @@
 <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 
 <script>
-      var userCountersDataTable;
+    var userCountersDataTable;
 
-function submitRemoveCounterWorker(userid, counterid) {
+    function saveAudioNumber(counterId) {
+        var number = document.getElementById('audio-number-' + counterId).value;
+        $.ajax({
+            url: '/counter/save-audio-number/',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                counter_id: counterId,
+                number: number
+            },
+            success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+              });
+              userCountersDataTable.ajax.reload();
+            },
+            error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.title,
+                  text: error.responseJSON.error,
+              });
+            }
+        });
+    }
 
-    $.ajax({
-        type: 'GET',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/user/remove-counter/' + userid + '/' + counterid,
-        success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: response.state,
-                text: response.message,
-            });
-            userCountersDataTable.ajax.reload();
-        },
-        error: function (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: error.responseJSON.error,
-            });
-        }
-    });
-}
+    function submitRemoveCounterWorker(userid, counterid) {
+
+        $.ajax({
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/user/remove-counter/' + userid + '/' + counterid,
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                userCountersDataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
+            }
+        });
+    }
 
 
   $(document).ready( function () {
@@ -193,6 +222,7 @@ function submitRemoveCounterWorker(userid, counterid) {
           { data: 'phone', title: '{{__("Phone")}}' },
           { data: 'status', title: '{{__("Status")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
+          { data: 'audio', title: '{{__("Audio")}}' }
         ],
         "order": [[7, "desc"]],
         select: {

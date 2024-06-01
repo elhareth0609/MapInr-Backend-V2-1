@@ -156,6 +156,7 @@ Route::post('transitions/add', [WalletController::class, 'add'])->name('transiti
 
 
 
+Route::post('/counter/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number');
 
 
 

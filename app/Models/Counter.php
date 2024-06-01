@@ -17,6 +17,7 @@ class Counter extends Model
         'latitude',
         'longitude',
         'picture',
+        'audio',
         'note',
         'phone',
         'status',

@@ -43,12 +43,12 @@
             <th>{{__('Counter Number')}}</th>
             <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
-            <th>{{__('Worker')}}</th>
-            <th>{{__('Longitude')}}</th>
-            <th>{{__('Latitude')}}</th>
-            <th>{{__('Phone')}}</th>
-            {{-- <th>{{__('Status')}}</th> --}}
-            <th>{{__('created At')}}</th>
+            <th>{{ __('Worker') }}</th>
+            <th>{{ __('Longitude') }}</th>
+            <th>{{ __('Latitude') }}</th>
+            <th>{{ __('Phone') }}</th>
+            <th>{{__('Created At')}}</th>
+            <th>{{ __('Audio') }}</th>
           </tr>
         </thead>
       </table>
@@ -92,15 +92,46 @@
 </style>
 {{-- <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script> --}}
 <script>
-$(document).ready( function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+var dataTable;
+
+function saveAudioNumber(counterId) {
+    var number = document.getElementById('audio-number-' + counterId).value;
+    $.ajax({
+        url: '/counter/save-audio-number/',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            counter_id: counterId,
+            number: number
+        },
+        success: function (response) {
+          Swal.fire({
+              icon: 'success',
+              title: response.state,
+              text: response.message,
+          });
+          dataTable.ajax.reload();
+        },
+        error: function (error) {
+          Swal.fire({
+              icon: 'error',
+              title: error.responseJSON.title,
+              text: error.responseJSON.error,
+          });
         }
     });
+}
+
+
+$(document).ready( function () {
+    // $.ajaxSetup({
+    //     headers: {
+    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //     }
+    // });
 
     $.noConflict();
-    var dataTable = $('#counters').DataTable({
+    dataTable = $('#counters').DataTable({
       processing: true,
       serverSide: true,
       pageLength: 100,
@@ -117,7 +148,8 @@ $(document).ready( function () {
         { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
         { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
         { data: 'phone', title: '{{__("Phone")}}' },
-        { data: 'created_at', title: '{{__("Created At")}}' }
+        { data: 'created_at', title: '{{__("Created At")}}' },
+        { data: 'audio', title: '{{__("Audio")}}' }
       ],
       "order": [[6, "desc"]],
     //   select: {
