@@ -113,8 +113,10 @@
     var userCountersDataTable;
 
     function saveAudioNumber(counterId) {
+
     var number = document.getElementById('audio-number-' + counterId).value;
     $.ajax({
+        url: '/counters/save-audio-number/',
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -123,7 +125,6 @@
             counter_id: counterId,
             number: number
         },
-        url: '/counters/save-audio-number/',
         success: function (response) {
             Swal.fire({
                 icon: 'success',
