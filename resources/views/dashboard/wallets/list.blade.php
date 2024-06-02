@@ -211,7 +211,7 @@
     text-align: center;
   }
 </style>
-{{-- <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script> --}}
+<script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 <script>
 var dataTable;
 
@@ -366,8 +366,8 @@ $(document).ready( function () {
         { data: 'created_at', title: '{{__("Created At")}}' },
         { data: 'actions', title: '{{__("Actions")}}' }
       ],
-      "order": [[6, "desc"]],
-      select: {
+        "order": [[6, "desc"]],
+        select: {
           style: 'multi',
         },
         columnDefs: [{
@@ -377,7 +377,7 @@ $(document).ready( function () {
           }
         }],
 
-      "drawCallback": function () {
+        "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
 

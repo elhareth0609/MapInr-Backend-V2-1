@@ -120,7 +120,6 @@ class DataTablesController extends Controller {
       })
       ->editColumn('audio', function($counter) {
         if ($counter->audio) {
-          # code...
           return '<a type="button" onclick="togglePlay(' . $counter->id . ')">
             <i class="mdi mdi-play-circle-outline" id="play-icon-' . $counter->id . '"></i>
           </a>
@@ -397,7 +396,7 @@ class DataTablesController extends Controller {
         <audio id="audio-' . $counter->id . '">
           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
         </audio>';
-        
+
           // return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
           //           <i class="mdi mdi-play-circle-outline"></i>
           //         </a>
