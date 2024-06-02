@@ -99,38 +99,58 @@
 <script>
 var dataTable;
 
-function saveAudioNumber(counterId) {
+// function saveAudioNumber(counterId) {
 
-var number = document.getElementById('audio-number-' + counterId).value;
-$.ajax({
-    type: 'POST',
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    data: {
-      counter_id: counterId,
-      number: number
-    },
-    url: '/counters/save-audio-number',
-    success: function (response) {
-        Swal.fire({
-            icon: 'success',
-            title: response.state,
-            text: response.message,
-        });
-        dataTable.ajax.reload();
-    },
-    error: function (error) {
-        Swal.fire({
-            icon: 'error',
-            title: error.responseJSON.title,
-            text: error.responseJSON.error
-        });
+//   var number = document.getElementById('audio-number-' + counterId).value;
+//   $.ajax({
+//       type: 'POST',
+//       headers: {
+//           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//       },
+//       data: {
+//         counter_id: counterId,
+//         number: number
+//       },
+//       url: '/counters/save-audio-number',
+//       success: function (response) {
+//           Swal.fire({
+//               icon: 'success',
+//               title: response.state,
+//               text: response.message,
+//           });
+//           dataTable.ajax.reload();
+//       },
+//       error: function (error) {
+//           Swal.fire({
+//               icon: 'error',
+//               title: error.responseJSON.title,
+//               text: error.responseJSON.error
+//           });
+//       }
+//   });
+// }
+
+
+function togglePlay(counterId) {
+    var audio = document.getElementById('audio-' + counterId);
+    var icon = document.getElementById('play-icon-' + counterId);
+
+    if (audio.paused) {
+        audio.play();
+        icon.classList.remove('mdi-play-circle-outline');
+        icon.classList.add('mdi-pause-circle-outline');
+
+        // When audio ends, change the icon back to play
+        audio.onended = function() {
+            icon.classList.remove('mdi-pause-circle-outline');
+            icon.classList.add('mdi-play-circle-outline');
+        };
+    } else {
+        audio.pause();
+        icon.classList.remove('mdi-pause-circle-outline');
+        icon.classList.add('mdi-play-circle-outline');
     }
-});
 }
-
-
 
 $(document).ready( function () {
     // $.ajaxSetup({
@@ -168,67 +188,67 @@ $(document).ready( function () {
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
 
         var currentlyEditing = null;
-            var originalValue = null;
+        var originalValue = null;
 
-            $('#counters tbody').on('dblclick', 'td', function() {
-                var cell = dataTable.cell(this);
-                var columnIdx = cell.index().column;
-                var rowIdx = cell.index().row;
-                var data = cell.data();
+        $('#counters tbody').on('dblclick', 'td', function() {
+            var cell = dataTable.cell(this);
+            var columnIdx = cell.index().column;
+            var rowIdx = cell.index().row;
+            var data = cell.data();
 
-                // Check if the double-clicked cell is in the 'name' column (index 1)
-                if (columnIdx === 1) {
-                    // Check if there's an already active editing cell
-                    if (currentlyEditing) {
-                        // Revert the previous cell to its original value
-                        var prevCell = dataTable.cell(currentlyEditing);
-                        $(currentlyEditing.node()).html(originalValue);
-                    }
-
-                    // Save the original value of the new cell
-                    originalValue = data;
-                    currentlyEditing = cell;
-
-                    $(this).html('<input type="text" name="name" value="' + data + '"/>');
-                    $('input[name="name"]').focus();
-
-                $('input[name="name"]').on('keypress', function(e) {
-                    if (e.which == 13) { // Enter key pressed
-                            var newValue = $(this).val();
-                            var rowData = dataTable.row(rowIdx).data();
-                            var rowId = rowData.id; // Assuming the row has a 'counter_id' field
-
-                            // Send AJAX request to update the value
-                            $.ajax({
-                                url: '/counters/save-audio-number', // Replace with your URL
-                                method: 'POST',
-                                data: {
-                                    counter_id: rowId,
-                                    number: newValue,
-                                    _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
-                                },
-                                // url: '/counters/save-audio-number',
-                                success: function (response) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: response.state,
-                                        text: response.message,
-                                    });
-                                    dataTable.ajax.reload();
-                                },
-                                error: function (error) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: error.responseJSON.title,
-                                        text: error.responseJSON.error
-                                    });
-                                }
-
-                            });
-                        }
-                    });
+            // Check if the double-clicked cell is in the 'name' column (index 1)
+            if (columnIdx === 1) {
+                // Check if there's an already active editing cell
+                if (currentlyEditing) {
+                    // Revert the previous cell to its original value
+                    var prevCell = dataTable.cell(currentlyEditing);
+                    $(currentlyEditing.node()).html(originalValue);
                 }
-            });
+
+                // Save the original value of the new cell
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="name" value="' + data + '"/>');
+                $('input[name="name"]').focus();
+
+            $('input[name="name"]').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key pressed
+                        var newValue = $(this).val();
+                        var rowData = dataTable.row(rowIdx).data();
+                        var rowId = rowData.id; // Assuming the row has a 'counter_id' field
+
+                        // Send AJAX request to update the value
+                        $.ajax({
+                            url: '/counters/save-audio-number', // Replace with your URL
+                            method: 'POST',
+                            data: {
+                                counter_id: rowId,
+                                number: newValue,
+                                _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                            },
+                            // url: '/counters/save-audio-number',
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.state,
+                                    text: response.message,
+                                });
+                                dataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: error.responseJSON.title,
+                                    text: error.responseJSON.error
+                                });
+                            }
+
+                        });
+                    }
+                });
+            }
+        });
 
 
       },

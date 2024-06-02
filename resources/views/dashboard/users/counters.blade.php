@@ -97,7 +97,9 @@
           text-align: center;
         }
 
-
+        tr td input {
+          width: 90px !important;
+        }
 
         </style>
 
@@ -108,41 +110,62 @@
 </div>
 
 <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable/1.3.3/jquery.editable.min.js"></script>
 
 <script>
     var userCountersDataTable;
 
-    function saveAudioNumber(counterId) {
+//     function saveAudioNumber(counterId) {
 
-    var number = document.getElementById('audio-number-' + counterId).value;
-    $.ajax({
-        type: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: {
-          counter_id: counterId,
-          number: number
-        },
-        url: '/counters/save-audio-number',
-        success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: response.state,
-                text: response.message,
-            });
-            userCountersDataTable.ajax.reload();
-        },
-        error: function (error) {
-            Swal.fire({
-                icon: 'error',
-                title: error.responseJSON.title,
-                text: error.responseJSON.error
-            });
-        }
-    });
+//     var number = document.getElementById('audio-number-' + counterId).value;
+//     $.ajax({
+//         type: 'POST',
+//         headers: {
+//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//         },
+//         data: {
+//           counter_id: counterId,
+//           number: number
+//         },
+//         url: '/counters/save-audio-number',
+//         success: function (response) {
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: response.state,
+//                 text: response.message,
+//             });
+//             userCountersDataTable.ajax.reload();
+//         },
+//         error: function (error) {
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: error.responseJSON.title,
+//                 text: error.responseJSON.error
+//             });
+//         }
+//     });
+// }
+
+function togglePlay(counterId) {
+    var audio = document.getElementById('audio-' + counterId);
+    var icon = document.getElementById('play-icon-' + counterId);
+
+    if (audio.paused) {
+        audio.play();
+        icon.classList.remove('mdi-play-circle-outline');
+        icon.classList.add('mdi-pause-circle-outline');
+
+        // When audio ends, change the icon back to play
+        audio.onended = function() {
+            icon.classList.remove('mdi-pause-circle-outline');
+            icon.classList.add('mdi-play-circle-outline');
+        };
+    } else {
+        audio.pause();
+        icon.classList.remove('mdi-pause-circle-outline');
+        icon.classList.add('mdi-play-circle-outline');
+    }
 }
-
 
     function submitRemoveCounterWorker(userid, counterid) {
 
@@ -245,6 +268,68 @@
 
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+          var currentlyEditing = null;
+        var originalValue = null;
+
+        $('#userCounters tbody').on('dblclick', 'td', function() {
+            var cell = userCountersDataTable.cell(this);
+            var columnIdx = cell.index().column;
+            var rowIdx = cell.index().row;
+            var data = cell.data();
+
+            // Check if the double-clicked cell is in the 'name' column (index 1)
+            if (columnIdx === 2) {
+                // Check if there's an already active editing cell
+                if (currentlyEditing) {
+                    // Revert the previous cell to its original value
+                    var prevCell = userCountersDataTable.cell(currentlyEditing);
+                    $(currentlyEditing.node()).html(originalValue);
+                }
+
+                // Save the original value of the new cell
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="name" value="' + data + '"/>');
+                $('input[name="name"]').focus();
+
+            $('input[name="name"]').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key pressed
+                        var newValue = $(this).val();
+                        var rowData = userCountersDataTable.row(rowIdx).data();
+                        var rowId = rowData.id; // Assuming the row has a 'counter_id' field
+
+                        // Send AJAX request to update the value
+                        $.ajax({
+                            url: '/counters/save-audio-number', // Replace with your URL
+                            method: 'POST',
+                            data: {
+                                counter_id: rowId,
+                                number: newValue,
+                                _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                            },
+                            // url: '/counters/save-audio-number',
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.state,
+                                    text: response.message,
+                                });
+                                userCountersDataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: error.responseJSON.title,
+                                    text: error.responseJSON.error
+                                });
+                            }
+
+                        });
+                    }
+                });
+            }
+        });
         },
       });
 
