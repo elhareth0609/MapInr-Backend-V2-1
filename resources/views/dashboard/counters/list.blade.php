@@ -89,7 +89,12 @@
   td , tr{
     text-align: center;
   }
+  tr td input {
+    width: 90px !important;
+  }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable/1.3.3/jquery.editable.min.js"></script>
+
 {{-- <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script> --}}
 <script>
 var dataTable;
@@ -145,7 +150,6 @@ $(document).ready( function () {
       },
       ajax: '{{ route("counters-table") }}',
       columns: [
-        // { data: 'id', title: '#' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
@@ -156,72 +160,80 @@ $(document).ready( function () {
         { data: 'audio', title: '{{__("Audio")}}' }
       ],
       "order": [[6, "desc"]],
-    //   select: {
-    //     style: 'multi',
-    //   },
-    // columnDefs: [{
-    //     targets: 0,
-    //     checkboxes: {
-    //         selectRow: true
-    //     }
-    //   }],
       "drawCallback": function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
 
         // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+
+        var currentlyEditing = null;
+            var originalValue = null;
+
+            $('#counters tbody').on('dblclick', 'td', function() {
+                var cell = dataTable.cell(this);
+                var columnIdx = cell.index().column;
+                var rowIdx = cell.index().row;
+                var data = cell.data();
+
+                // Check if the double-clicked cell is in the 'name' column (index 1)
+                if (columnIdx === 1) {
+                    // Check if there's an already active editing cell
+                    if (currentlyEditing) {
+                        // Revert the previous cell to its original value
+                        var prevCell = dataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
+                    }
+
+                    // Save the original value of the new cell
+                    originalValue = data;
+                    currentlyEditing = cell;
+
+                    $(this).html('<input type="text" name="name" value="' + data + '"/>');
+                    $('input[name="name"]').focus();
+
+                $('input[name="name"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
+                            var newValue = $(this).val();
+                            var rowData = dataTable.row(rowIdx).data();
+                            var rowId = rowData.id; // Assuming the row has a 'counter_id' field
+
+                            // Send AJAX request to update the value
+                            $.ajax({
+                                url: '/counters/save-audio-number', // Replace with your URL
+                                method: 'POST',
+                                data: {
+                                    counter_id: rowId,
+                                    number: newValue,
+                                    _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                                },
+                                // url: '/counters/save-audio-number',
+                                success: function (response) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: response.state,
+                                        text: response.message,
+                                    });
+                                    dataTable.ajax.reload();
+                                },
+                                error: function (error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: error.responseJSON.title,
+                                        text: error.responseJSON.error
+                                    });
+                                }
+
+                            });
+                        }
+                    });
+                }
+            });
+
+
       },
 
     });
-
-    // $('#delete-button').on('click', function() {
-
-    // var selectedRowsIds = [];
-
-    // dataTable.rows().every(function () {
-    //     var rowNode = this.node(); // Get the row node
-    //     var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
-    //     var isChecked = checkbox.prop('checked');
-
-    //     if (isChecked) {
-    //         selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
-    //         // console.log('Checkbox in this row is checked',this.data().id);
-    //     } else {
-    //         // console.log('Checkbox in this row is not checked');
-    //     }
-    // });
-
-    // console.log(selectedRowsIds);
-
-
-
-    // var requestData = {
-    //     _token: '{{ csrf_token() }}',
-    //     ids: selectedRowsIds
-    // };
-
-    // $.ajax({
-    //         url: '{{ route("counter.delete.all") }}',
-    //         type: 'POST',
-    //         data: requestData,
-    //         success: function (response) {
-    //         Swal.fire({
-    //             icon: 'success',
-    //             title: response.state,
-    //             text: response.message,
-    //         });
-    //         dataTable.ajax.reload();
-    //         },
-    //         error: function (error) {
-    //           Swal.fire({
-    //                 icon: 'error',
-    //                 title: error.responseJSON.message,
-    //                 text: error.responseJSON.error,
-    //             });
-    //         }
-    //     });
-    // });
 
     $('#customSearch').on('keyup', function () {
       dataTable.search(this.value).draw();
