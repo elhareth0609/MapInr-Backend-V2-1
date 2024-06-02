@@ -199,12 +199,24 @@ $(document).ready( function () {
             // Check if the double-clicked cell is in the 'name' column (index 1)
             if (columnIdx === 1) {
                 // Check if there's an already active editing cell
-                if (currentlyEditing) {
-                    // Revert the previous cell to its original value
-                    var prevCell = dataTable.cell(currentlyEditing);
-                    $(currentlyEditing.node()).html(originalValue);
-                }
+                // if (currentlyEditing) {
+                //     // Revert the previous cell to its original value
+                //     var prevCell = dataTable.cell(currentlyEditing);
+                //     $(currentlyEditing.node()).html(originalValue);
+                // }
 
+                if (currentlyEditing) {
+                        if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                            // Do nothing if double-click is on the same cell that is already being edited
+                            return;
+                        } else {
+                            // Revert the previous cell to its original value
+                            var prevCell = dataTable.cell(currentlyEditing);
+                            $(currentlyEditing.node()).html(originalValue);
+                        }
+                    }
+
+                    
                 // Save the original value of the new cell
                 originalValue = data;
                 currentlyEditing = cell;

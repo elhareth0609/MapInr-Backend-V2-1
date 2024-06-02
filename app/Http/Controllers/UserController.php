@@ -446,6 +446,34 @@ class UserController extends Controller
     }
   }
 
+  public function removeallTransitions(Request $request) {
+    try {
+      if(empty($request->ids)) {
+        return response()->json([
+        'state' => __("Error"),
+        'message' => __("There Is No Selected Rows."),
+        ], 401);
+      }
+
+      foreach ($request->ids as $id) {
+        $transition = Wallet::find($id);
+        if ($transition) {
+            $transition->delete();
+        }
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Transitions Removed successfully!"),
+      ]);
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500);
+    }
+  }
 
   public function check_password(Request $request) {
 

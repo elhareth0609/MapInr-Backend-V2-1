@@ -129,10 +129,6 @@ Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePl
 Route::get('user/remove-counter/{id}/{counterId}', [UserController::class, 'removeCounterWorker'])->name('user-remove-counter-worker');
 Route::post('user/remove-worker-counters', [UserController::class, 'removeWorkerCounters'])->name('user.delete.counters.all');
 
-
-Route::post('user/remove-worker-transitions', [UserController::class, 'removeWorkerTransitions'])->name('user.delete.transitions.all');
-
-
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
 Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file'); // for place counters
 Route::get('/exoprt-user-file/{id}', [ExelController::class, 'exportUserFile'])->name('export.user.file'); // for place counters
@@ -156,6 +152,8 @@ Route::post('wallets/{id}/accept', [WalletController::class, 'accept'])->name('w
 Route::delete('wallets/{id}/delete', [WalletController::class, 'delete'])->name('wallet.delete');
 Route::get('wallets/{id}/hide', [WalletController::class, 'hide'])->name('wallet.hide');
 Route::post('transitions/add', [WalletController::class, 'add'])->name('transitions.add');
+Route::post('user/remove-worker-transitions', [UserController::class, 'removeWorkerTransitions'])->name('user.delete.transitions.all');
+Route::post('remove-all-transitions', [UserController::class, 'removeallTransitions'])->name('transitions.delete.all');
 
 
 
