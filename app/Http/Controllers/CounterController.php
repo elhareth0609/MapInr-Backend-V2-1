@@ -227,8 +227,8 @@ class CounterController extends Controller
               $audiotimeName      = time();
               $audiooriginalName  = pathinfo($data['audio']->getClientOriginalName(), PATHINFO_FILENAME);
               $audiofileExtension = $data['audio']->getClientOriginalExtension();
-              $audiouniqueAudioName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
-              $data['audio']->storeAs('public/assets/audio/counters/', $audiouniqueAudioName);
+              $uniqueAudioName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+              $data['audio']->storeAs('public/assets/audio/counters/', $uniqueAudioName);
             }
 
             if (isset($data['id'])) {
