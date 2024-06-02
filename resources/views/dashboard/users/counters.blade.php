@@ -269,7 +269,7 @@ function togglePlay(counterId) {
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
           var currentlyEditing = null;
-          var originalValue = null;
+        var originalValue = null;
 
         $('#userCounters tbody').on('dblclick', 'td', function() {
             var cell = userCountersDataTable.cell(this);
@@ -280,16 +280,23 @@ function togglePlay(counterId) {
             // Check if the double-clicked cell is in the 'name' column (index 1)
             if (columnIdx === 2) {
                 // Check if there's an already active editing cell
+                // if (currentlyEditing) {
+                //     // Revert the previous cell to its original value
+                //     var prevCell = dataTable.cell(currentlyEditing);
+                //     $(currentlyEditing.node()).html(originalValue);
+                // }
+
                 if (currentlyEditing) {
                         if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
                             // Do nothing if double-click is on the same cell that is already being edited
                             return;
                         } else {
                             // Revert the previous cell to its original value
-                            var prevCell = dataTable.cell(currentlyEditing);
+                            var prevCell = userCountersDataTable.cell(currentlyEditing);
                             $(currentlyEditing.node()).html(originalValue);
                         }
                     }
+
 
                 // Save the original value of the new cell
                 originalValue = data;

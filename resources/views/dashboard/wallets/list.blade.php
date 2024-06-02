@@ -366,8 +366,8 @@ $(document).ready( function () {
         { data: 'created_at', title: '{{__("Created At")}}' },
         { data: 'actions', title: '{{__("Actions")}}' }
       ],
-      "order": [[7, "desc"]],
-        select: {
+      "order": [[6, "desc"]],
+      select: {
           style: 'multi',
         },
         columnDefs: [{
