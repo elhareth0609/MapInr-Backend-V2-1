@@ -527,8 +527,8 @@ class CounterController extends Controller
         $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
         $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
 
-        $audiosourcePath = storage_path('app/public/assets/img/counters/' . $counter->audio);
-        $audiodestinationPath = storage_path('app/public/assets/img/counters/' . $audiouniqueName);
+        $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
+        $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
         copy($audiosourcePath, $audiodestinationPath);
 
         $newCounter->audio = $audiouniqueName;
