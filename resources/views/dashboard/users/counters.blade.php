@@ -233,9 +233,8 @@ function togglePlay(counterId) {
       userCountersDataTable = $('#userCounters').DataTable({
         processing: true,
         serverSide: true,
-        pageLength: 25,
+        pageLength: -1,
         responsive: true,
-
         language: {
           info: "_START_-_END_ of _TOTAL_",
         },
