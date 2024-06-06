@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\YourExcelExport;
 use App\Exports\PlacesExport;
+use App\Exports\YourExcelExport;
+use App\Exports\YourExcelTranactionsExport;
 use App\Exports\YourUserExcelExport;
-
 use App\Imports\YourExcelImport;
 
-use ZipArchive;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
+use App\Imports\YourExcelTranactionsImport;
 
 use App\Models\Municipality;
 use App\Models\Place;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use ZipArchive;
 
 class ExelController extends Controller
 {
@@ -52,6 +54,151 @@ class ExelController extends Controller
           'errors' => $e->getMessage(),
         ],401);
       }
+  }
+
+  public function uploadFileTranactions(Request $request) {
+    $request->validate([
+      'zipFile' => 'required|mimes:zip',
+    ]);
+
+    try {
+      $zip = new ZipArchive;
+      $zipFilePath = request()->file('zipFile')->getPathname();
+      $tempDir = storage_path('app/temp_export');
+      if (!is_dir($tempDir)) {
+        mkdir($tempDir, 0755, true);
+      }
+      $zip->open($zipFilePath);
+      $zip->extractTo($tempDir);
+      $zip->close();
+
+      // Import each Excel file within the extracted directory
+      $files = scandir($tempDir);
+      $usersImported = false;
+      foreach ($files as $file) {
+          if ($file !== '.' && $file !== '..') {
+              // Check if the file is for users
+              if (strpos($file, 'Users') !== false) {
+                  // Import users
+                  Excel::import(new YourExcelTranactionsImport($file), $tempDir . '/' . $file);
+                  $usersImported = true;
+              }
+          }
+      }
+
+      // If users are successfully imported, import transactions
+      if ($usersImported) {
+          foreach ($files as $file) {
+              if ($file !== '.' && $file !== '..') {
+                  // Check if the file is for transactions
+                  if (strpos($file, 'Tranactions') !== false) {
+                      // Import transactions
+                      Excel::import(new YourExcelTranactionsImport($file), $tempDir . '/' . $file);
+                  }
+              }
+          }
+      } else {
+          // Handle the case where users are not imported before transactions
+          return response()->json([
+              'status' => 'Error',
+              'message' => 'Users must be imported before transactions.'
+          ], 400);
+      }
+
+
+      // Delete the extracted files
+      foreach ($files as $file) {
+          if ($file !== '.' && $file !== '..') {
+              unlink($tempDir . '/' . $file);
+          }
+      }
+
+      // Delete the extracted directory
+      // rmdir($tempDir);
+
+          // $import = new YourExcelTranactionsImport();
+          // Excel::import($import, $request->file('excelFile'));
+
+      return response()->json([
+        'state' => __('Success'),
+        'message' => __('Files Upload It Successfully')
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'errors' => $e->getMessage(),
+      ],401);
+    }
+  }
+
+  public function exportFileTranactions(Excel $excel){
+    try {
+
+      // Create a temporary directory to store individual Excel files
+      $tempDir = storage_path('app/temp_export');
+      if (!is_dir($tempDir)) {
+          mkdir($tempDir, 0755, true);
+      }
+
+      // Create Excel files for each place and store them in the temporary directory
+      $excelFiles = [];
+
+      $export = new YourExcelTranactionsExport('Tranactions');
+      $fileName = "Tranactions.xlsx";
+      $filePath = "{$tempDir}/{$fileName}";
+
+      Excel::store($export, $fileName, 'temp_export');
+
+      $excelFiles[] = $filePath;
+
+      $export = new YourExcelTranactionsExport('Users');
+      $fileName = "Users.xlsx";
+      $filePath = "{$tempDir}/{$fileName}";
+
+      Excel::store($export, $fileName, 'temp_export');
+
+      $excelFiles[] = $filePath;
+
+      // Create a zip file containing all Excel files
+      $zipFileName = 'MapIner.zip';
+      $zipFilePath = "{$tempDir}/{$zipFileName}";
+
+      $zip = new ZipArchive;
+      $zip->open($zipFilePath, ZipArchive::CREATE);
+
+      foreach ($excelFiles as $excelFile) {
+          $zip->addFile($excelFile, basename($excelFile));
+      }
+
+      $zip->close();
+      File::cleanDirectory(public_path('files'));
+      $publicZipFilePath = public_path('files/MapIner.zip');
+      File::move($zipFilePath, $publicZipFilePath);
+
+      File::cleanDirectory(storage_path('app/temp_export'));
+
+      return response()->json(['url' => asset('files/MapIner.zip')]);
+
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 0,
+            'error' => $e->getMessage(),
+        ], 401);
+    }
+
+
+    // try {
+    //   $filename = 'Tranactions.xlsx';
+    //   return Excel::download(new YourExcelTranactionsExport(), $filename);
+
+
+    // } catch (\Exception $e) {
+    //   return response()->json([
+    //     'status' => 0,
+    //     'error' => $e->getMessage(),
+    //   ],401);
+    // }
   }
 
   public function exportFile($id,Excel $excel){

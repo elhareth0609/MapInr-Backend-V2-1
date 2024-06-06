@@ -10,7 +10,51 @@
     <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir="rtl"' : '' }}>{{__('Pages')}} /</span> {{__('All Transitions')}}
   </h4>
 
+
+  {{-- <h4 class="py-3 mb-4 col-lg-4 col-xl-4 col-md-5 col-sm-6 col-12">
+    <span class="text-muted fw-light" {{ app()->getLocale() === 'ar' ? 'dir' : '' }}>{{ __('Municipality Settings') }} /</span> {{ $municipality->name }}
+  </h4> --}}
+  <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
+    <button type="button" class="m-1 btn btn-outline-primary col-lg-3 col-xl-4 col-md-5 col-sm-5 col-12" data-bs-toggle="modal" data-bs-target="#importFile">
+      <span class="tf-icons mdi mdi-plus-outline me-1"></span>{{__('Import')}}
+    </button>
+  </div>
+
+
 </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="importFile" data-bs-backdrop="static" tabindex="-1">
+      <div class="modal-dialog">
+        <form class="modal-content" id="uploadForm" action="{{ route('upload.file.tranactions') }}" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h4 class="modal-title" id="backDropModalTitle">{{__('Import File')}}</h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="container-upload-file w-100">
+              <div class="card-upload-file w-100">
+                <div class="drop_box-upload-file w-100">
+                    <h4>{{__('Select File here')}}</h4>
+                  <p>Files Supported: Excel</p>
+                  <input type="file" hidden accept=".zip" id="fileID" name="zipFile" style="display:none;">
+                  <div class="btn btn-outline-primary" id="button-upload-file" >{{__('Choose File')}}</div>
+                </div>
+              </div>
+            </div>
+            <div id="selectedFileName"></div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{__('Close')}}</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">{{__('Submit')}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
 
 
         <div class="row w-100 mx-auto">
@@ -174,8 +218,11 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+        <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1 m-1" id="delete-button">
           <icon class="mdi mdi-trash-can-outline"></icon>
+        </button>
+        <button type="button" class="btn btn-icon btn-outline-primary m-1" id="exportButton">
+          <span class="tf-icons mdi mdi-download"></span>
         </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
         <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
@@ -210,6 +257,45 @@
   td , tr{
     text-align: center;
   }
+
+
+
+  .container-upload-file {
+
+display: flex;
+justify-content: center;
+}
+
+
+.card-upload-file h3 {
+font-size: 22px;
+font-weight: 600;
+
+}
+
+.drop_box-upload-file {
+margin: 10px 0;
+padding: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+border: 3px dotted #a3a3a3;
+border-radius: 5px;
+}
+
+.drop_box-upload-file h4 {
+font-size: 16px;
+font-weight: 400;
+color: #2e2e2e;
+}
+
+.drop_box-upload-file p {
+margin-top: 10px;
+margin-bottom: 20px;
+font-size: 12px;
+color: #a3a3a3;
+}
 </style>
 <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 <script>
@@ -340,6 +426,68 @@ $(document).ready( function () {
         }
     });
 
+
+
+
+    $('#button-upload-file').on('click', function () {
+      $('#fileID').click();
+    });
+
+    $('#fileID').on('change', function (e) {
+      var files = e.target.files;
+      var fileNames = Array.from(files).map(file => file.name);
+
+    });
+
+    $(document).on('change', '#fileID', function (e) {
+    // Get the selected file(s)
+    var files = $(this)[0].files;
+
+    // Display the file name(s)
+    var fileNameContainer = $('#selectedFileName');
+    fileNameContainer.empty(); // Clear previous file name(s)
+    for (var i = 0; i < files.length; i++) {
+        fileNameContainer.append('<p>' + files[i].name + '</p>');
+    }
+});
+
+    $(document).on('submit', '#uploadForm', function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        // Manually append file data to FormData
+        // formData.append('excelFile', $('#fileID')[0].files);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                dataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.responseJSON.errors,
+                });
+            }
+        });
+    });
+
+
+
     $.noConflict();
     dataTable = $('#wallets').DataTable({
       processing: true,
@@ -445,22 +593,35 @@ $(document).ready( function () {
 
         // Make an AJAX request to download Excel for the specific place
         $.ajax({
-            url: '/exoprt-file/0', // Update the URL to your route for downloading Excel
+            url: '/exoprt-file-tranactions', // Update the URL to your route for downloading Excel
             type: 'GET',
-            xhrFields: {
-                responseType: 'blob' // Important to set the responseType to 'blob'
+            responseType: 'arraybuffer', // Use 'arraybuffer' for binary data
+            success: function (data) {
+            // Redirect the user to the download link
+            window.location.href = data.url;
             },
-            success: function(response) {
-                // Create a Blob from the response
-                var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-                // Use FileSaver.js library to trigger the download
-                saveAs(blob,+ '0' + '.xlsx');
-            },
-            error: function(error) {
-                // Handle error
-                console.error(error);
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error.responseJSON.error,
+                });
             }
+
+            // xhrFields: {
+            //     responseType: 'blob' // Important to set the responseType to 'blob'
+            // },
+            // success: function(response) {
+            //     // Create a Blob from the response
+            //     var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            //     // Use FileSaver.js library to trigger the download
+            //     saveAs(blob, 'Tranactions.xlsx');
+            // },
+            // error: function(error) {
+            //     // Handle error
+            //     console.error(error);
+            // }
         });
     });
 

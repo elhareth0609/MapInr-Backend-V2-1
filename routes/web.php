@@ -129,6 +129,9 @@ Route::get('user/remove-place/{id}/{placeId}', [UserController::class, 'removePl
 Route::get('user/remove-counter/{id}/{counterId}', [UserController::class, 'removeCounterWorker'])->name('user-remove-counter-worker');
 Route::post('user/remove-worker-counters', [UserController::class, 'removeWorkerCounters'])->name('user.delete.counters.all');
 
+Route::post('/upload-file-tranactions', [ExelController::class, 'uploadFileTranactions'])->name('upload.file.tranactions');
+Route::get('/exoprt-file-tranactions', [ExelController::class, 'exportFileTranactions'])->name('export.file.tranactions');
+
 Route::post('/upload-file', [ExelController::class, 'uploadFile'])->name('upload.file');
 Route::get('/exoprt-file/{id}', [ExelController::class, 'exportFile'])->name('export.file'); // for place counters
 Route::get('/exoprt-user-file/{id}', [ExelController::class, 'exportUserFile'])->name('export.user.file'); // for place counters
