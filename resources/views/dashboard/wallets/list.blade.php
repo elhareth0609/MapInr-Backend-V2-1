@@ -303,10 +303,11 @@ var dataTable;
 
 
 
-    function acceptTransaction(id) {
+    function submitTransaction(id) {
         var amount = $('input[name="amount-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
         var description = $('textarea[name="description-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
         var type = $('select[name="type-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+        var status = $('select[name="status-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
 
           $.ajax({
               type: 'POST',
@@ -316,9 +317,10 @@ var dataTable;
               data: {
                 amount: amount,
                 description: description,
-                type: type
+                type: type,
+                status: status
               },
-              url: '/wallets/' + id + '/accept',
+              url: '/wallets/' + id + '/submit',
               success: function (response) {
                   Swal.fire({
                       icon: 'success',
@@ -337,57 +339,57 @@ var dataTable;
           });
     }
 
-    function rejectTransaction(id) {
+    // function rejectTransaction(id) {
 
-          $.ajax({
-              type: 'GET',
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              url: '/wallets/' + id + '/reject',
-              success: function (response) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: response.state,
-                      text: response.message,
-                  });
-                  dataTable.ajax.reload();
-              },
-              error: function (error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: error.responseJSON.status,
-                      text: error.responseJSON.errors,
-                  });
-              }
-          });
-    }
+    //       $.ajax({
+    //           type: 'GET',
+    //           headers: {
+    //               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //           },
+    //           url: '/wallets/' + id + '/reject',
+    //           success: function (response) {
+    //               Swal.fire({
+    //                   icon: 'success',
+    //                   title: response.state,
+    //                   text: response.message,
+    //               });
+    //               dataTable.ajax.reload();
+    //           },
+    //           error: function (error) {
+    //               Swal.fire({
+    //                   icon: 'error',
+    //                   title: error.responseJSON.status,
+    //                   text: error.responseJSON.errors,
+    //               });
+    //           }
+    //       });
+    // }
 
-    function hideTransaction(id) {
+    // function hideTransaction(id) {
 
-        $.ajax({
-            type: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/wallets/' + id + '/hide',
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: response.state,
-                    text: response.message,
-                });
-                dataTable.ajax.reload();
-            },
-            error: function (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: error.responseJSON.status,
-                    text: error.responseJSON.errors,
-                });
-            }
-        });
-    }
+    //     $.ajax({
+    //         type: 'GET',
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         url: '/wallets/' + id + '/hide',
+    //         success: function (response) {
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: response.state,
+    //                 text: response.message,
+    //             });
+    //             dataTable.ajax.reload();
+    //         },
+    //         error: function (error) {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: error.responseJSON.status,
+    //                 text: error.responseJSON.errors,
+    //             });
+    //         }
+    //     });
+    // }
 
     function submitDistroyTransaction(id) {
       var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID

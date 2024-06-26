@@ -154,21 +154,25 @@ class WalletController extends Controller
     ]);
   }
 
-  public function reject(Request $request,$id) {
-    $transaction = Wallet::find($id);
-    $transaction->status = 'rejected';
-    $transaction->save();
-    return response()->json([
-      'state' => __("Success"),
-      'message' => __("Rejected Successful."),
-    ], 200);
-  }
+  // public function reject(Request $request,$id) {
+  //   $transaction = Wallet::find($id);
+  //   $transaction->status = 'rejected';
+  //   $transaction->save();
+  //   return response()->json([
+  //     'state' => __("Success"),
+  //     'message' => __("Rejected Successful."),
+  //   ], 200);
+  // }
 
-  public function accept(Request $request,$id) {
+
+
+
+  public function submit(Request $request,$id) {
     $validator = Validator::make($request->all(), [
       'amount' => 'required|string',
       'type' => 'required|string',
-      'description' => 'required|string'
+      'description' => 'required|string',
+      'status' => 'required|string|in:rejected,completed,hidden'
     ]);
 
     if ($validator->fails()) {
@@ -182,7 +186,7 @@ class WalletController extends Controller
       $transaction = Wallet::find($id);
       $transaction->transaction_type = $request->type;
       $transaction->amount = $request->amount;
-      $transaction->status = 'completed';
+      $transaction->status = $request->status;
       $transaction->description = $request->description;
       $transaction->save();
 
@@ -198,15 +202,15 @@ class WalletController extends Controller
     }
   }
 
-  public function hide(Request $request,$id) {
-    $transaction = Wallet::find($id);
-    $transaction->status = 'hidden';
-    $transaction->save();
-    return response()->json([
-      'state' => __("Success"),
-      'message' => __("Hidden Successfully"),
-    ], 200);
-  }
+  // public function hide(Request $request,$id) {
+  //   $transaction = Wallet::find($id);
+  //   $transaction->status = 'hidden';
+  //   $transaction->save();
+  //   return response()->json([
+  //     'state' => __("Success"),
+  //     'message' => __("Hidden Successfully"),
+  //   ], 200);
+  // }
 
   public function delete(Request $request,$id) {
     $validator = Validator::make($request->all(), [

@@ -633,28 +633,25 @@ class DataTablesController extends Controller {
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <select id="largeSelect" class="form-select form-select-lg" name="type-' . $wallet->id . '">
+
+                  <select id="largeSelect" class="form-select form-select-lg mb-4" name="type-' . $wallet->id . '">
                       <option value="credit" ' . ($wallet->transaction_type == 'credit'? 'selected' : '') . '>' .  __("Credit") . '</option>
                       <option value="debit" ' . ($wallet->transaction_type == 'debit'? 'selected' : '') . '>' .  __("Debit") . '</option>
+                  </select>
+
+                  <select id="largeSelect" class="form-select form-select-lg mb-4" name="status-' . $wallet->id . '">
+                      <option value="completed" ' . ($wallet->status == 'completed' || $wallet->status == 'pending'? 'selected' : '') . '>' .  __("Accept") . '</option>
+                      <option value="rejected" ' . ($wallet->status == 'rejected'? 'selected' : '') . '>' .  __("Reject") . '</option>
+                      <option value="hidden" ' . ($wallet->status == 'hidden'? 'selected' : '') . '>' .  __("Hide") . '</option>
                     </select>
-                  </div>
+
+
+
                 </div>
                 <div class="modal-footer">
-                ' . ($wallet->status == 'hidden' ? '
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
-                ' : ($wallet->status == 'rejected' ? '
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
-                ' : ($wallet->status == 'completed' ? '
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="hideTransaction('. $wallet->id .')">'. __("Hide") .'</button>
-                ' : '
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTransaction('. $wallet->id .')">'. __("Accept") .'</button>
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="rejectTransaction('. $wallet->id .')">'. __("Reject") .'</button>
-                '))) . '
-            </div>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitTransaction(' . $wallet->id . ')">'. __("Submit") .'</button>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                </div>
               </form>
             </div>
           </div>
