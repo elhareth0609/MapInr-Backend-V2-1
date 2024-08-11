@@ -42,7 +42,7 @@ class MunicipalityController extends Controller
   public function destroy(Request $request, $id) {
     // Validate the request data
     $validator = Validator::make($request->all(), [
-        'password' => 'required|string',
+        'password' => 'required|string|in:10',
     ]);
 
     // Check if validation fails

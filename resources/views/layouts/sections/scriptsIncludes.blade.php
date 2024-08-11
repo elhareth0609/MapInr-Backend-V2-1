@@ -1,3 +1,5 @@
+<script src="{{ asset('assets/js/mine.js') }}"></script>
+
 <!-- laravel style -->
 <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 

@@ -40,7 +40,8 @@
         <thead>
           <tr class="text-nowrap">
             {{-- <th></th> --}}
-            <th>{{__('Counter Number')}}</th>
+            <th>{{__('Counter Id')}}</th>
+            <th>{{ __('Send To') }}</th> <!-- Added column header -->
             <th>{{__('Counter Name')}}</th>
             {{-- <th>{{__('Place Number')}}</th> --}}
             <th>{{ __('Worker') }}</th>
@@ -53,6 +54,10 @@
         </thead>
       </table>
       <div class="row w-100 d-flex align-items-baseline justify-content-end ">
+        <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="confirm-send-all-button">
+          <icon class="mdi mdi-send-check-outline"></icon>
+        </button>
+
         {{-- <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
           <icon class="mdi mdi-trash-can-outline"></icon>
         </button> --}}
@@ -98,6 +103,7 @@
 {{-- <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script> --}}
 <script>
 var dataTable;
+var lang = "{{ app()->getLocale() }}"
 
 // function saveAudioNumber(counterId) {
 
@@ -130,27 +136,27 @@ var dataTable;
 //   });
 // }
 
+    // for play single audio
+    function togglePlay(counterId) {
+        var audio = document.getElementById('audio-' + counterId);
+        var icon = document.getElementById('play-icon-' + counterId);
 
-function togglePlay(counterId) {
-    var audio = document.getElementById('audio-' + counterId);
-    var icon = document.getElementById('play-icon-' + counterId);
+        if (audio.paused) {
+            audio.play();
+            icon.classList.remove('mdi-play-circle-outline');
+            icon.classList.add('mdi-pause-circle-outline');
 
-    if (audio.paused) {
-        audio.play();
-        icon.classList.remove('mdi-play-circle-outline');
-        icon.classList.add('mdi-pause-circle-outline');
-
-        // When audio ends, change the icon back to play
-        audio.onended = function() {
+            // When audio ends, change the icon back to play
+            audio.onended = function() {
+                icon.classList.remove('mdi-pause-circle-outline');
+                icon.classList.add('mdi-play-circle-outline');
+            };
+        } else {
+            audio.pause();
             icon.classList.remove('mdi-pause-circle-outline');
             icon.classList.add('mdi-play-circle-outline');
-        };
-    } else {
-        audio.pause();
-        icon.classList.remove('mdi-pause-circle-outline');
-        icon.classList.add('mdi-play-circle-outline');
+        }
     }
-}
 
 $(document).ready( function () {
     // $.ajaxSetup({
@@ -171,6 +177,9 @@ $(document).ready( function () {
       ajax: '{{ route("counters-table") }}',
       columns: [
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
+        { data: null, title: '{{__("Send To")}}', className: 'editable', render: function(data, type, row) {
+                return '<input type="text" class="send-to-input" value="' + (row.send_to || '') + '"/>';
+        }},
         { data: 'name', title: '{{__("Name")}}' },
         { data: 'worker_id', title: '{{__("Worker")}}' },
         { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
@@ -184,7 +193,6 @@ $(document).ready( function () {
         updateCustomPagination();
         var pageInfo = this.api().page.info();
 
-        // Update the content of the custom info element
         $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
 
         var currentlyEditing = null;
@@ -196,8 +204,93 @@ $(document).ready( function () {
             var rowIdx = cell.index().row;
             var data = cell.data();
 
-            // Check if the double-clicked cell is in the 'name' column (index 1)
-            if (columnIdx === 1) {
+            if (columnIdx === 2) {
+
+                if (currentlyEditing) {
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        return;
+                    } else {
+                        var prevCell = dataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
+                    }
+                }
+
+
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="name" value="' + data + '"/>');
+                $('input[name="name"]').focus();
+
+                $('input[name="name"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
+                            var newValue = $(this).val();
+                            var rowData = dataTable.row(rowIdx).data();
+                            var rowId = rowData.id;
+
+
+                            $.ajax({
+                                url: '/counters/save-audio-number', // Replace with your URL
+                                method: 'POST',
+                                data: {
+                                    counter_id: rowId,
+                                    number: newValue,
+                                    _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                                },
+
+                                success: function (response) {
+                                  var justNowLabel = __("Just Now", lang);
+
+                                  var successToast = `
+                                      <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                          <div class="toast-header">
+                                              <i class="mdi mdi-content-copy text-success me-2"></i>
+                                              <div class="me-auto fw-medium">${response.state}</div>
+                                              <small class="text-muted">${justNowLabel}</small>
+                                              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                          </div>
+                                          <div class="toast-body">
+                                              ${response.message}
+                                          </div>
+                                      </div>
+                                  `;
+
+                                  $('body').append(successToast);
+
+                                  var toastElement = document.querySelector('.bs-toast');
+                                  var toast = new bootstrap.Toast(toastElement);
+                                  toast.show();
+
+
+                                  dataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
+
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
+
+                            });
+                        }
+                });
+            } else if (columnIdx === 6) {
                 // Check if there's an already active editing cell
                 // if (currentlyEditing) {
                 //     // Revert the previous cell to its original value
@@ -206,59 +299,92 @@ $(document).ready( function () {
                 // }
 
                 if (currentlyEditing) {
-                        if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
-                            // Do nothing if double-click is on the same cell that is already being edited
-                            return;
-                        } else {
-                            // Revert the previous cell to its original value
-                            var prevCell = dataTable.cell(currentlyEditing);
-                            $(currentlyEditing.node()).html(originalValue);
-                        }
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        // Do nothing if double-click is on the same cell that is already being edited
+                        return;
+                    } else {
+                        // Revert the previous cell to its original value
+                        var prevCell = dataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
                     }
+                }
 
-                    
+
                 // Save the original value of the new cell
                 originalValue = data;
                 currentlyEditing = cell;
 
-                $(this).html('<input type="text" name="name" value="' + data + '"/>');
-                $('input[name="name"]').focus();
+                $(this).html('<input type="text" name="phone" value="' + data + '"/>');
+                $('input[name="phone"]').focus();
 
-            $('input[name="name"]').on('keypress', function(e) {
-                if (e.which == 13) { // Enter key pressed
+                $('input[name="phone"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
                         var newValue = $(this).val();
                         var rowData = dataTable.row(rowIdx).data();
                         var rowId = rowData.id; // Assuming the row has a 'counter_id' field
 
                         // Send AJAX request to update the value
                         $.ajax({
-                            url: '/counters/save-audio-number', // Replace with your URL
+                            url: '/counters/save-counter-phone', // Replace with your URL
                             method: 'POST',
                             data: {
                                 counter_id: rowId,
                                 number: newValue,
                                 _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
                             },
-                            // url: '/counters/save-audio-number',
+                            // Toast Here
                             success: function (response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.state,
-                                    text: response.message,
-                                });
-                                dataTable.ajax.reload();
+                              var justNowLabel = __("Just Now", lang);
+
+                              var successToast = `
+                                  <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                      <div class="toast-header">
+                                          <i class="mdi mdi-content-copy text-success me-2"></i>
+                                          <div class="me-auto fw-medium">${response.state}</div>
+                                          <small class="text-muted">${justNowLabel}</small>
+                                          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                      </div>
+                                      <div class="toast-body">
+                                          ${response.message}
+                                      </div>
+                                  </div>
+                              `;
+
+                              $('body').append(successToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+
+
+                              dataTable.ajax.reload();
                             },
                             error: function (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: error.responseJSON.title,
-                                    text: error.responseJSON.error
-                                });
-                            }
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
 
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
                         });
                     }
                 });
+
             }
         });
 
@@ -332,6 +458,42 @@ $(document).ready( function () {
             error: function(error) {
                 // Handle error
                 console.error(error);
+            }
+        });
+    });
+
+    $(document).on('click', '#confirm-send-all-button', function() {
+        var editedData = [];
+
+        // Iterate through all rows to collect edited values
+        dataTable.rows().every(function(rowIdx, tableLoop, rowLoop) {
+            var data = this.data();
+            var sendToValue = $(this.node()).find('.send-to-input').val();
+            editedData.push({ counter: data.id, send_to: sendToValue });
+        });
+
+        // Send the edited data to the server via AJAX
+        $.ajax({
+            url: '/counters/save-counter-place',
+            type: 'POST',
+            data: {
+                editedData: editedData,
+                _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+            },
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                dataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.responseJSON.title,
+                    text: error.responseJSON.error
+                });
             }
         });
     });

@@ -80,7 +80,7 @@
     "Add Worker" : "أضف عامل",
     "Validation failed" : "خطأ في المتغيرات",
     "User deleted successfully." : "تم حذف العضو بنجاح",
-    "Success" : "جيد جداً",
+    "Success" : "نجاح",
     "User created successfully" : "تم إضافة العضو بنجاح",
     "Sorry," : "أسف",
     "There Is No User To Deleted." : "لا يوجد أي عضو لحذفه",
@@ -156,6 +156,8 @@
     "Enter number" : "ادخل العدد",
     "Number Saved Successfully" : "تم حفظ الرقم",
     "Transitions Removed From Worker successfully!" : "تم حذف العمليات من العامل بنجاح.",
-    "Transitions Removed successfully!" : "تم حذف العمليات بنجاح."
+    "Transitions Removed successfully!" : "تم حذف العمليات بنجاح.",
+    "Phone Saved Successfully." : "تم حفظ رقم الهاتف",
+    "Send To" : "إرسال إلى"
 
 }

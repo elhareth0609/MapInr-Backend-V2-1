@@ -66,6 +66,20 @@
       </div>
       <!-- /Account -->
     </div>
+    {{-- <div class="card">
+      <h5 class="card-header fw-normal">{{ __('Logout Account') }}</h5>
+      <div class="card-body">
+        <div class="mb-3 col-12 mb-0">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading mb-1">{{ __('Are you sure you want to logout your account?') }}</h6>
+            <p class="mb-0">{{ __('Once you logout your account, there is no going back. Please be certain.') }}</p>
+          </div>
+        </div>
+        <div >
+          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user-logout-modal">{{ __('Logout Account') }}</button>
+        </div>
+      </div>
+    </div> --}}
     <div class="card">
       <h5 class="card-header fw-normal">{{ __('Delete Account') }}</h5>
       <div class="card-body">
@@ -123,111 +137,170 @@
   </div>
 </div>
 
-
+<!-- Modal -->
+<div class="modal fade" id="user-logout-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalCenterTitle">{{  __('User Logout') }}</h4>
+        </div>
+        <div class="modal-body text-center">
+          <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+          <div class="row justify-content-center text-wrap">
+            {{  __('Do You Really want to Logout This User.') }}
+          </div>
+          <div class="row">
+            <div class="col mb-4 mt-2">
+              <div class="input-group" dir="ltr">
+                {{-- <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required /> --}}
+                <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password" required />
+                <span class="input-group-text cursor-pointer show-password" ><i class="mdi mdi-lock-outline"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitLogoutUser({{  $user->id }})">{{ __('Submit') }}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{  __('Close') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 
 
-function submitDistroyUser(id) {
-          var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
+  // function submitLogoutUser(id) {
+  //   var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
 
-            $.ajax({
-                type: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                  password: password
-                },
-                url: '/user/destroy/' + id,
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: response.state,
-                        text: response.message,
-                      }).then(() => {
-                          window.location.href = '/users';
-                      });
-                },
-                error: function (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: error.responseJSON.status,
-                        text: error.responseJSON.errors,
-                    });
-                }
-            });
-        }
+  //     $.ajax({
+  //         type: 'DELETE',
+  //         headers: {
+  //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //         },
+  //         data: {
+  //           password: password
+  //         },
+  //         url: '/user/logout/' + id,
+  //         success: function (response) {
+  //             Swal.fire({
+  //                 icon: 'success',
+  //                 title: response.state,
+  //                 text: response.message,
+  //               });
+  //         },
+  //         error: function (error) {
+  //             Swal.fire({
+  //                 icon: 'error',
+  //                 title: error.responseJSON.status,
+  //                 text: error.responseJSON.errors,
+  //             });
+  //         }
+  //     });
+  // }
 
-$(document).ready( function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+  function submitDistroyUser(id) {
+    var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
 
-    $(document).on('click', '.show-password', function () {
-        var inputField = $(this).closest('.modal-content').find('.form-control');
-          if (inputField.attr('type') === 'password') {
-              inputField.attr('type', 'text');
-              $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
-          } else {
-              inputField.attr('type', 'password');
-              $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
+      $.ajax({
+          type: 'DELETE',
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            password: password
+          },
+          url: '/user/destroy/' + id,
+          success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+                }).then(() => {
+                    window.location.href = '/users';
+                });
+          },
+          error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.status,
+                  text: error.responseJSON.errors,
+              });
+          }
+      });
+  }
+
+  $(document).ready( function () {
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
 
-    $('#copyPassword').on('click', function() {
-        var passwordInput = $('#passwordInput');
-        passwordInput.select();
-        document.execCommand('copy');
-        // You can add a visual indication or alert here
-    });
-
-    // Function to generate a new password
-    $('#generatePassword').on('click', function() {
-        // Make an AJAX request to generate a new password
-        $.ajax({
-            url: '/generate-password',
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-              $('#passwordInput').val(response.password);
-            },
-            error: function(error) {
-                console.error('Error generating password:', error);
+      $(document).on('click', '.show-password', function () {
+          var inputField = $(this).closest('.modal-content').find('.form-control');
+            if (inputField.attr('type') === 'password') {
+                inputField.attr('type', 'text');
+                $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-variant-outline');
+            } else {
+                inputField.attr('type', 'password');
+                $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
             }
         });
-    });
 
-$('#updateUser').submit(function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/user/update',
-            data: $(this).serialize(),
-            success: function (response) {
-            Swal.fire({
-                icon: response.icon,
-                title: response.state,
-                text: response.message,
-            });
-
-            },
-            error: function (error) {
-              Swal.fire({
-                    icon: 'error',
-                    title: error.responseJSON.message,
-                    text: error.responseJSON.error,
-                });
-            }
-        });
+      $('#copyPassword').on('click', function() {
+          var passwordInput = $('#passwordInput');
+          passwordInput.select();
+          document.execCommand('copy');
+          // You can add a visual indication or alert here
       });
+
+      // Function to generate a new password
+      $('#generatePassword').on('click', function() {
+          // Make an AJAX request to generate a new password
+          $.ajax({
+              url: '/generate-password',
+              type: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function(response) {
+                $('#passwordInput').val(response.password);
+              },
+              error: function(error) {
+                  console.error('Error generating password:', error);
+              }
+          });
+      });
+
+    $('#updateUser').submit(function (e) {
+          e.preventDefault();
+
+          $.ajax({
+              type: 'POST',
+              headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: '/user/update',
+              data: $(this).serialize(),
+              success: function (response) {
+              Swal.fire({
+                  icon: response.icon,
+                  title: response.state,
+                  text: response.message,
+              });
+
+              },
+              error: function (error) {
+                Swal.fire({
+                      icon: 'error',
+                      title: error.responseJSON.message,
+                      text: error.responseJSON.error,
+                  });
+              }
+          });
     });
+  });
 </script>
 @endsection

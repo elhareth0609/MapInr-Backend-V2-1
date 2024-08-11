@@ -114,7 +114,7 @@
 
 <script>
     var userCountersDataTable;
-
+    var lang = "{{ app()->getLocale() }}"
 //     function saveAudioNumber(counterId) {
 
 //     var number = document.getElementById('audio-number-' + counterId).value;
@@ -268,7 +268,7 @@ function togglePlay(counterId) {
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
           var currentlyEditing = null;
-        var originalValue = null;
+          var originalValue = null;
 
         $('#userCounters tbody').on('dblclick', 'td', function() {
             var cell = userCountersDataTable.cell(this);
@@ -286,59 +286,186 @@ function togglePlay(counterId) {
                 // }
 
                 if (currentlyEditing) {
-                        if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
-                            // Do nothing if double-click is on the same cell that is already being edited
-                            return;
-                        } else {
-                            // Revert the previous cell to its original value
-                            var prevCell = userCountersDataTable.cell(currentlyEditing);
-                            $(currentlyEditing.node()).html(originalValue);
-                        }
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        // Do nothing if double-click is on the same cell that is already being edited
+                        return;
+                    } else {
+                        // Revert the previous cell to its original value
+                        var prevCell = userCountersDataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
                     }
+                }
 
 
-                // Save the original value of the new cell
                 originalValue = data;
                 currentlyEditing = cell;
 
                 $(this).html('<input type="text" name="name" value="' + data + '"/>');
                 $('input[name="name"]').focus();
 
-            $('input[name="name"]').on('keypress', function(e) {
-                if (e.which == 13) { // Enter key pressed
+                $('input[name="name"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
+                            var newValue = $(this).val();
+                            var rowData = userCountersDataTable.row(rowIdx).data();
+                            var rowId = rowData.id;
+
+
+                            $.ajax({
+                                url: '/counters/save-audio-number', // Replace with your URL
+                                method: 'POST',
+                                data: {
+                                    counter_id: rowId,
+                                    number: newValue,
+                                    _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                                },
+
+                                success: function (response) {
+                                  var justNowLabel = __("Just Now", lang);
+
+                                  var successToast = `
+                                      <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                          <div class="toast-header">
+                                              <i class="mdi mdi-content-copy text-success me-2"></i>
+                                              <div class="me-auto fw-medium">${response.state}</div>
+                                              <small class="text-muted">${justNowLabel}</small>
+                                              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                          </div>
+                                          <div class="toast-body">
+                                              ${response.message}
+                                          </div>
+                                      </div>
+                                  `;
+
+                                  $('body').append(successToast);
+
+                                  var toastElement = document.querySelector('.bs-toast');
+                                  var toast = new bootstrap.Toast(toastElement);
+                                  toast.show();
+
+
+                                  userCountersDataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
+
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
+
+                            });
+                        }
+                });
+            } else if (columnIdx === 5) {
+                // Check if there's an already active editing cell
+                // if (currentlyEditing) {
+                //     // Revert the previous cell to its original value
+                //     var prevCell = dataTable.cell(currentlyEditing);
+                //     $(currentlyEditing.node()).html(originalValue);
+                // }
+
+                if (currentlyEditing) {
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        // Do nothing if double-click is on the same cell that is already being edited
+                        return;
+                    } else {
+                        // Revert the previous cell to its original value
+                        var prevCell = userCountersDataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
+                    }
+                }
+
+
+                // Save the original value of the new cell
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="phone" value="' + data + '"/>');
+                $('input[name="phone"]').focus();
+
+                $('input[name="phone"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
                         var newValue = $(this).val();
                         var rowData = userCountersDataTable.row(rowIdx).data();
                         var rowId = rowData.id; // Assuming the row has a 'counter_id' field
 
                         // Send AJAX request to update the value
                         $.ajax({
-                            url: '/counters/save-audio-number', // Replace with your URL
+                            url: '/counters/save-counter-phone', // Replace with your URL
                             method: 'POST',
                             data: {
                                 counter_id: rowId,
                                 number: newValue,
                                 _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
                             },
-                            // url: '/counters/save-audio-number',
+                            // Toast Here
                             success: function (response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.state,
-                                    text: response.message,
-                                });
-                                userCountersDataTable.ajax.reload();
+                              var justNowLabel = __("Just Now", lang);
+
+                              var successToast = `
+                                  <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                      <div class="toast-header">
+                                          <i class="mdi mdi-content-copy text-success me-2"></i>
+                                          <div class="me-auto fw-medium">${response.state}</div>
+                                          <small class="text-muted">${justNowLabel}</small>
+                                          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                      </div>
+                                      <div class="toast-body">
+                                          ${response.message}
+                                      </div>
+                                  </div>
+                              `;
+
+                              $('body').append(successToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+
+
+                              userCountersDataTable.ajax.reload();
                             },
                             error: function (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: error.responseJSON.title,
-                                    text: error.responseJSON.error
-                                });
-                            }
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
 
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
                         });
                     }
                 });
+
             }
         });
         },

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AudioTransactions;
+use App\Models\PhotoTransactions;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -55,6 +57,8 @@ class WalletController extends Controller
       'amount' => 'required|numeric',
       'transaction_type' => 'required|string|in:credit,debit',
       'description' => 'nullable|string',
+      'photo.*' => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      'audio.*' => 'sometimes|file',
     ]);
 
     if ($validator->fails()) {
@@ -67,13 +71,47 @@ class WalletController extends Controller
 
     try {
 
-
       $wallet = new Wallet();
       $wallet->user_id = $request->user()->id;
       $wallet->amount = $request->amount;
       $wallet->transaction_type = $request->transaction_type;
       $wallet->description = $request->description;
       $wallet->save();
+
+      $uniqueName = null;
+      $uniqueAudioName = null;
+
+      if ($request->hasFile('audio')) {
+        foreach ($request->file('audio') as $audio) {
+            $timeName = time();
+            $originalName = pathinfo($audio->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileExtension = $audio->getClientOriginalExtension();
+            $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+
+            $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
+
+            $audioTransaction = new AudioTransactions();
+            $audioTransaction->transaction_id = $wallet->id;
+            $audioTransaction->audio = $path;
+            $audioTransaction->save();
+        }
+      }
+
+      if ($request->hasFile('photo')) {
+          foreach ($request->file('photo') as $photo) {
+              $timeName = time();
+              $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+              $fileExtension = $photo->getClientOriginalExtension();
+              $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+
+              $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+
+              $photoTransaction = new PhotoTransactions();
+              $photoTransaction->transaction_id = $wallet->id;
+              $photoTransaction->photo = $path;
+              $photoTransaction->save();
+          }
+      }
 
       return response()->json([
           'status' => 1,
@@ -93,6 +131,8 @@ class WalletController extends Controller
       '*.amount' => 'required|numeric',
       '*.transaction_type' => 'required|string|in:credit,debit',
       '*.description' => 'nullable|string',
+      '*.photo.*'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      '*.audio.*'     => 'sometimes|file',
     ]);
 
     if ($validator->fails()) {
@@ -105,14 +145,46 @@ class WalletController extends Controller
 
     try {
 
-      foreach ($request->all() as $data) {
-        $wallet = new Wallet();
-        $wallet->user_id = $request->user()->id;
-        $wallet->amount = $data['amount'];
-        $wallet->transaction_type = $data['transaction_type'];
-        $wallet->description = $data['description'];
-        $wallet->save();
-      }
+        foreach ($request->all() as $data) {
+          $wallet = new Wallet();
+          $wallet->user_id = $request->user()->id;
+          $wallet->amount = $data['amount'];
+          $wallet->transaction_type = $data['transaction_type'];
+          $wallet->description = $data['description'];
+          $wallet->save();
+
+          if (isset($data['photo'])) {
+              foreach ($data['photo'] as $photo) {
+                  $timeName = time();
+                  $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                  $fileExtension = $photo->getClientOriginalExtension();
+                  $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+
+                  $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+
+                  $photoTransaction = new PhotoTransactions();
+                  $photoTransaction->transaction_id = $wallet->id;
+                  $photoTransaction->photo = $path;
+                  $photoTransaction->save();
+              }
+          }
+
+          if (isset($data['audio'])) {
+              foreach ($data['audio'] as $audio) {
+                  $timeName = time();
+                  $originalName = pathinfo($audio->getClientOriginalName(), PATHINFO_FILENAME);
+                  $fileExtension = $audio->getClientOriginalExtension();
+                  $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+
+                  $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
+
+                  $audioTransaction = new AudioTransactions();
+                  $audioTransaction->transaction_id = $wallet->id;
+                  $audioTransaction->audio = $path;
+                  $audioTransaction->save();
+              }
+          }
+        }
 
       return response()->json([
           'status' => 1,
@@ -132,8 +204,6 @@ class WalletController extends Controller
     ->where('status', '!=','hidden')
     ->latest('created_at')
     ->get();
-
-
 
     $credit = Wallet::where('user_id', $request->user()->id)
                           ->where('transaction_type', 'credit')
@@ -163,9 +233,6 @@ class WalletController extends Controller
   //     'message' => __("Rejected Successful."),
   //   ], 200);
   // }
-
-
-
 
   public function submit(Request $request,$id) {
     $validator = Validator::make($request->all(), [
@@ -214,7 +281,7 @@ class WalletController extends Controller
 
   public function delete(Request $request,$id) {
     $validator = Validator::make($request->all(), [
-        'password' => 'required|string',
+      'password' => 'required|string|in:10',
     ]);
 
     // Check if validation fails

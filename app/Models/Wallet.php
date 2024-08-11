@@ -21,4 +21,14 @@ class Wallet extends Model
       return $this->belongsTo(User::class);
   }
 
+  public function photoTransactions()
+  {
+      return $this->hasMany(PhotoTransactions::class);
+  }
+
+  public function audioTransactions()
+  {
+      return $this->hasMany(AudioTransactions::class);
+  }
+
 }

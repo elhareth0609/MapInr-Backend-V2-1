@@ -30,6 +30,7 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/counters/update', [CounterController::class, 'update'])->name('counter.update');
   Route::post('/v1/counters/update-lot', [CounterController::class, 'update_lot'])->name('counter.update.lot');
   Route::post('/v1/counters/share', [CounterController::class, 'share'])->name('counter.share');
+  Route::post('/v1/counters/search', [CounterController::class, 'search'])->name('counter.search');
   Route::get('/v1/user/all', [AuthController::class, 'all'])->name('user.all');
 
   Route::post('/v1/wallets/create', [WalletController::class, 'create'])->name('wallet.create');

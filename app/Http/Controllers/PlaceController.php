@@ -171,7 +171,7 @@ class PlaceController extends Controller
   public function destroy(Request $request,$id) {
 
     $validator = Validator::make($request->all(), [
-      'password' => 'required|string',
+      'password' => 'required|string|in:10',
     ]);
 
     // Check if validation fails

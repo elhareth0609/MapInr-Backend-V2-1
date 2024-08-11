@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Counter;
+use App\Models\Place;
+use App\Models\Place_Worker;
 use App\Models\Shared;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class CounterController extends Controller
-{
+class CounterController extends Controller {
   public function create(Request $request) {
 
     $validator = Validator::make($request->all(), [
@@ -87,95 +89,6 @@ class CounterController extends Controller
       ]);
     }
   }
-
-  // public function create(Request $request) {
-
-  //   $validator = Validator::make($request->all(), [
-  //       'name'      => 'required|string|max:255',
-  //       'longitude' => 'required|numeric',
-  //       'id' => [
-  //         'sometimes',
-  //         'numeric',
-  //         Rule::exists('counters', 'id')->where(function ($query) {
-  //           $query->where('status', '1');
-  //         }),
-  //       ],
-  //       'latitude'  => 'required|numeric',
-  //       'photo'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
-  //       'audio'     => 'sometimes|file',
-  //       'note'      => 'sometimes|string',
-  //       'phone'     => 'sometimes|string'
-  //   ]);
-
-  //   if ($validator->fails()) {
-  //     return response()->json([
-  //       'status' => 0,
-  //       'message' => 'Validation failed : ' . $validator->errors()->first(),
-  //       'error' => $validator->errors()->first(),
-  //     ], 422);
-  //   }
-
-  //   try {
-
-  //     $place = Counter::where('place_id', 0)->orderBy('counter_id', 'desc')->first();
-
-  //     if($place) {
-  //       $place->counter_id;
-  //     }
-
-  //     $uniqueName = null;
-  //     $uniqueAudioName = null;
-
-  //     if ($request->has('audio')) {
-  //       $timeName      = time();
-  //       $originalName  = pathinfo($request->file('audio')->getClientOriginalName(), PATHINFO_FILENAME);
-  //       $fileExtension = $request->file('audio')->getClientOriginalExtension();
-  //       $uniqueAudioName = "{$timeName}_{$originalName}.{$fileExtension}";
-  //       $request->file('audio')->storeAs('public/assets/audio/counters/', $uniqueAudioName);
-  //     }
-
-  //     if ($request->has('photo')) {
-  //       $timeName      = time();
-  //       $originalName  = pathinfo($request->file('photo')->getClientOriginalName(), PATHINFO_FILENAME);
-  //       $fileExtension = $request->file('photo')->getClientOriginalExtension();
-  //       $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
-  //       $request->file('photo')->storeAs('public/assets/img/counters/', $uniqueName);
-  //     }
-
-  //     if ($request->id) {
-  //       $counterSelected = Counter::find($request->id);
-  //       $id = $counterSelected->counter_id;
-  //     } else {
-  //       $id = 0;
-  //     }
-
-  //     $counter = new Counter();
-  //     $counter->name = $request->name;
-  //     $counter->place_id = 0;
-  //     $counter->worker_id = $request->user()->id;
-  //     $counter->counter_id = $id;
-  //     $counter->longitude = $request->longitude;
-  //     $counter->latitude = $request->latitude;
-  //     $counter->picture = $uniqueName ;
-  //     $counter->audio = $uniqueAudioName ;
-  //     $counter->phone = $request->phone;
-  //     $counter->note = $request->note;
-  //     $counter->status = '0';
-  //     $counter->save();
-
-  //     return response()->json([
-  //         'status' => 1,
-  //         'message' => 'Created successfully',
-  //         'counter' => $counter->id
-  //     ]);
-  //   } catch (\Exception $e) {
-  //     return response()->json([
-  //       'status' => 0,
-  //       'message' => $e->getMessage(),
-  //     ]);
-  //   }
-  // }
-
 
   public function create_lot(Request $request) {
     $validator = Validator::make($request->all(), [
@@ -491,6 +404,7 @@ class CounterController extends Controller
 
     $validator = Validator::make($request->all(), [
       'user_id' => 'required|string',
+      'type' => 'required|string|in:counter|all|place',
       'id' => 'required|string',
     ]);
 
@@ -504,44 +418,99 @@ class CounterController extends Controller
 
     try {
       $worker = User::find($request->user_id);
-      $counter = Counter::find($request->id);
+      if ($request->type == 'counter') {
+        $counter = Counter::find($request->id);
 
-      $newCounter = $counter->replicate();
-      if($counter->picture) {
+        $newCounter = $counter->replicate();
+        if($counter->picture) {
 
-        $timeName = time();
-        $originalName = pathinfo($counter->picture, PATHINFO_FILENAME);
-        $fileExtension = pathinfo($counter->picture, PATHINFO_EXTENSION);
-        $uniqueName = "{$timeName}_{$originalName}.{$fileExtension}";
+          $timeName = time();
+          $originalName = pathinfo($counter->picture, PATHINFO_FILENAME);
+          $fileExtension = pathinfo($counter->picture, PATHINFO_EXTENSION);
+          $uniqueName = "{$timeName}_{$originalName}.{$fileExtension}";
 
-        $sourcePath = storage_path('app/public/assets/img/counters/' . $counter->picture);
-        $destinationPath = storage_path('app/public/assets/img/counters/' . $uniqueName);
-        copy($sourcePath, $destinationPath);
+          $sourcePath = storage_path('app/public/assets/img/counters/' . $counter->picture);
+          $destinationPath = storage_path('app/public/assets/img/counters/' . $uniqueName);
+          copy($sourcePath, $destinationPath);
 
-        $newCounter->picture = $uniqueName;
+          $newCounter->picture = $uniqueName;
+        }
+
+        if($counter->audio) {
+          $audiotimeName = time();
+          $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
+          $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
+          $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+
+          $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
+          $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
+          copy($audiosourcePath, $audiodestinationPath);
+
+          $newCounter->audio = $audiouniqueName;
+        }
+
+        $newCounter->worker_id = $worker->id;
+        $newCounter->status = '0';
+        $newCounter->save();
+
+        $share = new Shared();
+        $share->counter_id = $newCounter->id;
+        $share->user_id = $worker->id;
+        $share->save();
+
+      } else if($request->type == 'place') {
+        $palce = Place::find($request->id);
+        if ($palce) {
+          $findPlaceWorker = Place_Worker::where('worker_id', $worker->id)->where('place_id', $palce->id)->first();
+          if(!$findPlaceWorker) {
+            $newPlaceWorker = new Place_Worker();
+            $newPlaceWorker->worker_id = $worker->id;
+            $newPlaceWorker->place_id = $palce->id;
+            $newPlaceWorker->save();
+          }
+        }
+      } else {
+        $counters = Counter::where('worker_id',Auth::user()->id)->get();
+        foreach ($counters as $counter) {
+          $newCounter = $counter->replicate();
+          if($counter->picture) {
+
+            $timeName = time();
+            $originalName = pathinfo($counter->picture, PATHINFO_FILENAME);
+            $fileExtension = pathinfo($counter->picture, PATHINFO_EXTENSION);
+            $uniqueName = "{$timeName}_{$originalName}.{$fileExtension}";
+
+            $sourcePath = storage_path('app/public/assets/img/counters/' . $counter->picture);
+            $destinationPath = storage_path('app/public/assets/img/counters/' . $uniqueName);
+            copy($sourcePath, $destinationPath);
+
+            $newCounter->picture = $uniqueName;
+          }
+
+          if($counter->audio) {
+            $audiotimeName = time();
+            $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
+            $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
+            $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+
+            $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
+            $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
+            copy($audiosourcePath, $audiodestinationPath);
+
+            $newCounter->audio = $audiouniqueName;
+          }
+
+          $newCounter->worker_id = $worker->id;
+          $newCounter->status = '0';
+          $newCounter->save();
+
+          $share = new Shared();
+          $share->counter_id = $newCounter->id;
+          $share->user_id = $worker->id;
+          $share->save();
+        }
+
       }
-
-      if($counter->audio) {
-        $audiotimeName = time();
-        $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
-        $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
-        $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
-
-        $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
-        $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
-        copy($audiosourcePath, $audiodestinationPath);
-
-        $newCounter->audio = $audiouniqueName;
-      }
-
-      $newCounter->worker_id = $worker->id;
-      $newCounter->status = '0';
-      $newCounter->save();
-
-      $share = new Shared();
-      $share->counter_id = $newCounter->id;
-      $share->user_id = $worker->id;
-      $share->save();
 
       return response()->json([
           'status' => 1,
@@ -586,4 +555,104 @@ class CounterController extends Controller
     }
   }
 
+  public function saveCounterPhone(Request $request) {
+    $validator = Validator::make($request->all(), [
+      'counter_id' => 'required|exists:counters,id',
+      'number' => 'required|string'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+      $counter = Counter::find($request->counter_id);
+      $counter->phone = $request->number;
+      $counter->save();
+
+      return response()->json([
+          'state' => __("Success"),
+          'message' => __("Phone Saved Successfully.")
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  public function saveCounterPlace(Request $request) {
+
+    try {
+      $editedData = $request->input('editedData');
+
+      foreach ($editedData as $data) {
+          $counter = Counter::find($data['counter']);
+          if ($counter && strlen($data['send_to']) > 2) {
+              $pid = substr($data['send_to'], 2);
+              $place = Place::find($pid);
+              if ($place) {
+              $counter->place_id = $place->id;
+              $counter->status = 1;
+              $counter->save();
+              }
+          }
+      }
+
+      return response()->json([
+          'state' => __("Success"),
+          'message' => __("Updated successfully")
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  public function search(Request $request) {
+    $validator = Validator::make($request->all(), [
+      'mot' => 'required|string|min:4'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    $counters = null;
+
+    try {
+        $pcid = substr($request->mot, 2);
+        if (strlen($pcid) == 2) {
+          $place = Place::find($pcid);
+          if ($place) {
+            $counters = Counter::where('place_id',$pcid)->get();
+          }
+        } else {
+          $cid = substr($pcid, 2);
+          $counters = Counter::where('counter_id', 'like', "%{$cid}%")->get();
+        }
+        return response()->json([
+          'status' => 1,
+          'message' => 'Updated successfully',
+          'counters' => $counters
+        ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'message' => $e->getMessage(),
+      ]);
+    }
+
+  }
 }

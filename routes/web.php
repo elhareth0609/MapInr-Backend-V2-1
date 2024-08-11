@@ -120,6 +120,7 @@ Route::get('/user/{id}/transitions', [DataTablesController::class, 'user_transit
 Route::post('/user/create', [UserController::class, 'create'])->name('user-create');
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');
+Route::delete('/user/logout/{id}', [UserController::class, 'logout'])->name('user-logout');
 Route::post('/generate-password', [UserController::class, 'generate_password'])->name('generate-password');
 Route::post('/user/add-place-worker', [UserController::class, 'addPlaceWorker'])->name('add.place.worker');
 Route::post('/user/add-worker-place', [UserController::class, 'addWorkerPlace'])->name('add.worker.place');
@@ -162,6 +163,8 @@ Route::post('remove-all-transitions', [UserController::class, 'removeallTransiti
 
 
 Route::post('/counters/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number');
+Route::post('/counters/save-counter-phone', [CounterController::class, 'saveCounterPhone'])->name('counter.save.counter.phone');
+Route::post('/counters/save-counter-place', [CounterController::class, 'saveCounterPlace'])->name('counter.save.counter.place');
 
 
 
