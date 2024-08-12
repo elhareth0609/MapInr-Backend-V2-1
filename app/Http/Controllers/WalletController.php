@@ -57,8 +57,13 @@ class WalletController extends Controller
       'amount' => 'required|numeric',
       'transaction_type' => 'required|string|in:credit,debit',
       'description' => 'nullable|string',
-      'photo.*' => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      'photo' => 'sometimes|array',
+      'photo.*' => 'sometimes|file|mimetypes:image/*',
+      // 'photo.*' => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      // 'audio.*' => 'sometimes|file',
+      'audio' => 'sometimes|array',
       'audio.*' => 'sometimes|file',
+
     ]);
 
     if ($validator->fails()) {
@@ -105,6 +110,7 @@ class WalletController extends Controller
               $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
               $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+
               $photoTransaction = new PhotoTransactions();
               $photoTransaction->wallet_id = $wallet->id;
               $photoTransaction->photo = $path;
@@ -130,8 +136,15 @@ class WalletController extends Controller
       '*.amount' => 'required|numeric',
       '*.transaction_type' => 'required|string|in:credit,debit',
       '*.description' => 'nullable|string',
-      '*.photo.*'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
-      '*.audio.*'     => 'sometimes|file',
+      '*.photo' => 'sometimes|array',
+      '*.photo.*' => 'sometimes|file|mimetypes:image/*',
+      // 'photo.*' => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      // 'audio.*' => 'sometimes|file',
+      '*.audio' => 'sometimes|array',
+      '*.audio.*' => 'sometimes|file',
+
+      // '*.photo.*'     => 'sometimes|file|mimes:jpeg,png,jpg,gif',
+      // '*.audio.*'     => 'sometimes|file',
     ]);
 
     if ($validator->fails()) {
