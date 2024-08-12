@@ -97,7 +97,7 @@ class WalletController extends Controller
 
             $audioTransaction = new AudioTransactions();
             $audioTransaction->wallet_id = $wallet->id;
-            $audioTransaction->audio = $path;
+            $audioTransaction->audio = $uniqueAudioName;
             $audioTransaction->save();
         }
       }
@@ -113,7 +113,7 @@ class WalletController extends Controller
 
               $photoTransaction = new PhotoTransactions();
               $photoTransaction->wallet_id = $wallet->id;
-              $photoTransaction->photo = $path;
+              $photoTransaction->photo = $uniqueName;
               $photoTransaction->save();
           }
       }
@@ -176,7 +176,7 @@ class WalletController extends Controller
 
                   $photoTransaction = new PhotoTransactions();
                   $photoTransaction->transaction_id = $wallet->id;
-                  $photoTransaction->photo = $path;
+                  $photoTransaction->photo = $uniqueName;
                   $photoTransaction->save();
               }
           }
@@ -192,7 +192,7 @@ class WalletController extends Controller
 
                   $audioTransaction = new AudioTransactions();
                   $audioTransaction->transaction_id = $wallet->id;
-                  $audioTransaction->audio = $path;
+                  $audioTransaction->audio = $uniqueAudioName;
                   $audioTransaction->save();
               }
           }
