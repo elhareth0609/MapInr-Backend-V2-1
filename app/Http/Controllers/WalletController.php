@@ -88,26 +88,25 @@ class WalletController extends Controller
             $fileExtension = $audio->getClientOriginalExtension();
             $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-            $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
+            $path = $audio->storeAs('public/assets/audio/wallets/', $uniqueAudioName, 'public');
 
             $audioTransaction = new AudioTransactions();
-            $audioTransaction->transaction_id = $wallet->id;
+            $audioTransaction->wallet_id = $wallet->id;
             $audioTransaction->audio = $path;
             $audioTransaction->save();
         }
       }
 
       if ($request->hasFile('photo')) {
-          foreach ($request->file('photo') as $photo) {
+        foreach ($request->file('photo') as $photo) {
               $timeName = time();
               $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
               $fileExtension = $photo->getClientOriginalExtension();
               $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
               $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
-
               $photoTransaction = new PhotoTransactions();
-              $photoTransaction->transaction_id = $wallet->id;
+              $photoTransaction->wallet_id = $wallet->id;
               $photoTransaction->photo = $path;
               $photoTransaction->save();
           }
