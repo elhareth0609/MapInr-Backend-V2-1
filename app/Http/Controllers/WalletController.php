@@ -9,6 +9,7 @@ use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
@@ -166,35 +167,41 @@ class WalletController extends Controller
           $wallet->save();
 
           if (isset($data['photo'])) {
-              foreach ($data['photo'] as $photo) {
-                  $timeName = time();
-                  $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
-                  $fileExtension = $photo->getClientOriginalExtension();
-                  $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+            foreach ($data['photo'] as $photo) {
+                $timeName = time();
+                $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileExtension = $photo->getClientOriginalExtension();
+                $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-                  $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+                $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
 
-                  $photoTransaction = new PhotoTransactions();
-                  $photoTransaction->transaction_id = $wallet->id;
-                  $photoTransaction->photo = $uniqueName;
-                  $photoTransaction->save();
-              }
-          }
+                // Log photo information
+                Log::info("Photo uploaded: {$uniqueName} to {$path}");
 
-          if (isset($data['audio'])) {
-              foreach ($data['audio'] as $audio) {
-                  $timeName = time();
-                  $originalName = pathinfo($audio->getClientOriginalName(), PATHINFO_FILENAME);
-                  $fileExtension = $audio->getClientOriginalExtension();
-                  $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+                $photoTransaction = new PhotoTransactions();
+                $photoTransaction->transaction_id = $wallet->id;
+                $photoTransaction->photo = $uniqueName;
+                $photoTransaction->save();
+            }
+        }
 
-                  $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
+        if (isset($data['audio'])) {
+            foreach ($data['audio'] as $audio) {
+                $timeName = time();
+                $originalName = pathinfo($audio->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileExtension = $audio->getClientOriginalExtension();
+                $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-                  $audioTransaction = new AudioTransactions();
-                  $audioTransaction->transaction_id = $wallet->id;
-                  $audioTransaction->audio = $uniqueAudioName;
-                  $audioTransaction->save();
-              }
+                $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
+
+                // Log audio information
+                Log::info("Audio uploaded: {$uniqueAudioName} to {$path}");
+
+                $audioTransaction = new AudioTransactions();
+                $audioTransaction->transaction_id = $wallet->id;
+                $audioTransaction->audio = $uniqueAudioName;
+                $audioTransaction->save();
+      }
           }
         }
 
