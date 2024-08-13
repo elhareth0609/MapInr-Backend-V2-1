@@ -92,7 +92,7 @@ class WalletController extends Controller
             $fileExtension = $audio->getClientOriginalExtension();
             $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-            $path = $audio->storeAs('public/assets/audio/wallets/', $uniqueAudioName, 'public');
+            $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
             Log::info("Audio uploaded: {$uniqueAudioName}");
 
             $audioTransaction = new AudioTransactions();
@@ -168,7 +168,7 @@ class WalletController extends Controller
 
           $uniqueName = null;
           $uniqueAudioName = null;
-    
+
           if (isset($data['photo'])) {
             foreach ($data['photo'] as $photo) {
               $timeName = time();
@@ -193,7 +193,7 @@ class WalletController extends Controller
                 $fileExtension = $audio->getClientOriginalExtension();
                 $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-                $path = $audio->storeAs('public/assets/audio/wallets/', $uniqueAudioName, 'public');
+                $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
                 Log::info("Audio uploaded: {$uniqueAudioName}");
 
                 $audioTransaction = new AudioTransactions();
