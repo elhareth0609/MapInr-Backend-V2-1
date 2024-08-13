@@ -404,7 +404,7 @@ class CounterController extends Controller {
 
     $validator = Validator::make($request->all(), [
       'user_id' => 'required|string',
-      'type' => 'required|string|in:counter|all|place',
+      'type' => 'required|string|in:counter,all,place',
       'id' => 'required|string',
     ]);
 
