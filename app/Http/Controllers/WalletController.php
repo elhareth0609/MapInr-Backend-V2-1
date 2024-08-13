@@ -95,7 +95,7 @@ class WalletController extends Controller
             $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
             $path = $audio->storeAs('public/assets/audio/wallets/', $uniqueAudioName, 'public');
-            Log::info("Audio uploaded: {$uniqueAudioName} to {$path}");
+            Log::info("Audio uploaded: {$uniqueAudioName}");
 
             $audioTransaction = new AudioTransactions();
             $audioTransaction->wallet_id = $wallet->id;
@@ -181,7 +181,7 @@ class WalletController extends Controller
                 Log::info("Photo uploaded: {$uniqueName} to {$path}");
 
                 $photoTransaction = new PhotoTransactions();
-                $photoTransaction->transaction_id = $wallet->id;
+                $photoTransaction->wallet_id = $wallet->id;
                 $photoTransaction->photo = $uniqueName;
                 $photoTransaction->save();
             }
@@ -200,7 +200,7 @@ class WalletController extends Controller
                 Log::info("Audio uploaded: {$uniqueAudioName} to {$path}");
 
                 $audioTransaction = new AudioTransactions();
-                $audioTransaction->transaction_id = $wallet->id;
+                $audioTransaction->wallet_id = $wallet->id;
                 $audioTransaction->audio = $uniqueAudioName;
                 $audioTransaction->save();
       }
