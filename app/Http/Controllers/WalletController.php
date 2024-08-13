@@ -60,8 +60,6 @@ class WalletController extends Controller
       'description' => 'nullable|string',
       'photo' => 'sometimes|array',
       'photo.*' => 'sometimes|file|mimetypes:image/*',
-      // 'photo.*' => 'sometimes|file|mimes:jpeg,png,jpg,gif',
-      // 'audio.*' => 'sometimes|file',
       'audio' => 'sometimes|array',
       'audio.*' => 'sometimes|file',
 
@@ -170,40 +168,36 @@ class WalletController extends Controller
 
           if (isset($data['photo'])) {
             foreach ($data['photo'] as $photo) {
-                $timeName = time();
-                $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
-                $fileExtension = $photo->getClientOriginalExtension();
-                $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
+              $timeName = time();
+              $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+              $fileExtension = $photo->getClientOriginalExtension();
+              $uniqueName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-                $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+              $path = $photo->storeAs('assets/img/wallets/', $uniqueName, 'public');
+              Log::info("Photo uploaded: {$uniqueName} to {$path}");
 
-                // Log photo information
-                Log::info("Photo uploaded: {$uniqueName} to {$path}");
-
-                $photoTransaction = new PhotoTransactions();
-                $photoTransaction->wallet_id = $wallet->id;
-                $photoTransaction->photo = $uniqueName;
-                $photoTransaction->save();
+              $photoTransaction = new PhotoTransactions();
+              $photoTransaction->wallet_id = $wallet->id;
+              $photoTransaction->photo = $uniqueName;
+              $photoTransaction->save();
             }
-        }
+          }
 
-        if (isset($data['audio'])) {
-            foreach ($data['audio'] as $audio) {
+          if (isset($data['audio'])) {
+              foreach ($data['audio'] as $audio) {
                 $timeName = time();
                 $originalName = pathinfo($audio->getClientOriginalName(), PATHINFO_FILENAME);
                 $fileExtension = $audio->getClientOriginalExtension();
                 $uniqueAudioName = "{$timeName}_{$originalName}_" . uniqid() . ".{$fileExtension}";
 
-                $path = $audio->storeAs('assets/audio/wallets/', $uniqueAudioName, 'public');
-
-                // Log audio information
-                Log::info("Audio uploaded: {$uniqueAudioName} to {$path}");
+                $path = $audio->storeAs('public/assets/audio/wallets/', $uniqueAudioName, 'public');
+                Log::info("Audio uploaded: {$uniqueAudioName}");
 
                 $audioTransaction = new AudioTransactions();
                 $audioTransaction->wallet_id = $wallet->id;
                 $audioTransaction->audio = $uniqueAudioName;
                 $audioTransaction->save();
-      }
+              }
           }
         }
 
