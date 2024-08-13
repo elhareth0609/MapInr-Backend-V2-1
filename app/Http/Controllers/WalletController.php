@@ -166,6 +166,9 @@ class WalletController extends Controller
           $wallet->description = $data['description'];
           $wallet->save();
 
+          $uniqueName = null;
+          $uniqueAudioName = null;
+    
           if (isset($data['photo'])) {
             foreach ($data['photo'] as $photo) {
               $timeName = time();
