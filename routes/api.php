@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\CounterController;
+use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\WalletController;
 
 /*
@@ -36,5 +37,9 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/wallets/create', [WalletController::class, 'create'])->name('wallet.create');
   Route::post('/v1/wallets/create-lot', [WalletController::class, 'create_lot'])->name('wallet.create.lot');
   Route::get('/v1/wallets/get', [WalletController::class, 'get'])->name('wallet.get');
+
+  Route::get('/v1/phones/all', [PhoneController::class, 'all'])->name('phones.all');
+  Route::post('/v1/phones/create', [PhoneController::class, 'create'])->name('phones.create');
+  Route::post('/v1/phones/create-lot', [PhoneController::class, 'create_lot'])->name('phones.create.lot');
 
 });
