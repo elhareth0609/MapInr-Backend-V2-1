@@ -142,7 +142,8 @@ class UserController extends Controller
     try {
       $user = User::find($id);
       if ($user) {
-          $user->delete();
+          // $user->delete();
+          $user->tokens()->delete();
 
           return response()->json([
             'state' => __('Success'),
@@ -276,7 +277,6 @@ class UserController extends Controller
 
     }
   }
-
 
   public function removePlaceWorker($id, $placeId) {
 
