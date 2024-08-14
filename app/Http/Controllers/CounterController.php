@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Counter;
+use App\Models\Municipality;
 use App\Models\Place;
 use App\Models\Place_Worker;
 use App\Models\Shared;
@@ -595,11 +596,17 @@ class CounterController extends Controller {
           $counter = Counter::find($data['counter']);
           if ($counter && strlen($data['send_to']) > 2) {
               $pid = substr($data['send_to'], 2);
-              $place = Place::find($pid);
-              if ($place) {
-              $counter->place_id = $place->id;
-              $counter->status = 1;
-              $counter->save();
+
+              $municapiltyChar = substr($data['send_to'], 0, 2);
+              $municapilty = Municipality::where('code', $municapiltyChar)->first();
+
+              if ($municapilty) {
+                $place = Place::where('place_id',$pid)->where('municipality_id',$municapilty->id)->first();
+                if ($place) {
+                $counter->place_id = $place->id;
+                $counter->status = 1;
+                $counter->save();
+                }
               }
           }
       }
@@ -633,15 +640,20 @@ class CounterController extends Controller {
 
     try {
         $pcid = substr($request->mot, 2);
-        if (strlen($pcid) == 2) {
-          $place = Place::find($pcid);
-          if ($place) {
-            $counters = Counter::where('place_id',$pcid)->get();
+        $municapiltyChar = substr($request->mot, 0, 2);
+        $municapilty = Municipality::where('code', $municapiltyChar)->first();
+        if ($municapilty) {
+          if (strlen($pcid) == 2) {
+            $place = Place::where('place_id',$pcid)->where('municipality_id',$municapilty->id)->first();
+            if ($place) {
+              $counters = Counter::where('place_id',$pcid)->get();
+            }
+          } else {
+            $cid = substr($pcid, 2);
+            $counters = Counter::where('counter_id', 'like', "%{$cid}%")->get();
           }
-        } else {
-          $cid = substr($pcid, 2);
-          $counters = Counter::where('counter_id', 'like', "%{$cid}%")->get();
         }
+
         return response()->json([
           'status' => 1,
           'message' => 'Updated successfully',
