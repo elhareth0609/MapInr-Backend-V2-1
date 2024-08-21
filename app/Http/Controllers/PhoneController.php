@@ -82,8 +82,8 @@ class PhoneController extends Controller
             }
 
             $phone = new Phone();
-            $phone->value = $data['value'];
             $phone->phone = $data['phone'];
+            $phone->value = $data['value'];
             $phone->audio = $uniqueAudioName;
             $phone->save();
 
@@ -103,7 +103,9 @@ class PhoneController extends Controller
   }
 
   public function all(Request $request) {
-    $phones = Phone::whereNotNull('value')->get();
+    $phones = Phone::whereNotNull('value')
+    ->select('id', 'value', 'phone')
+    ->get();
     return response()->json($phones);
   }
 
