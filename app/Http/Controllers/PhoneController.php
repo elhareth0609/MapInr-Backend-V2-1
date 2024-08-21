@@ -103,7 +103,7 @@ class PhoneController extends Controller
   }
 
   public function all(Request $request) {
-    $phones = Phone::all();
+    $phones = Phone::whereNotNull('value')->get();
     return response()->json($phones);
   }
 
