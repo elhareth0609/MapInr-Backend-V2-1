@@ -603,9 +603,9 @@ class CounterController extends Controller {
               if ($municapilty) {
                 $place = Place::where('place_id',$pid)->where('municipality_id',$municapilty->id)->first();
                 if ($place) {
-                $counter->place_id = $place->id;
-                $counter->status = 1;
-                $counter->save();
+                  $counter->place_id = $place->id;
+                  $counter->status = 1;
+                  $counter->save();
                 }
               }
           }
