@@ -6,8 +6,7 @@ use App\Models\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PhoneController extends Controller
-{
+class PhoneController extends Controller {
   public function create(Request $request) {
 
     $validator = Validator::make($request->all(), [

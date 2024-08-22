@@ -16,7 +16,8 @@ class MunicipalityController extends Controller
   public function create(Request $request) {
 
     $rules = [
-      'name' => 'required|string'
+      'name' => 'required|string',
+      'code' => 'required|string|unique:municipalities,code'
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -31,6 +32,7 @@ class MunicipalityController extends Controller
 
     $municipality = new Municipality();
     $municipality->name = $request->name;
+    $municipality->code = $request->code;
     $municipality->save();
 
     return response()->json([

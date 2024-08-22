@@ -25,6 +25,12 @@
       "url": "/counters"
     },
     {
+      "name": "Phones",
+      "icon": "menu-icon tf-icons mdi mdi-phone-outline",
+      "slug": "phones-table",
+      "url": "/phones"
+    },
+    {
       "name": "Settings",
       "icon": "menu-icon tf-icons mdi mdi-cog-outline",
       "slug": "settings",

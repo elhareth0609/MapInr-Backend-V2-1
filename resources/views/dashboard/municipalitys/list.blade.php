@@ -27,7 +27,16 @@
               <div class="col mb-4 mt-2">
                 <div class="form-floating form-floating-outline">
                   <input type="text" class="form-control" placeholder="{{__('Enter Name')}}" name="name" required>
-                  <label for="nameBackdrop">{{__('Municipality Name')}}</label>
+                  <label for="name">{{__('Municipality Name')}}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col mb-4 mt-2">
+                <div class="form-floating form-floating-outline">
+                  <input type="text" class="form-control" placeholder="{{__('Enter Code')}}" name="code" required>
+                  <label for="code">{{__('Code')}}</label>
                 </div>
               </div>
             </div>
@@ -66,7 +75,8 @@
         <thead>
           <tr class="text-nowrap">
             <th>#</th>
-            <th>{{__('Municipal Name')}}</th>
+            <th>{{__('Municipality Name')}}</th>
+            <th>{{__('Code')}}</th>
             <th>{{__('Places')}}</th>
             {{-- <th>{{__('Workers')}}</th> --}}
             {{-- <th>{{__('Created At')}}</th> --}}
@@ -243,6 +253,7 @@ $(document).ready( function () {
       columns: [
         { data: 'id', title: '#' },
         { data: 'name', title: '{{ __("Municipality Name")}}' },
+        { data: 'code', title: '{{ __("Code")}}' },
         { data: 'places', title: '{{ __("Places")}}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
       ],

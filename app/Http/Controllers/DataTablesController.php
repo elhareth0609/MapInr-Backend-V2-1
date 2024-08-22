@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Counter;
 
 use App\Models\Municipality;
+use App\Models\Phone;
 use App\Models\Place;
 use App\Models\Place_Worker;
 use App\Models\User;
@@ -470,6 +471,9 @@ class DataTablesController extends Controller {
       ->editColumn('id', function($municipality) {
           return (string) $municipality->id;
       })
+      ->editColumn('code', function($municipality) {
+        return $municipality->code;
+      })
       ->editColumn('places', function($municipality) {
         return $municipality->places->count();
       })
@@ -855,6 +859,70 @@ class DataTablesController extends Controller {
       return view('dashboard.users.transitions')
       ->with('user',$user)
       ->with('data',$data);
+
+  }
+
+
+  public function phones(Request $request) {
+
+    $phones = Phone::all();
+    if ($request->ajax()) {
+      return DataTables::of($phones)
+      ->editColumn('counter_id', function($phone) {
+        return (string) $phone->counter_id;
+      })
+      ->editColumn('longitude', function($phone) {
+        return $phone->value;
+      })
+      ->editColumn('phone', function($phone) {
+        return $phone->phone;
+      })
+      ->editColumn('created_at', function($phone) {
+          return $phone->created_at->format('Y-m-d');
+      })
+      ->editColumn('audio', function($phone) {
+        if ($phone->audio) {
+          return '<a type="button" onclick="togglePlay(' . $phone->id . ')">
+            <i class="mdi mdi-play-circle-outline" id="play-icon-' . $phone->id . '"></i>
+          </a>
+          <audio id="audio-' . $phone->id . '">
+            <source src="' . asset('storage/assets/audio/phones/' . $phone->audio) . '" type="audio/mpeg">
+          </audio>';
+
+          // return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
+          // <i class="mdi mdi-play-circle-outline"></i>
+          // </a>
+
+          // <!-- Modal -->
+          // <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+          //   <div class="modal-dialog modal-dialog-centered" role="document">
+          //     <div class="modal-content">
+          //       <div class="modal-header">
+          //         <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
+          //       </div>
+          //       <div class="modal-body text-center">
+          //         <audio controls>
+          //           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
+          //         </audio>
+          //         <div class="mt-3">
+          //           <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
+          //         </div>
+          //       </div>
+          //       <div class="modal-footer">
+          //         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
+          //         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>';
+        }
+      })
+      ->rawColumns(['audio'])
+
+      ->make(true);
+
+    }
+      return view('dashboard.phones.list');
 
   }
 }
