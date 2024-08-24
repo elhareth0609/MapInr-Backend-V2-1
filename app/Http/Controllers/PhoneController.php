@@ -105,7 +105,9 @@ class PhoneController extends Controller {
     $phones = Phone::whereNotNull('value')
     ->select('id', 'value', 'phone')
     ->get();
-    return response()->json($phones);
+    return response()->json([
+      'phones' => $phones
+    ]);
   }
 
 }
