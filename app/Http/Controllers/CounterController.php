@@ -656,7 +656,7 @@ class CounterController extends Controller {
 
         return response()->json([
           'status' => 1,
-          'message' => 'Updated successfully',
+          'message' => 'Searched successfully',
           'counters' => $counters
         ]);
     } catch (\Exception $e) {
