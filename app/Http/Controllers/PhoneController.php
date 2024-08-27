@@ -10,7 +10,7 @@ class PhoneController extends Controller {
   public function create(Request $request) {
 
     $validator = Validator::make($request->all(), [
-        'phone'      => 'required|phone',
+        'phone'      => 'required|string',
         'value'      => 'required|string',
         'audio'     => 'sometimes|file',
     ]);
