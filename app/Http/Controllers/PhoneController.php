@@ -11,7 +11,7 @@ class PhoneController extends Controller {
 
     $validator = Validator::make($request->all(), [
         'phone'      => 'required|string',
-        'value'      => 'required|string',
+        'value'      => 'sometimes|string',
         'audio'     => 'sometimes|file',
     ]);
 
@@ -56,7 +56,7 @@ class PhoneController extends Controller {
   public function create_lot(Request $request) {
     $validator = Validator::make($request->all(), [
         '*.phone'      => 'required|string',
-        '*.value'      => 'required|string',
+        '*.value'      => 'sometimes|string',
         '*.audio'     => 'sometimes|file',
     ]);
 
