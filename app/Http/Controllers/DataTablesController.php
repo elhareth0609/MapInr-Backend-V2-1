@@ -878,7 +878,7 @@ class DataTablesController extends Controller {
         return $phone->phone;
       })
       ->editColumn('created_at', function($phone) {
-          return $phone->created_at->format('Y-m-d');
+          return $phone->created_at->format('Y-m-d H:i');
       })
       ->editColumn('audio', function($phone) {
         if ($phone->audio) {
