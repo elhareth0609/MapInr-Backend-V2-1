@@ -609,10 +609,50 @@ class DataTablesController extends Controller {
       })
       ->addColumn('actions', function($wallet) {
         return '
+        <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-detail-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-file-multiple-outline"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
         <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-delete-modal-' . $wallet->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
-        <!-- Modal -->
+        <!-- Detail Modal -->
+        <div class="modal fade" id="transaction-detail-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <form class="modal-content" id="editTransaction-' . $wallet->id . '">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Detail Transaction") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  ' . $wallet->photoTransactions->map(function($photo) {
+                      return '
+                      <div class="image-container text-center my-w-fit-content mb-2 mx-auto position-relative">
+                          <div class="image-overlay rounded h-100 w-100 d-flex justify-content-center align-items-center position-absolute top-0 start-0 opacity-0 transition-opacity">
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-photo-id="' . $photo->id . '"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content copy-button" data-photo-url="' . $photo->photoUrl() . '"><span class="tf-icons mdi mdi-content-copy"></span></button>
+                          </div>
+                          <img src="' . $photo->photoUrl() . '" alt="' . $photo->id . '" class="rounded publication-photo" />
+                      </div>';
+                  })->implode('') . '
+                  ' . $wallet->audioTransactions->map(function($audio) {
+                      return '
+                      <div class="image-container text-center my-w-fit-content mb-2 mx-auto position-relative">
+                          <div class="image-overlay rounded h-100 w-100 d-flex justify-content-center align-items-center position-absolute top-0 start-0 opacity-0 transition-opacity">
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-audio-id="' . $audio->id . '"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content copy-button" data-audio-url="' . $audio->photoUrl() . '"><span class="tf-icons mdi mdi-content-copy"></span></button>
+                          </div>
+                          <audio controls class="w-100">
+                              <source src="' . $audio->photoUrl() . '" type="audio/mpeg">
+                              Your browser does not support the audio element.
+                          </audio>
+                          <img src="' . $audio->photoUrl() . '" alt="' . $audio->id . '" class="rounded publication-photo" />
+                      </div>';
+                  })->implode('') . '
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Modal -->
         <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -661,37 +701,34 @@ class DataTablesController extends Controller {
           </div>
         </div>
 
-
-
-
-
+        <!-- Delete Modal -->
         <div class="modal fade" id="transaction-delete-modal-' . $wallet->id . '" tabindex="-1" data-bs-backdrop="static" >
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <form class="modal-content" id="deleteTransaction' . $wallet->id . '">
-            <div class="modal-header">
-              <h4 class="modal-title">' .  __("Transaction Delete") . '</h4>
-            </div>
-            <div class="modal-body text-center">
-              <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-              <div class="row justify-content-center text-wrap">
-                '. __("Do You Really want to delete This Transaction.") .'
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <form class="modal-content" id="deleteTransaction' . $wallet->id . '">
+              <div class="modal-header">
+                <h4 class="modal-title">' .  __("Transaction Delete") . '</h4>
               </div>
-              <div class="row">
-                <div class="col mb-4 mt-2">
-                  <div class="input-group" dir="ltr">
-                    <input type="password" class="form-control" id="show-password-transaction-' . $wallet->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $wallet->id . '" name="password-' . $wallet->id . '" required />
-                    <span class="input-group-text cursor-pointer show-password" data-transition-id="' . $wallet->id . '"><i class="mdi mdi-lock-outline"></i></span>
+              <div class="modal-body text-center">
+                <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                <div class="row justify-content-center text-wrap">
+                  '. __("Do You Really want to delete This Transaction.") .'
+                </div>
+                <div class="row">
+                  <div class="col mb-4 mt-2">
+                    <div class="input-group" dir="ltr">
+                      <input type="password" class="form-control" id="show-password-transaction-' . $wallet->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $wallet->id . '" name="password-' . $wallet->id . '" required />
+                      <span class="input-group-text cursor-pointer show-password" data-transition-id="' . $wallet->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyTransaction(' . $wallet->id . ')">'. __("Submit") .'</button>
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
-            </div>
-          </form>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyTransaction(' . $wallet->id . ')">'. __("Submit") .'</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
         ';
       })
       ->editColumn('created_at', function($wallet) {

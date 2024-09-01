@@ -24,7 +24,7 @@
 </div>
 
 
-    <!-- Modal -->
+    <!-- Modal Form Edit -->
     <div class="modal fade" id="importFile" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog">
         <form class="modal-content" id="uploadForm" action="{{ route('upload.file.tranactions') }}" enctype="multipart/form-data">
@@ -53,8 +53,6 @@
         </form>
       </div>
     </div>
-
-
 
 
         <div class="row w-100 mx-auto">
@@ -299,7 +297,7 @@ color: #a3a3a3;
 </style>
 <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 <script>
-var dataTable;
+    var dataTable;
 
 
 
@@ -339,58 +337,6 @@ var dataTable;
           });
     }
 
-    // function rejectTransaction(id) {
-
-    //       $.ajax({
-    //           type: 'GET',
-    //           headers: {
-    //               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //           },
-    //           url: '/wallets/' + id + '/reject',
-    //           success: function (response) {
-    //               Swal.fire({
-    //                   icon: 'success',
-    //                   title: response.state,
-    //                   text: response.message,
-    //               });
-    //               dataTable.ajax.reload();
-    //           },
-    //           error: function (error) {
-    //               Swal.fire({
-    //                   icon: 'error',
-    //                   title: error.responseJSON.status,
-    //                   text: error.responseJSON.errors,
-    //               });
-    //           }
-    //       });
-    // }
-
-    // function hideTransaction(id) {
-
-    //     $.ajax({
-    //         type: 'GET',
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: '/wallets/' + id + '/hide',
-    //         success: function (response) {
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: response.state,
-    //                 text: response.message,
-    //             });
-    //             dataTable.ajax.reload();
-    //         },
-    //         error: function (error) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: error.responseJSON.status,
-    //                 text: error.responseJSON.errors,
-    //             });
-    //         }
-    //     });
-    // }
-
     function submitDistroyTransaction(id) {
       var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
 
@@ -428,9 +374,6 @@ $(document).ready( function () {
         }
     });
 
-
-
-
     $('#button-upload-file').on('click', function () {
       $('#fileID').click();
     });
@@ -442,25 +385,21 @@ $(document).ready( function () {
     });
 
     $(document).on('change', '#fileID', function (e) {
-    // Get the selected file(s)
-    var files = $(this)[0].files;
+        // Get the selected file(s)
+        var files = $(this)[0].files;
 
-    // Display the file name(s)
-    var fileNameContainer = $('#selectedFileName');
-    fileNameContainer.empty(); // Clear previous file name(s)
-    for (var i = 0; i < files.length; i++) {
-        fileNameContainer.append('<p>' + files[i].name + '</p>');
-    }
-});
+        // Display the file name(s)
+        var fileNameContainer = $('#selectedFileName');
+        fileNameContainer.empty(); // Clear previous file name(s)
+        for (var i = 0; i < files.length; i++) {
+            fileNameContainer.append('<p>' + files[i].name + '</p>');
+        }
+    });
 
     $(document).on('submit', '#uploadForm', function (e) {
         e.preventDefault();
 
         var formData = new FormData(this);
-
-        // Manually append file data to FormData
-        // formData.append('excelFile', $('#fileID')[0].files);
-
         $.ajax({
             url: $(this).attr('action'),
             type: 'POST',
@@ -610,20 +549,6 @@ $(document).ready( function () {
                 });
             }
 
-            // xhrFields: {
-            //     responseType: 'blob' // Important to set the responseType to 'blob'
-            // },
-            // success: function(response) {
-            //     // Create a Blob from the response
-            //     var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-            //     // Use FileSaver.js library to trigger the download
-            //     saveAs(blob, 'Tranactions.xlsx');
-            // },
-            // error: function(error) {
-            //     // Handle error
-            //     console.error(error);
-            // }
         });
     });
 
