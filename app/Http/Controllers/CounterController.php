@@ -528,7 +528,7 @@ class CounterController extends Controller {
   public function saveAudioNumber(Request $request) {
     $validator = Validator::make($request->all(), [
       'counter_id' => 'required|exists:counters,id',
-        'number' => 'required|string'
+      'number' => 'required|string'
     ]);
 
     if ($validator->fails()) {

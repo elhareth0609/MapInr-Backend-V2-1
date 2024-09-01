@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Counter;
+use App\Models\Municipality;
 use App\Models\Phone;
+use App\Models\Place;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -110,4 +113,100 @@ class PhoneController extends Controller {
     ]);
   }
 
+  public function saveAudioValue(Request $request) {
+    $validator = Validator::make($request->all(), [
+      'phone_id' => 'required|exists:phones,id',
+      'value' => 'required|string'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+      $phone = Phone::find($request->phone_id);
+      $phone->value = $request->value;
+      $phone->save();
+
+      return response()->json([
+          'state' => __("Success"),
+          'message' => __("Number Saved Successfully")
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  public function savePhoneCounter(Request $request) {
+    $validator = Validator::make($request->all(), [
+      'phone_id' => 'required|exists:phones,id',
+      'mot' => 'required|string|min:4'
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 0,
+        'message' => 'Validation failed : ' . $validator->errors()->first(),
+        'error' => $validator->errors()->first(),
+      ], 422);
+    }
+
+    try {
+
+      $pcid = substr($request->mot, 2);
+      $municapiltyChar = substr($request->mot, 0, 2);
+
+      $municapilty = Municipality::where('code', $municapiltyChar)->first();
+      if (!$municapilty) {
+          return response()->json(['error' => 'Municipality not found'], 404);
+      }
+
+      if (strlen($pcid) > 2) {
+          $pid = substr($pcid, 0, 2);
+          $place = Place::where('place_id', $pid)
+              ->where('municipality_id', $municapilty->id)
+              ->first();
+
+          if (!$place) {
+              return response()->json(['error' => 'Place not found'], 404);
+          }
+
+          $cid = substr($pcid, 2);
+          $counter = Counter::where('counter_id', $cid)->first();
+
+          if (!$counter) {
+              return response()->json(['error' => 'Counter not found'], 404);
+          }
+
+          $phone = Phone::find($request->phone_id);
+          if (!$phone) {
+              return response()->json(['error' => 'Phone not found'], 404);
+          }
+
+          $phone->counter_id = $counter->id;
+          $phone->mot = $request->mot;
+          $phone->save();
+
+          return response()->json([
+            'state' => __("Success"),
+            'message' => __("Mot Saved Successfully")
+          ]);
+      } else {
+          return response()->json(['error' => 'Invalid pcid length'], 400);
+      }
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
 }

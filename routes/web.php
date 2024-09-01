@@ -28,6 +28,7 @@ use App\Http\Controllers\pages\AccountSettingsConnections;
 use App\Http\Controllers\pages\AccountSettingsNotifications;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\MiscUnderMaintenance;
+use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\tables\Basic as TablesBasic;
@@ -143,7 +144,6 @@ Route::get('/exoprt-municipalitys-zip', [ExelController::class, 'exportMunicipal
 
 Route::post('/counters/delete-all', [CounterController::class, 'delete_all'])->name('counter.delete.all');
 
-
 Route::post('/municipality/create', [MunicipalityController::class, 'create'])->name('municipality.create');
 Route::post('/municipality/update', [MunicipalityController::class, 'update'])->name('municipality.update');
 Route::delete('/municipality/destroy/{id}', [MunicipalityController::class, 'destroy'])->name('municipality.destroy');
@@ -163,9 +163,10 @@ Route::post('user/remove-worker-transitions', [UserController::class, 'removeWor
 Route::post('remove-all-transitions', [UserController::class, 'removeallTransitions'])->name('transitions.delete.all');
 
 
-
-Route::post('/counters/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number');
-Route::post('/counters/save-counter-phone', [CounterController::class, 'saveCounterPhone'])->name('counter.save.counter.phone');
+Route::post('/phones/save-phone-counter', [PhoneController::class, 'savePhoneCounter'])->name('counter.save.phone.counter'); // for counter in phones table
+Route::post('/phones/save-audio-value', [PhoneController::class, 'saveAudioValue'])->name('phone.save.audio.value'); // for audio in counters table
+Route::post('/counters/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number'); // for audio in counters table
+Route::post('/counters/save-counter-phone', [CounterController::class, 'saveCounterPhone'])->name('counter.save.counter.phone'); // for phone in counters table
 Route::post('/counters/save-counter-place', [CounterController::class, 'saveCounterPlace'])->name('counter.save.counter.place');
 
 

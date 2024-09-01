@@ -89,7 +89,7 @@
     text-align: center;
   }
   tr td input {
-    width: 90px !important;
+    width: 100% !important;
   }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable/1.3.3/jquery.editable.min.js"></script>
@@ -133,7 +133,7 @@ $(document).ready( function () {
       },
       ajax: '{{ route("phones-table") }}',
       columns: [
-        { data: 'counter_id', title: '{{__("Counter Id")}}' },
+        { data: 'mot', title: '{{__("Counter Id")}}' },
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'value', title: '{{__("Value")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' },
@@ -170,10 +170,10 @@ $(document).ready( function () {
                 originalValue = data;
                 currentlyEditing = cell;
 
-                $(this).html('<input type="text" name="name" value="' + data + '"/>');
-                $('input[name="name"]').focus();
+                $(this).html('<input type="text" name="value" value="' + data + '"/>');
+                $('input[name="value"]').focus();
 
-                $('input[name="name"]').on('keypress', function(e) {
+                $('input[name="value"]').on('keypress', function(e) {
                     if (e.which == 13) { // Enter key pressed
                             var newValue = $(this).val();
                             var rowData = dataTable.row(rowIdx).data();
@@ -181,11 +181,11 @@ $(document).ready( function () {
 
 
                             $.ajax({
-                                url: '/phones/save-audio-number', // Replace with your URL
+                                url: '/phones/save-audio-value', // Replace with your URL
                                 method: 'POST',
                                 data: {
-                                    counter_id: rowId,
-                                    number: newValue,
+                                    phone_id: rowId,
+                                    value: newValue,
                                     _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
                                 },
 
@@ -241,7 +241,93 @@ $(document).ready( function () {
                             });
                         }
                 });
-            } 
+            } else if (columnIdx === 0) {
+
+              if (currentlyEditing) {
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        return;
+                    } else {
+                        var prevCell = dataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
+                    }
+                }
+
+
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="mot" value="' + data + '"/>');
+                $('input[name="mot"]').focus();
+
+                $('input[name="mot"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
+                            var mot = $(this).val();
+                            var rowData = dataTable.row(rowIdx).data();
+                            var rowId = rowData.id;
+
+
+                            $.ajax({
+                                url: '/phones/save-phone-counter', // Replace with your URL
+                                method: 'POST',
+                                data: {
+                                  phone_id: rowId,
+                                  mot: mot,
+                                  _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                                },
+
+                                success: function (response) {
+                                  var justNowLabel = __("Just Now", lang);
+
+                                  var successToast = `
+                                      <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                          <div class="toast-header">
+                                              <i class="mdi mdi-content-copy text-success me-2"></i>
+                                              <div class="me-auto fw-medium">${response.state}</div>
+                                              <small class="text-muted">${justNowLabel}</small>
+                                              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                          </div>
+                                          <div class="toast-body">
+                                              ${response.message}
+                                          </div>
+                                      </div>
+                                  `;
+
+                                  $('body').append(successToast);
+
+                                  var toastElement = document.querySelector('.bs-toast');
+                                  var toast = new bootstrap.Toast(toastElement);
+                                  toast.show();
+
+
+                                  dataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
+
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
+
+                            });
+                        }
+                });
+            }
         });
 
 
