@@ -159,8 +159,12 @@ Route::post('wallets/{id}/submit', [WalletController::class, 'submit'])->name('w
 Route::delete('wallets/{id}/delete', [WalletController::class, 'delete'])->name('wallet.delete');
 // Route::get('wallets/{id}/hide', [WalletController::class, 'hide'])->name('wallet.hide');
 Route::post('transitions/add', [WalletController::class, 'add'])->name('transitions.add');
+Route::delete('/wallet/unupload/{id}', [WalletController::class, 'unuploadFile'])->name('product.unupload.file');
+
+
 Route::post('user/remove-worker-transitions', [UserController::class, 'removeWorkerTransitions'])->name('user.delete.transitions.all');
 Route::post('remove-all-transitions', [UserController::class, 'removeallTransitions'])->name('transitions.delete.all');
+
 
 
 Route::post('/phones/save-phone-counter', [PhoneController::class, 'savePhoneCounter'])->name('counter.save.phone.counter'); // for counter in phones table

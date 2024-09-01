@@ -55,105 +55,100 @@
     </div>
 
 
-        <div class="row w-100 mx-auto">
-          <div class="col-md-3 col-sm-4 my-1 px-0">
-            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
-              <div class="card-body p-4">
-                <div class="row">
-                  <div class="col-8">
-                    <h5 class="card-title widget-card-title mb-3">{{ __('Pending') }}</h5>
-                    @if ($data->pending > 0)
-                      <h4 class="card-subtitle text-success m-0">{{ $data->pending }} د.ج</h4>
-                    @else
-                      <h4 class="card-subtitle text-danger m-0">{{ $data->pending * -1 }} د.ج</h4>
-                    @endif
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex justify-content-end">
-                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                        <i class="mdi mdi-clock-time-eight-outline fs-4"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <div class="row w-100 mx-auto">
+      <div class="col-md-3 col-sm-4 my-1 px-0">
+        <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="card-title widget-card-title mb-3">{{ __('Pending') }}</h5>
+                @if ($data->pending > 0)
+                  <h4 class="card-subtitle text-success m-0">{{ $data->pending }} د.ج</h4>
+                @else
+                  <h4 class="card-subtitle text-danger m-0">{{ $data->pending * -1 }} د.ج</h4>
+                @endif
               </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-4 my-1 px-0">
-            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
-              <div class="card-body p-4">
-                <div class="row">
-                  <div class="col-8">
-                    <h5 class="card-title widget-card-title mb-3">{{ __('Completed') }}</h5>
-                    @if ($data->completed > 0)
-                      <h4 class="card-subtitle text-success m-0">{{ $data->completed }} د.ج</h4>
-                    @else
-                      <h4 class="card-subtitle text-danger m-0">{{ $data->completed * -1 }} د.ج</h4>
-                    @endif
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex justify-content-end">
-                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                        <i class="mdi mdi-check-all fs-4"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-4 my-1 px-0">
-            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
-              <div class="card-body p-4">
-                <div class="row">
-                  <div class="col-8">
-                    <h5 class="card-title widget-card-title mb-3">{{ __('Rejected') }}</h5>
-                    @if ($data->rejected > 0)
-                      <h4 class="card-subtitle text-success m-0">{{ $data->rejected }} د.ج</h4>
-                    @else
-                      <h4 class="card-subtitle text-danger m-0">{{ $data->rejected * -1 }} د.ج</h4>
-                    @endif
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex justify-content-end">
-                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                        <i class="mdi mdi-alert-outline fs-4"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-4 my-1 px-0">
-            <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
-              <div class="card-body p-4">
-                <div class="row">
-                  <div class="col-8">
-                    <h5 class="card-title widget-card-title mb-3">{{ __('Hidden') }}</h5>
-                    @if ($data->hidden > 0)
-                    <h4 class="card-subtitle text-success m-0">{{ $data->hidden }} د.ج</h4>
-                    @else
-                    <h4 class="card-subtitle text-danger m-0">{{ $data->hidden * -1 }} د.ج</h4>
-                    @endif
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex justify-content-end">
-                      <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                        <i class="mdi mdi-circle-off-outline fs-4"></i>
-                      </div>
-                    </div>
+              <div class="col-4">
+                <div class="d-flex justify-content-end">
+                  <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-clock-time-eight-outline fs-4"></i>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-
-
-
+      </div>
+      <div class="col-md-3 col-sm-4 my-1 px-0">
+        <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="card-title widget-card-title mb-3">{{ __('Completed') }}</h5>
+                @if ($data->completed > 0)
+                  <h4 class="card-subtitle text-success m-0">{{ $data->completed }} د.ج</h4>
+                @else
+                  <h4 class="card-subtitle text-danger m-0">{{ $data->completed * -1 }} د.ج</h4>
+                @endif
+              </div>
+              <div class="col-4">
+                <div class="d-flex justify-content-end">
+                  <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-check-all fs-4"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-4 my-1 px-0">
+        <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="card-title widget-card-title mb-3">{{ __('Rejected') }}</h5>
+                @if ($data->rejected > 0)
+                  <h4 class="card-subtitle text-success m-0">{{ $data->rejected }} د.ج</h4>
+                @else
+                  <h4 class="card-subtitle text-danger m-0">{{ $data->rejected * -1 }} د.ج</h4>
+                @endif
+              </div>
+              <div class="col-4">
+                <div class="d-flex justify-content-end">
+                  <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-alert-outline fs-4"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-4 my-1 px-0">
+        <div class="card widget-card border-light shadow-sm mx-1" dir="rtl">
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <h5 class="card-title widget-card-title mb-3">{{ __('Hidden') }}</h5>
+                @if ($data->hidden > 0)
+                <h4 class="card-subtitle text-success m-0">{{ $data->hidden }} د.ج</h4>
+                @else
+                <h4 class="card-subtitle text-danger m-0">{{ $data->hidden * -1 }} د.ج</h4>
+                @endif
+              </div>
+              <div class="col-4">
+                <div class="d-flex justify-content-end">
+                  <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-circle-off-outline fs-4"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <div class="col-lg-8 col-xl-8 col-md-7 col-sm-12 col-12 text-end">
@@ -256,44 +251,62 @@
     text-align: center;
   }
 
-
-
   .container-upload-file {
+    display: flex;
+    justify-content: center;
+  }
 
-display: flex;
-justify-content: center;
-}
 
+  .card-upload-file h3 {
+    font-size: 22px;
+    font-weight: 600;
+  }
 
-.card-upload-file h3 {
-font-size: 22px;
-font-weight: 600;
+  .drop_box-upload-file {
+    margin: 10px 0;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 3px dotted #a3a3a3;
+    border-radius: 5px;
+  }
 
-}
+  .drop_box-upload-file h4 {
+    font-size: 16px;
+    font-weight: 400;
+    color: #2e2e2e;
+  }
 
-.drop_box-upload-file {
-margin: 10px 0;
-padding: 30px;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-border: 3px dotted #a3a3a3;
-border-radius: 5px;
-}
+  .drop_box-upload-file p {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #a3a3a3;
+  }
 
-.drop_box-upload-file h4 {
-font-size: 16px;
-font-weight: 400;
-color: #2e2e2e;
-}
+  .image-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+  }
 
-.drop_box-upload-file p {
-margin-top: 10px;
-margin-bottom: 20px;
-font-size: 12px;
-color: #a3a3a3;
-}
+  .image-container:hover .image-overlay {
+      opacity: 1!important;
+  }
+
+  .audio-container:hover .image-overlay {
+      opacity: 1!important;
+  }
+
+  .publication-photo {
+  width: 720px;
+  }
+
+  .swal2-container {
+    z-index: 10000;
+  }
+
 </style>
 <script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 <script>
@@ -598,6 +611,51 @@ $(document).ready( function () {
       });
 
 
-  });
+      $(document).on('click', '.trash-button', function(event) {
+        var id = $(this).data('photo-id') || $(this).data('audio-id');
+        var type = $(this).data('type'); // Add data-type attribute to distinguish between image and audio
+        var container = $(this).closest('.image-container, .audio-container');
+
+        Swal.fire({
+            title: 'Do you really want to delete this Item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Submit",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/wallet/unupload/' + id,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: { type: type }, // Send the type of file in the request
+                    success: function(response) {
+                        container.remove();
+
+                        Swal.fire({
+                            icon: response.icon,
+                            title: response.state,
+                            text: response.message,
+                            confirmButtonText: __("Ok", lang),
+                        });
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        const response = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            icon: response.icon,
+                            title: response.state,
+                            text: response.message,
+                            confirmButtonText: __("Ok", lang),
+                        });
+                    }
+                });
+            }
+        });
+});
+});
+
 </script>
 @endsection

@@ -14,9 +14,13 @@ class PhotoTransactions extends Model
       'photo'
     ];
 
-    public function transaction()
-    {
+    public function transaction() {
         return $this->belongsTo(Wallet::class);
     }
+
+    public function photoUrl() {
+        return asset('storage/assets/img/wallets/' . $this->photo);
+    }
+
 
 }

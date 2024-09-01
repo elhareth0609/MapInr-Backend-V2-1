@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
@@ -242,15 +243,45 @@ class WalletController extends Controller
     ]);
   }
 
-  // public function reject(Request $request,$id) {
-  //   $transaction = Wallet::find($id);
-  //   $transaction->status = 'rejected';
-  //   $transaction->save();
-  //   return response()->json([
-  //     'state' => __("Success"),
-  //     'message' => __("Rejected Successful."),
-  //   ], 200);
-  // }
+  public function unuploadFile(Request $request,$id) {
+    try {
+      if ($request->type == 'audio') {
+        $audio = AudioTransactions::find($id);
+
+        $audioPath = 'public/assets/audio/wallets/' . $audio->audio;
+
+        if ($audio->audio && Storage::exists($audioPath)) {
+          Storage::delete($audioPath);
+        }
+
+        $audio->delete();
+      } elseif ($request->type == 'image') {
+        $photo = PhotoTransactions::find($id);
+
+        $photoPath = 'public/assets/img/wallets/' . $photo->photo;
+
+        if ($photo->photo && Storage::exists($photoPath)) {
+            Storage::delete($photoPath);
+        }
+  
+        $photo->delete();
+      }
+
+    return response()->json([
+      'icon' => 'success',
+      'state' => __("Success"),
+      'message' => __("Deleted Successfully.")
+    ]);
+
+  } catch (\Exception $e) {
+    return response()->json([
+      'icon' => 'error',
+      'state' => __("Error"),
+      'message' => $e->getMessage(),
+    ]);
+  }
+
+  }
 
   public function submit(Request $request,$id) {
     $validator = Validator::make($request->all(), [
@@ -286,16 +317,6 @@ class WalletController extends Controller
       ], 200);
     }
   }
-
-  // public function hide(Request $request,$id) {
-  //   $transaction = Wallet::find($id);
-  //   $transaction->status = 'hidden';
-  //   $transaction->save();
-  //   return response()->json([
-  //     'state' => __("Success"),
-  //     'message' => __("Hidden Successfully"),
-  //   ], 200);
-  // }
 
   public function delete(Request $request,$id) {
     $validator = Validator::make($request->all(), [

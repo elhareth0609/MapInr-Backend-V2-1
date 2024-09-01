@@ -14,8 +14,12 @@ class AudioTransactions extends Model
       'audio'
     ];
 
-    public function transaction()
-    {
+    public function transaction() {
         return $this->belongsTo(Wallet::class);
     }
+
+    public function audioUrl() {
+        return asset('storage/assets/audio/wallets/' . $this->audio);
+    }
+
 }

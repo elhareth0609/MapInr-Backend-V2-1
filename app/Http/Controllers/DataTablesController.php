@@ -626,24 +626,21 @@ class DataTablesController extends Controller {
                       return '
                       <div class="image-container text-center my-w-fit-content mb-2 mx-auto position-relative">
                           <div class="image-overlay rounded h-100 w-100 d-flex justify-content-center align-items-center position-absolute top-0 start-0 opacity-0 transition-opacity">
-                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-photo-id="' . $photo->id . '"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
-                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content copy-button" data-photo-url="' . $photo->photoUrl() . '"><span class="tf-icons mdi mdi-content-copy"></span></button>
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-photo-id="' . $photo->id . '" data-type="image"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
                           </div>
-                          <img src="' . $photo->photoUrl() . '" alt="' . $photo->id . '" class="rounded publication-photo" />
+                          <img class="w-100" src="' . $photo->photoUrl() . '" alt="' . $photo->id . '" class="rounded publication-photo" />
                       </div>';
                   })->implode('') . '
                   ' . $wallet->audioTransactions->map(function($audio) {
                       return '
-                      <div class="image-container text-center my-w-fit-content mb-2 mx-auto position-relative">
-                          <div class="image-overlay rounded h-100 w-100 d-flex justify-content-center align-items-center position-absolute top-0 start-0 opacity-0 transition-opacity">
-                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-audio-id="' . $audio->id . '"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
-                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content copy-button" data-audio-url="' . $audio->photoUrl() . '"><span class="tf-icons mdi mdi-content-copy"></span></button>
+                      <div class="audio-container text-center my-w-fit-content mb-2 mx-auto position-relative d-flex justify-content-center align-items-center">
+                          <div class="image-overlay rounded position-absolute top-0 start-0 opacity-0 transition-opacity ms-2">
+                              <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-audio-id="' . $audio->id . '" data-type="audio"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
                           </div>
-                          <audio controls class="w-100">
-                              <source src="' . $audio->photoUrl() . '" type="audio/mpeg">
+                          <audio controls>
+                              <source src="' . $audio->audioUrl() . '" type="audio/mpeg">
                               Your browser does not support the audio element.
                           </audio>
-                          <img src="' . $audio->photoUrl() . '" alt="' . $audio->id . '" class="rounded publication-photo" />
                       </div>';
                   })->implode('') . '
                 </div>
