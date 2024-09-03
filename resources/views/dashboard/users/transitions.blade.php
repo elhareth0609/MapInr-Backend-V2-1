@@ -283,16 +283,39 @@
         #userTransitions_paginate {
           display: none;
         }
+
         #userTransitions_info {
           display: none;
         }
+
         .delete-alert-span::before {
           font-size: 110px;
         }
+
         td , tr{
           text-align: center;
         }
 
+        .image-overlay {
+          background-color: rgba(0, 0, 0, 0.5);
+          transition: opacity 0.3s ease;
+        }
+
+        .image-container:hover .image-overlay {
+            opacity: 1!important;
+        }
+
+        .audio-container:hover .image-overlay {
+            opacity: 1!important;
+        }
+
+        .publication-photo {
+        width: 720px;
+        }
+
+        .swal2-container {
+          z-index: 10000;
+        }
         </style>
 
 
@@ -611,6 +634,51 @@
         });
       });
 
+      $(document).on('click', '.trash-button', function(event) {
+        var id = $(this).data('photo-id') || $(this).data('audio-id');
+        var type = $(this).data('type'); // Add data-type attribute to distinguish between image and audio
+        var container = $(this).closest('.image-container, .audio-container');
+
+        Swal.fire({
+            title: 'Do you really want to delete this Item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Submit",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/wallet/unupload/' + id,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: { type: type }, // Send the type of file in the request
+                    success: function(response) {
+                        container.remove();
+
+                        Swal.fire({
+                            icon: response.icon,
+                            title: response.state,
+                            text: response.message,
+                            confirmButtonText: __("Ok", lang),
+                        });
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        const response = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            icon: response.icon,
+                            title: response.state,
+                            text: response.message,
+                            confirmButtonText: __("Ok", lang),
+                        });
+                    }
+                });
+            }
+        });
+      });
+      
     });
   </script>
 

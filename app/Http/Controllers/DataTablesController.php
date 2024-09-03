@@ -793,10 +793,47 @@ class DataTablesController extends Controller {
       })
       ->addColumn('actions', function($wallet) {
         return '
+            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-detail-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-file-multiple-outline"></icon></a>
             <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-edit-modal-' . $wallet->id . '" data-wallet-id="' . $wallet->id . '"><icon class="mdi mdi-pencil-outline"></icon></a>
             <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-delete-modal-' . $wallet->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
-            <!-- Modal -->
+            <!-- Detail Modal -->
+            <div class="modal fade" id="transaction-detail-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <form class="modal-content" id="editTransaction-' . $wallet->id . '">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="modalCenterTitle">' .  __("Detail Transaction") . '</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                      ' . $wallet->photoTransactions->map(function($photo) {
+                          return '
+                          <div class="image-container text-center my-w-fit-content mb-2 mx-auto position-relative">
+                              <div class="image-overlay rounded h-100 w-100 d-flex justify-content-center align-items-center position-absolute top-0 start-0 opacity-0 transition-opacity">
+                                  <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-photo-id="' . $photo->id . '" data-type="image"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
+                              </div>
+                              <img class="w-100" src="' . $photo->photoUrl() . '" alt="' . $photo->id . '" class="rounded publication-photo" />
+                          </div>';
+                      })->implode('') . '
+                      ' . $wallet->audioTransactions->map(function($audio) {
+                          return '
+                          <div class="audio-container text-center my-w-fit-content mb-2 mx-auto position-relative d-flex justify-content-center align-items-center">
+                              <div class="image-overlay rounded position-absolute top-0 start-0 opacity-0 transition-opacity ms-2">
+                                  <button type="button" class="btn btn-icon btn-primary m-2 overlay-content trash-button" data-audio-id="' . $audio->id . '" data-type="audio"><span class="tf-icons mdi mdi-trash-can-outline"></span></button>
+                              </div>
+                              <audio controls>
+                                  <source src="' . $audio->audioUrl() . '" type="audio/mpeg">
+                                  Your browser does not support the audio element.
+                              </audio>
+                          </div>';
+                      })->implode('') . '
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- edit Modal -->
             <div class="modal fade" id="transaction-edit-modal-' . $wallet->id . '" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -851,7 +888,7 @@ class DataTablesController extends Controller {
 
 
 
-            <!-- Modal -->
+            <!-- delete Modal -->
 
             <div class="modal fade" id="transaction-delete-modal-' . $wallet->id . '" tabindex="-1" data-bs-backdrop="static" >
               <div class="modal-dialog modal-dialog-centered" role="document">

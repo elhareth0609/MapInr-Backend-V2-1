@@ -654,7 +654,7 @@ $(document).ready( function () {
                 });
             }
         });
-});
+      });
 });
 
 </script>
