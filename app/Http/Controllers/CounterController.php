@@ -652,11 +652,14 @@ class CounterController extends Controller {
               }
             }
           } else {
-            // $pid = substr($pcid, 0, 2);
-            $cid = substr($pcid, 2);
-            $counters = Counter::where('counter_id', 'like', "%{$cid}%")->get();
-            foreach ($counters as $counter) {
-              $counter->phone = $counter->phone1? $counter->phone1->phone : $counter->phone;
+            $pid = substr($pcid, 0, 2);
+            $place = Place::where('place_id',$pid)->get();
+            if ($place) {
+              $cid = substr($pcid, 2);
+              $counters = Counter::where('place_id',$place->id)->where('counter_id', 'like', "%{$cid}%")->get();
+              foreach ($counters as $counter) {
+                $counter->phone = $counter->phone1? $counter->phone1->phone : $counter->phone;
+              }
             }
           }
         }
