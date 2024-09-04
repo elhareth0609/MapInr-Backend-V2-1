@@ -28,8 +28,8 @@ class Counter extends Model
         return $this->belongsTo(Place::class);
     }
 
-    public function phone() {
-        return $this->hasOne(Phone::class);
+    public function phone1() {
+      return $this->hasOne(Phone::class);
     }
 
     public function worker()
