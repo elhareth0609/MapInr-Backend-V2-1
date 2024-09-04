@@ -647,10 +647,16 @@ class CounterController extends Controller {
             $place = Place::where('place_id',$pcid)->where('municipality_id',$municapilty->id)->first();
             if ($place) {
               $counters = Counter::where('place_id',$pcid)->get();
+              foreach ($counters as $counter) {
+                $counter->phone = $counter->phone1? $counter->phone1->phone : $counter->phone;
+              }
             }
           } else {
             $cid = substr($pcid, 2);
             $counters = Counter::where('counter_id', 'like', "%{$cid}%")->get();
+            foreach ($counters as $counter) {
+              $counter->phone = $counter->phone1? $counter->phone1->phone : $counter->phone;
+            }
           }
         }
 
