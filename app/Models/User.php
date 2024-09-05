@@ -43,14 +43,16 @@ class User extends Authenticatable
         // 'password' => 'hashed',
     ];
 
-    public function counters()
-    {
+    public function counters() {
         return $this->hasMany(Counter::class,'worker_id');
     }
 
-    public function wallets()
-    {
+    public function wallets() {
         return $this->hasMany(Wallet::class);
+    }
+
+    public function phones() {
+        return $this->hasMany(phone::class,'worker_id');
     }
 
     public static function userProfit($type,$id) {
@@ -69,9 +71,9 @@ class User extends Authenticatable
 
       return $totalAmount;
     }
-  
+
     public static function allProfit($type) {
-  
+
       $credit = Wallet::where('transaction_type', 'credit')
       ->where('status', $type)
       ->get()->sum('amount');
@@ -84,5 +86,5 @@ class User extends Authenticatable
 
       return $totalAmount;
   }
-  
+
 }

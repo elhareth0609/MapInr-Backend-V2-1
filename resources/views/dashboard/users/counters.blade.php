@@ -18,6 +18,8 @@
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
       <li class="nav-item"><a class="nav-link active"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/transitions')}}"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('worker-phones/'. $user->id)}}"><i class="mdi mdi-phone-outline  mdi-20px me-1"></i>{{ __('Phones') }}</a></li>
+
 
     </ul>
     <div class="card mb-4">

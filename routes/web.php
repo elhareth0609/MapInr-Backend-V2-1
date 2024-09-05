@@ -95,6 +95,7 @@ Route::post('/update-information', [SettingController::class, 'update_informatio
 Route::get('/users', [DataTablesController::class, 'users'])->name('users');
 Route::get('/worker-places/{id}', [DataTablesController::class, 'worker_places'])->name('worker-places-table');
 Route::get('/worker-counters/{id}', [DataTablesController::class, 'worker_counters'])->name('worker-counters-table');
+Route::get('/worker-phones/{id}', [DataTablesController::class, 'worker_phones'])->name('worker-phones-table');
 
 Route::get('/places', [DataTablesController::class, 'places'])->name('places-table');
 Route::get('/place-workers/{id}', [DataTablesController::class, 'place_workers'])->name('place-workers-table');
@@ -120,6 +121,7 @@ Route::get('/user/{id}', [UserController::class, 'user'])->name('user');
 Route::get('/user/{id}/places', [UserController::class, 'user_places'])->name('user_places');
 Route::get('/user/{id}/counters', [UserController::class, 'user_counters'])->name('user_counters');
 Route::get('/user/{id}/transitions', [DataTablesController::class, 'user_transitions'])->name('user_transitions');
+Route::get('/user/{id}/phones', [DataTablesController::class, 'worker_phones'])->name('user_phones');
 Route::post('/user/create', [UserController::class, 'create'])->name('user-create');
 Route::post('/user/update', [UserController::class, 'update'])->name('user-update');
 Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user-destroy');

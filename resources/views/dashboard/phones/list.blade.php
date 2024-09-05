@@ -39,7 +39,7 @@
       <table class="table table-striped w-100" id="phones" dir="rtl">
         <thead>
           <tr class="text-nowrap">
-            <th>{{__('Counter Id')}}</th>
+            <th>{{__('Send To')}}</th>
             <th>{{ __('Phone') }}</th>
             <th>{{ __('Value') }}</th>
             <th>{{__('Created At')}}</th>
@@ -133,7 +133,7 @@ $(document).ready( function () {
       },
       ajax: '{{ route("phones-table") }}',
       columns: [
-        { data: 'mot', title: '{{__("Counter Id")}}' },
+        { data: 'mot', title: '{{__("Send To")}}' },
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'value', title: '{{__("Value")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' },

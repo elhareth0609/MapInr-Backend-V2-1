@@ -11,6 +11,7 @@ class Phone extends Model
 
 
     protected $fillable = [
+      'user_id',
       'counter_id',
       'value',
       'audio',
@@ -19,4 +20,8 @@ class Phone extends Model
     public function counter() {
         return $this->belongsTo(Counter::class);
     }
+
+    public function worker() {
+      return $this->belongsTo(User::class);
+  }
 }

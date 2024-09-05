@@ -39,6 +39,7 @@ class PhoneController extends Controller {
       }
 
       $phone = new Phone();
+      $phone->worker_id = $request->user()->id;
       $phone->phone = $request->phone;
       $phone->value = $request->value;
       $phone->audio = $uniqueName;
@@ -84,6 +85,7 @@ class PhoneController extends Controller {
             }
 
             $phone = new Phone();
+            $phone->worker_id = $request->user()->id;
             $phone->phone = $data['phone'];
             $phone->value = $data['value'];
             $phone->audio = $uniqueAudioName;

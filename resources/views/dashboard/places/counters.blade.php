@@ -48,6 +48,7 @@
                   <th>{{__('Counter Number')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
+                  <th>{{__('Phone')}}</th>
                   {{-- <th>{{__('Status')}}</th> --}}
                   {{-- <th>{{__('Created At')}}</th> --}}
                   <th>{{__('Actions')}}</th>
@@ -92,6 +93,9 @@
           text-align: center;
         }
 
+        tr td input {
+          width: 100% !important;
+        }
 
         :root {
       --textColor: #1E2330;
@@ -415,9 +419,11 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable/1.3.3/jquery.editable.min.js"></script>
 
 <script>
 
+var lang = "{{ app()->getLocale() }}"
 
     $(document).on('click', '.selectMultiple ul li', function(e) {
         var select = $(this).parent().parent();
@@ -579,6 +585,7 @@
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
+          { data: 'phone', title: '{{__("Phone")}}',"searchable": false },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
         "drawCallback": function () {
@@ -589,6 +596,113 @@
 
           // Update the content of the custom info element
           $('#infoTable').text((pageInfo.start + 1) + '-' + pageInfo.end + ' of ' + pageInfo.recordsTotal);
+
+          var currentlyEditing = null;
+        var originalValue = null;
+
+        $('#placeCounters tbody').on('dblclick', 'td', function() {
+            var cell = placeCountersDataTable.cell(this);
+            var columnIdx = cell.index().column;
+            var rowIdx = cell.index().row;
+            var data = cell.data();
+
+            if (columnIdx === 3) {
+                // Check if there's an already active editing cell
+                // if (currentlyEditing) {
+                //     // Revert the previous cell to its original value
+                //     var prevCell = placeCountersDataTable.cell(currentlyEditing);
+                //     $(currentlyEditing.node()).html(originalValue);
+                // }
+
+                if (currentlyEditing) {
+                    if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
+                        // Do nothing if double-click is on the same cell that is already being edited
+                        return;
+                    } else {
+                        // Revert the previous cell to its original value
+                        var prevCell = placeCountersDataTable.cell(currentlyEditing);
+                        $(currentlyEditing.node()).html(originalValue);
+                    }
+                }
+
+
+                // Save the original value of the new cell
+                originalValue = data;
+                currentlyEditing = cell;
+
+                $(this).html('<input type="text" name="phone" value="' + data + '"/>');
+                $('input[name="phone"]').focus();
+
+                $('input[name="phone"]').on('keypress', function(e) {
+                    if (e.which == 13) { // Enter key pressed
+                        var newValue = $(this).val();
+                        var rowData = placeCountersDataTable.row(rowIdx).data();
+                        var rowId = rowData.id; // Assuming the row has a 'counter_id' field
+
+                        // Send AJAX request to update the value
+                        $.ajax({
+                            url: '/counters/save-counter-phone', // Replace with your URL
+                            method: 'POST',
+                            data: {
+                                counter_id: rowId,
+                                number: newValue,
+                                _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+                            },
+                            // Toast Here
+                            success: function (response) {
+                              var justNowLabel = __("Just Now", lang);
+
+                              var successToast = `
+                                  <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                      <div class="toast-header">
+                                          <i class="mdi mdi-content-copy text-success me-2"></i>
+                                          <div class="me-auto fw-medium">${response.state}</div>
+                                          <small class="text-muted">${justNowLabel}</small>
+                                          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                      </div>
+                                      <div class="toast-body">
+                                          ${response.message}
+                                      </div>
+                                  </div>
+                              `;
+
+                              $('body').append(successToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+
+
+                              placeCountersDataTable.ajax.reload();
+                            },
+                            error: function (error) {
+                              var justNowLabel = __("Just Now",lang);
+                              var errorToast = `
+                                <div class="bs-toast toast toast-placement-ex m-2 fade bottom-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                                    <div class="toast-header">
+                                        <i class="mdi mdi-alert-outline text-danger me-2"></i>
+                                        <div class="me-auto fw-medium">${error.responseJSON.title}</div>
+                                        <small class="text-muted">${justNowLabel}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${error.responseJSON.error}
+                                    </div>
+                                </div>
+                              `;
+
+                              $('body').append(errorToast);
+
+                              var toastElement = document.querySelector('.bs-toast');
+                              var toast = new bootstrap.Toast(toastElement);
+                              toast.show();
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
         },
       });
       $('#customSearch').on('keyup', function () {

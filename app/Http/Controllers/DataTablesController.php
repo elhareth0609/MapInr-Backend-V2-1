@@ -462,6 +462,44 @@ class DataTablesController extends Controller {
     return view('dashboard.users.counters');
   }
 
+  public function worker_phones($id,Request $request) {
+    $worker = User::find($id);
+
+    $phones = $worker->phones;
+    if ($request->ajax()) {
+      return DataTables::of($phones)
+      ->editColumn('counter_id', function($phone) {
+        return (string) $phone->counter_id;
+      })
+      ->editColumn('longitude', function($phone) {
+        return $phone->value;
+      })
+      ->editColumn('phone', function($phone) {
+        return $phone->phone;
+      })
+      ->editColumn('created_at', function($phone) {
+          return $phone->created_at->format('Y-m-d H:i');
+      })
+      ->editColumn('audio', function($phone) {
+        if ($phone->audio) {
+          return '<a type="button" onclick="togglePlay(' . $phone->id . ')">
+            <i class="mdi mdi-play-circle-outline" id="play-icon-' . $phone->id . '"></i>
+          </a>
+          <audio id="audio-' . $phone->id . '">
+            <source src="' . asset('storage/assets/audio/phones/' . $phone->audio) . '" type="audio/mpeg">
+          </audio>';
+
+        }
+      })
+      ->rawColumns(['audio'])
+      ->make(true);
+
+    }
+
+    return view('dashboard.users.phones')
+    ->with('user',$worker);
+  }
+
   public function municipalitys(Request $request) {
     $municipalitys = Municipality::where('id','!=', 0)->get();
 
