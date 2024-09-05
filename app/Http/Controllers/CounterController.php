@@ -658,7 +658,7 @@ class CounterController extends Controller {
               $cid = substr($pcid, 2);
               $counters = Counter::where('place_id',$place->id)->where('counter_id', 'like', "{$cid}%")->get();
               foreach ($counters as $counter) {
-                // $counter->phone = $counter->myPhone? $counter->myPhone->phone : $counter->phone;
+                $counter->phone = $counter->myPhone? $counter->myPhone->phone : $counter->phone;
               }
             }
             // return $counters;
