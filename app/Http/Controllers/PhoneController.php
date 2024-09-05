@@ -181,7 +181,7 @@ class PhoneController extends Controller {
           }
 
           $cid = substr($pcid, 2);
-          $counter = Counter::where('counter_id', $cid)->first();
+          $counter = Counter::where('place_id', $place->id)->where('counter_id', $cid)->first();
 
           if (!$counter) {
               return response()->json(['error' => 'Counter not found'], 404);
