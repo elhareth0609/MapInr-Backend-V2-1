@@ -52,7 +52,7 @@ class User extends Authenticatable
     }
 
     public function phones() {
-        return $this->hasMany(phone::class,'worker_id');
+        return $this->hasMany(Phone::class,'worker_id');
     }
 
     public static function userProfit($type,$id) {
