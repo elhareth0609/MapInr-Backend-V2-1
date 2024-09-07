@@ -472,7 +472,7 @@ class DataTablesController extends Controller {
         return $place->workers->count();
       })
       ->editColumn('updated_at', function($place) {
-        return $place->updated_at->format('Y-m-d H:i:s');
+        return $place->counters()->latest('updated_at')->first()->updated_at->format('Y-m-d H:i:s');
       })
       ->addColumn('actions', function($place) {
           return '
