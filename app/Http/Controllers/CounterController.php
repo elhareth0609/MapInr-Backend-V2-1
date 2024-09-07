@@ -601,11 +601,35 @@ class CounterController extends Controller {
               $municapilty = Municipality::where('code', $municapiltyChar)->first();
 
               if ($municapilty) {
-                $place = Place::where('place_id',$pid)->where('municipality_id',$municapilty->id)->first();
+                $place = Place::where('place_id', $pid)
+                ->where('municipality_id', $municapilty->id)
+                ->first();
+
                 if ($place) {
-                  $counter->place_id = $place->id;
-                  $counter->status = 1;
-                  $counter->save();
+
+                  // $counter->place_id = $place->id;
+                  // $counter->status = 1;
+                  // $counter->save();
+
+                  $newCounter = $counter->replicate();
+
+                  $newCounter->place_id = $place->id;
+                  $newCounter->status = 1;
+
+                  if ($counter->photo && Storage::exists("public/assets/img/counters/{$counter->photo}")) {
+                    $timeName      = time();
+                    $originalName  = pathinfo($counter->photo, PATHINFO_FILENAME);
+                    $fileExtension = pathinfo($counter->photo, PATHINFO_EXTENSION);
+                    $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
+
+                    // Copy the photo to a new location with a new name
+                    Storage::copy("public/assets/img/counters/{$counter->photo}", "public/assets/img/counters/{$uniqueName}");
+
+                    // Set the new photo name in the cloned Place
+                    $newCounter->photo = $uniqueName;
+                  }
+
+                  $newCounter->save();
                 }
               }
           }
