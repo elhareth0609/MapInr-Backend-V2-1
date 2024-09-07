@@ -89,6 +89,7 @@
                   <th>{{__('Counters')}}</th>
                   <th>{{__('Workers')}}</th>
                   <th>{{__('Actions')}}</th>
+                  <th>{{__('Updated At')}}</th>
                 </tr>
               </thead>
             </table>
@@ -290,6 +291,7 @@
         { data: 'place_id', title: '{{ __("Place Id")}}' },
         { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
+        { data: 'updated_at', title: '{{ __("Updated At")}}' },
         { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
         ],
         "drawCallback": function () {

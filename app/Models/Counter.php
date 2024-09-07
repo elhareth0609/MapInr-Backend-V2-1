@@ -23,6 +23,14 @@ class Counter extends Model
         'status',
     ];
 
+    protected static function booted() {
+        static::saved(function ($counter) {
+            if ($counter->place) {
+                $counter->place->touch(); // Update the updated_at timestamp
+            }
+        });
+    }
+
     public function place()
     {
         return $this->belongsTo(Place::class);

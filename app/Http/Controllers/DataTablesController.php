@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Worker_Counter;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use Yajra\DataTables\Facades\DataTables;
 
 class DataTablesController extends Controller {
@@ -469,6 +470,9 @@ class DataTablesController extends Controller {
       })
       ->editColumn('workers', function($place) {
         return $place->workers->count();
+      })
+      ->editColumn('updated_at', function($place) {
+        return $place->updated_at->format('Y-m-d H:i:s');
       })
       ->addColumn('actions', function($place) {
           return '
