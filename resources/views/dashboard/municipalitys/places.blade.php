@@ -292,7 +292,7 @@
         { data: 'counters', title: '{{ __("Counters")}}' },
         { data: 'workers', title: '{{ __("Workers")}}' },
         { data: 'updated_at', title: '{{ __("Updated At")}}' },
-        { data: 'actions', name: '{{ __("Actions")}}', orderable: false, searchable: false },
+        { data: 'actions', title: '{{ __("Actions")}}', orderable: false, searchable: false },
         ],
         "drawCallback": function () {
           updateCustomPagination();
