@@ -166,7 +166,6 @@ class DataTablesController extends Controller {
         } else {
           return '<span class="badge rounded-pill bg-label-danger me-1">' . __("OFF") . '</span>';
         }
-          // return $worker->status;
       })
       ->editColumn('created_at', function($worker) {
           return $worker->created_at->format('Y-m-d');
@@ -298,10 +297,6 @@ class DataTablesController extends Controller {
       ->editColumn('workers', function($place) {
         return $place->workers->count();
       })
-
-      // ->editColumn('created_at', function($place) {
-      //     return $place->created_at->format('Y-m-d');
-      // })
       ->addColumn('actions', function($place) use ($id) {
           return '
             <a href="' . url("/place/{$place->id}/counters") . '" data-place-id="1"><icon class="mdi mdi-pen"></icon></a>
@@ -927,33 +922,6 @@ class DataTablesController extends Controller {
           <audio id="audio-' . $phone->id . '">
             <source src="' . asset('storage/assets/audio/phones/' . $phone->audio) . '" type="audio/mpeg">
           </audio>';
-
-          // return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
-          // <i class="mdi mdi-play-circle-outline"></i>
-          // </a>
-
-          // <!-- Modal -->
-          // <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-          //   <div class="modal-dialog modal-dialog-centered" role="document">
-          //     <div class="modal-content">
-          //       <div class="modal-header">
-          //         <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
-          //       </div>
-          //       <div class="modal-body text-center">
-          //         <audio controls>
-          //           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
-          //         </audio>
-          //         <div class="mt-3">
-          //           <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
-          //         </div>
-          //       </div>
-          //       <div class="modal-footer">
-          //         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
-          //         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>';
         }
       })
       ->rawColumns(['audio'])
