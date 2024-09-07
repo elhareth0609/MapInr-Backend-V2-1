@@ -185,6 +185,12 @@ class PhoneController extends Controller {
 
           if (!$counter) {
               return response()->json(['error' => 'Counter not found'], 404);
+          } elseif ($counter && $counter->myPhone) {
+            return response()->json([
+              'title' => __('Exsits Before.'),
+              'error' => __('Counter Has Phone Before.')
+            ], 404);
+
           }
 
           $phone = Phone::find($request->phone_id);
@@ -195,6 +201,9 @@ class PhoneController extends Controller {
           $phone->counter_id = $counter->id;
           $phone->mot = $request->mot;
           $phone->save();
+
+          $counter->phone = $phone->phone;
+          $counter->save();
 
           return response()->json([
             'state' => __("Success"),

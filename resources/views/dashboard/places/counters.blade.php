@@ -45,11 +45,12 @@
             <table class="table table-striped w-100" id="placeCounters" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
-                  <th>{{__('Counter Number')}}</th>
+                  <th>{{__('Counter Id')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>
-                  {{-- <th>{{__('Status')}}</th> --}}
+                  <th>{{__('Value')}}</th>
+                  <th>{{__('Audio')}}</th>
                   {{-- <th>{{__('Created At')}}</th> --}}
                   <th>{{__('Actions')}}</th>
                 </tr>
@@ -425,6 +426,28 @@
 
 var lang = "{{ app()->getLocale() }}"
 
+    // for play single audio
+    function togglePlay(counterId) {
+        var audio = document.getElementById('audio-' + counterId);
+        var icon = document.getElementById('play-icon-' + counterId);
+
+        if (audio.paused) {
+            audio.play();
+            icon.classList.remove('mdi-play-circle-outline');
+            icon.classList.add('mdi-pause-circle-outline');
+
+            // When audio ends, change the icon back to play
+            audio.onended = function() {
+                icon.classList.remove('mdi-pause-circle-outline');
+                icon.classList.add('mdi-play-circle-outline');
+            };
+        } else {
+            audio.pause();
+            icon.classList.remove('mdi-pause-circle-outline');
+            icon.classList.add('mdi-play-circle-outline');
+        }
+    }
+
     $(document).on('click', '.selectMultiple ul li', function(e) {
         var select = $(this).parent().parent();
         var li = $(this);
@@ -585,7 +608,9 @@ var lang = "{{ app()->getLocale() }}"
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
-          { data: 'phone', title: '{{__("Phone")}}',"searchable": false },
+          { data: 'phone', title: '{{__("Phone")}}' },
+          { data: 'value', title: '{{__("Value")}}' },
+          { data: 'audio', title: '{{__("Audio")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
         "drawCallback": function () {

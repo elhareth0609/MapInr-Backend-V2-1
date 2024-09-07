@@ -127,33 +127,6 @@ class DataTablesController extends Controller {
           <audio id="audio-' . $counter->id . '">
             <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
           </audio>';
-
-          // return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
-          // <i class="mdi mdi-play-circle-outline"></i>
-          // </a>
-
-          // <!-- Modal -->
-          // <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-          //   <div class="modal-dialog modal-dialog-centered" role="document">
-          //     <div class="modal-content">
-          //       <div class="modal-header">
-          //         <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
-          //       </div>
-          //       <div class="modal-body text-center">
-          //         <audio controls>
-          //           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
-          //         </audio>
-          //         <div class="mt-3">
-          //           <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
-          //         </div>
-          //       </div>
-          //       <div class="modal-footer">
-          //         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
-          //         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>';
         }
       })
       ->rawColumns(['audio'])
@@ -224,7 +197,7 @@ class DataTablesController extends Controller {
         </div>
       </div>
     </div>
-  </div>
+    </div>
         ';
     })
       ->rawColumns(['actions','status'])
@@ -247,6 +220,22 @@ class DataTablesController extends Controller {
       })
       ->editColumn('latitude', function($counter) {
           return $counter->latitude;
+      })
+      ->editColumn('phone', function($counter) {
+        return $counter->phone;
+      })
+      ->addColumn('value', function($counter) {
+        return $counter->myPhone? $counter->myPhone->value : '';
+      })
+      ->addColumn('audio', function($counter) {
+        if ($counter->myPhone && $counter->myPhone->audio) {
+          return '<a type="button" onclick="togglePlay(' . $counter->myPhone->id . ')">
+            <i class="mdi mdi-play-circle-outline" id="play-icon-' . $counter->myPhone->id . '"></i>
+          </a>
+          <audio id="audio-' . $counter->myPhone->id . '">
+            <source src="' . asset('storage/assets/audio/phones/' . $counter->myPhone->audio) . '" type="audio/mpeg">
+          </audio>';
+        }
       })
       ->addColumn('actions', function($counter) {
         $workers = Worker_Counter::where('counter_id', $counter->id)->pluck('worker_id');
@@ -285,12 +274,12 @@ class DataTablesController extends Controller {
         return $html;
     })
 
-    ->rawColumns(['actions'])
+    ->rawColumns(['actions','audio'])
     ->make(true);
 
 
     }
-    return view('dashboard.places.counter');
+    return view('dashboard.places.counters');
   }
 
   public function worker_places($id,Request $request) {
@@ -300,10 +289,6 @@ class DataTablesController extends Controller {
 
     if ($request->ajax()) {
       return DataTables::of($places)
-
-      // ->editColumn('id', function($place) {
-      //     return $place->id;
-      // })
       ->editColumn('place_id', function($place) {
           return (string) $place->place_id;
       })
@@ -397,63 +382,8 @@ class DataTablesController extends Controller {
         <audio id="audio-' . $counter->id . '">
           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
         </audio>';
-
-          // return '<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#audio-modal-' . $counter->id . '">
-          //           <i class="mdi mdi-play-circle-outline"></i>
-          //         </a>
-
-          // <!-- Modal -->
-          // <div class="modal fade" id="audio-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-          //   <div class="modal-dialog modal-dialog-centered" role="document">
-          //     <div class="modal-content">
-          //       <div class="modal-header">
-          //         <h4 class="modal-title" id="modalCenterTitle">' . __("Audio for Counter") . ' ' . $counter->name . '</h4>
-          //       </div>
-          //       <div class="modal-body text-center">
-          //         <audio controls>
-          //           <source src="' . asset('storage/assets/audio/counters/' . $counter->audio) . '" type="audio/mpeg">
-          //         </audio>
-          //         <div class="mt-3">
-          //           <input type="number" class="form-control" id="audio-number-' . $counter->id . '" placeholder="' . __("Enter number") . '">
-          //         </div>
-          //       </div>
-          //       <div class="modal-footer">
-          //         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __("Close") . '</button>
-          //         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="saveAudioNumber(' . $counter->id . ')">' . __("Save") . '</button>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>';
         }
       })
-
-    //   ->addColumn('actions', function($counter) use ($id){
-    //     return '
-    //     <a href="javascript:void(0);" class="download-btn" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#worker-counter-remove-modal-' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
-    //     <!-- Modal -->
-    //     <div class="modal fade" id="worker-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-    //       <div class="modal-dialog modal-dialog-centered" role="document">
-    //         <div class="modal-content">
-    //           <div class="modal-header">
-    //             <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
-    //           </div>
-    //           <div class="modal-body text-center">
-    //             <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
-    //             <div class="row justify-content-center text-wrap">
-    //               '. __("Do You Really Want To Remove This Counter From Worker.") .'
-    //             </div>
-    //           </div>
-    //           <div class="modal-footer">
-    //             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
-    //             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterWorker(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-    //     ';
-    //   })
       ->rawColumns(['status','audio'])
       ->make(true);
 
@@ -526,6 +456,7 @@ class DataTablesController extends Controller {
     }
     return view('dashboard.municipalitys.list');
   }
+
   public function municipality_places($id,Request $request) {
     $places = Place::where('municipality_id',$id)->get();
     $municipality = Municipality::find($id);
@@ -971,7 +902,6 @@ class DataTablesController extends Controller {
 
   }
 
-
   public function phones(Request $request) {
 
     $phones = Phone::all();
@@ -980,7 +910,7 @@ class DataTablesController extends Controller {
       ->editColumn('counter_id', function($phone) {
         return (string) $phone->counter_id;
       })
-      ->editColumn('longitude', function($phone) {
+      ->editColumn('value', function($phone) {
         return $phone->value;
       })
       ->editColumn('phone', function($phone) {

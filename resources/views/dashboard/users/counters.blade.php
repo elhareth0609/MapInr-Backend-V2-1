@@ -50,7 +50,7 @@
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Id')}}</th>
-                  <th>{{__('Counter Number')}}</th>
+                  <th>{{__('Counter Id')}}</th>
                   <th>{{__('Name')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
@@ -117,36 +117,6 @@
 <script>
     var userCountersDataTable;
     var lang = "{{ app()->getLocale() }}"
-//     function saveAudioNumber(counterId) {
-
-//     var number = document.getElementById('audio-number-' + counterId).value;
-//     $.ajax({
-//         type: 'POST',
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         },
-//         data: {
-//           counter_id: counterId,
-//           number: number
-//         },
-//         url: '/counters/save-audio-number',
-//         success: function (response) {
-//             Swal.fire({
-//                 icon: 'success',
-//                 title: response.state,
-//                 text: response.message,
-//             });
-//             userCountersDataTable.ajax.reload();
-//         },
-//         error: function (error) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: error.responseJSON.title,
-//                 text: error.responseJSON.error
-//             });
-//         }
-//     });
-// }
 
 function togglePlay(counterId) {
     var audio = document.getElementById('audio-' + counterId);
@@ -280,12 +250,6 @@ function togglePlay(counterId) {
 
             // Check if the double-clicked cell is in the 'name' column (index 1)
             if (columnIdx === 2) {
-                // Check if there's an already active editing cell
-                // if (currentlyEditing) {
-                //     // Revert the previous cell to its original value
-                //     var prevCell = dataTable.cell(currentlyEditing);
-                //     $(currentlyEditing.node()).html(originalValue);
-                // }
 
                 if (currentlyEditing) {
                     if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
@@ -374,12 +338,6 @@ function togglePlay(counterId) {
                         }
                 });
             } else if (columnIdx === 5) {
-                // Check if there's an already active editing cell
-                // if (currentlyEditing) {
-                //     // Revert the previous cell to its original value
-                //     var prevCell = dataTable.cell(currentlyEditing);
-                //     $(currentlyEditing.node()).html(originalValue);
-                // }
 
                 if (currentlyEditing) {
                     if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
@@ -467,7 +425,6 @@ function togglePlay(counterId) {
                         });
                     }
                 });
-
             }
         });
         },

@@ -291,12 +291,6 @@ $(document).ready( function () {
                         }
                 });
             } else if (columnIdx === 6) {
-                // Check if there's an already active editing cell
-                // if (currentlyEditing) {
-                //     // Revert the previous cell to its original value
-                //     var prevCell = dataTable.cell(currentlyEditing);
-                //     $(currentlyEditing.node()).html(originalValue);
-                // }
 
                 if (currentlyEditing) {
                     if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
