@@ -62,7 +62,10 @@
               </thead>
             </table>
             <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-              <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+              <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="confirm-send-all-button">
+                <icon class="mdi mdi-send-check-outline"></icon>
+              </button>
+              <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1 ms-3" id="delete-button">
                 <icon class="mdi mdi-trash-can-outline"></icon>
               </button>
               <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
@@ -118,26 +121,26 @@
     var userCountersDataTable;
     var lang = "{{ app()->getLocale() }}"
 
-function togglePlay(counterId) {
-    var audio = document.getElementById('audio-' + counterId);
-    var icon = document.getElementById('play-icon-' + counterId);
+    function togglePlay(counterId) {
+        var audio = document.getElementById('audio-' + counterId);
+        var icon = document.getElementById('play-icon-' + counterId);
 
-    if (audio.paused) {
-        audio.play();
-        icon.classList.remove('mdi-play-circle-outline');
-        icon.classList.add('mdi-pause-circle-outline');
+        if (audio.paused) {
+            audio.play();
+            icon.classList.remove('mdi-play-circle-outline');
+            icon.classList.add('mdi-pause-circle-outline');
 
-        // When audio ends, change the icon back to play
-        audio.onended = function() {
+            // When audio ends, change the icon back to play
+            audio.onended = function() {
+                icon.classList.remove('mdi-pause-circle-outline');
+                icon.classList.add('mdi-play-circle-outline');
+            };
+        } else {
+            audio.pause();
             icon.classList.remove('mdi-pause-circle-outline');
             icon.classList.add('mdi-play-circle-outline');
-        };
-    } else {
-        audio.pause();
-        icon.classList.remove('mdi-pause-circle-outline');
-        icon.classList.add('mdi-play-circle-outline');
+        }
     }
-}
 
     function submitRemoveCounterWorker(userid, counterid) {
 
@@ -213,8 +216,18 @@ function togglePlay(counterId) {
         ajax: '{{ route("worker-counters-table", ["id" => $user->id]) }}',
         columns: [
           { data: 'id', title: '{{__("Id")}}' },
-          { data: 'counter_id', title: '{{__("Counter Id")}}' },
           { data: 'name', title: '{{__("Name")}}' },
+          { data: 'name',
+            title: '{{__("Send To")}}',
+            className: 'editable',
+            render: function(data, type, row) {
+                if (row.state === "0") {
+                  return '<input type="text" class="send-to-input" value="' + (row.send_to || '') + '"/>';
+                } else {
+                  return row.send_to ? row.send_to : ''; // Show plain text or empty if no value
+                }
+            }
+          },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'phone', title: '{{__("Phone")}}' },
@@ -524,6 +537,44 @@ function togglePlay(counterId) {
       window.changePage = function (page) {
         userCountersDataTable.page(page).draw(false);
       };
+
+
+
+      $(document).on('click', '#confirm-send-all-button', function() {
+        var editedData = [];
+
+        // Iterate through all rows to collect edited values
+        userCountersDataTable.rows().every(function(rowIdx, tableLoop, rowLoop) {
+            var data = this.data();
+            var sendToValue = $(this.node()).find('.send-to-input').val();
+            editedData.push({ counter: data.id, send_to: sendToValue? sendToValue : null });
+        });
+
+        // Send the edited data to the server via AJAX
+        $.ajax({
+            url: '/counters/save-counter-place',
+            type: 'POST',
+            data: {
+                editedData: editedData,
+                _token: '{{ csrf_token() }}' // Add CSRF token if using Laravel
+            },
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.state,
+                    text: response.message,
+                });
+                userCountersDataTable.ajax.reload();
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.responseJSON.title,
+                    text: error.responseJSON.error
+                });
+            }
+        });
+    });
 
 
     });

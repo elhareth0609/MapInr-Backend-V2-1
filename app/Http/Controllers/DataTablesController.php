@@ -359,6 +359,9 @@ class DataTablesController extends Controller {
       ->editColumn('latitude', function($counter) {
           return $counter->latitude;
       })
+      ->addColumn('state', function($counter) {
+        return $counter->status;
+      })
       ->editColumn('status', function($counter) {
         if ($counter->status == '0') {
             return '<span class="badge rounded-pill bg-label-danger me-1">' . __("In Progress"). '</span>';

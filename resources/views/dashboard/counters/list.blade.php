@@ -105,37 +105,6 @@
 var dataTable;
 var lang = "{{ app()->getLocale() }}"
 
-// function saveAudioNumber(counterId) {
-
-//   var number = document.getElementById('audio-number-' + counterId).value;
-//   $.ajax({
-//       type: 'POST',
-//       headers: {
-//           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//       },
-//       data: {
-//         counter_id: counterId,
-//         number: number
-//       },
-//       url: '/counters/save-audio-number',
-//       success: function (response) {
-//           Swal.fire({
-//               icon: 'success',
-//               title: response.state,
-//               text: response.message,
-//           });
-//           dataTable.ajax.reload();
-//       },
-//       error: function (error) {
-//           Swal.fire({
-//               icon: 'error',
-//               title: error.responseJSON.title,
-//               text: error.responseJSON.error
-//           });
-//       }
-//   });
-// }
-
     // for play single audio
     function togglePlay(counterId) {
         var audio = document.getElementById('audio-' + counterId);
@@ -291,6 +260,7 @@ $(document).ready( function () {
                         }
                 });
             } else if (columnIdx === 6) {
+
 
                 if (currentlyEditing) {
                     if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
