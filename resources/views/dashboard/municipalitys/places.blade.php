@@ -88,8 +88,8 @@
                   <th>{{__('Place Number')}}</th>
                   <th>{{__('Counters')}}</th>
                   <th>{{__('Workers')}}</th>
-                  <th>{{__('Actions')}}</th>
                   <th>{{__('Updated At')}}</th>
+                  <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
             </table>
