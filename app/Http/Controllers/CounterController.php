@@ -607,10 +607,6 @@ class CounterController extends Controller {
 
                 if ($place) {
 
-                  // $counter->place_id = $place->id;
-                  // $counter->status = 1;
-                  // $counter->save();
-
                   $newCounter = $counter->replicate();
 
                   $newCounter->place_id = $place->id;
@@ -622,10 +618,8 @@ class CounterController extends Controller {
                     $fileExtension = pathinfo($counter->photo, PATHINFO_EXTENSION);
                     $uniqueName    = "{$timeName}_{$originalName}.{$fileExtension}";
 
-                    // Copy the photo to a new location with a new name
                     Storage::copy("public/assets/img/counters/{$counter->photo}", "public/assets/img/counters/{$uniqueName}");
 
-                    // Set the new photo name in the cloned Place
                     $newCounter->photo = $uniqueName;
                   }
 
