@@ -616,6 +616,7 @@ var lang = "{{ app()->getLocale() }}"
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
+        "order": [[5, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           initializeCustomSelects();
