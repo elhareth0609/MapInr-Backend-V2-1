@@ -46,12 +46,13 @@
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Id')}}</th>
+                  <th>{{__('Name')}}</th>
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>
-                  <th>{{__('Value')}}</th>
-                  <th>{{__('Audio')}}</th>
-                  {{-- <th>{{__('Created At')}}</th> --}}
+                  {{-- <th>{{__('Value')}}</th> --}}
+                  {{-- <th>{{__('Audio')}}</th> --}}
+                  <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
               </thead>
@@ -606,11 +607,13 @@ var lang = "{{ app()->getLocale() }}"
         ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
+          { data: 'name', title: '{{__("Name")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'phone', title: '{{__("Phone")}}' },
-          { data: 'value', title: '{{__("Value")}}' },
-          { data: 'audio', title: '{{__("Audio")}}' },
+          // { data: 'value', title: '{{__("Value")}}' },
+          // { data: 'audio', title: '{{__("Audio")}}' },
+          { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
         "drawCallback": function () {
@@ -631,7 +634,7 @@ var lang = "{{ app()->getLocale() }}"
             var rowIdx = cell.index().row;
             var data = cell.data();
 
-            if (columnIdx === 3) {
+            if (columnIdx === 4) {
                 // Check if there's an already active editing cell
                 // if (currentlyEditing) {
                 //     // Revert the previous cell to its original value
