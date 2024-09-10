@@ -115,6 +115,7 @@ Route::get('/place/{id}', [PlaceController::class, 'place'])->name('place');
 Route::get('/place/{id}/workers', [PlaceController::class, 'place_workers'])->name('place_users');
 Route::get('/place/{id}/counters', [PlaceController::class, 'place_counters'])->name('place_counters');
 Route::delete('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name('place.destroy');
+Route::get('place/remove-counter/{id}/{counterId}', [PlaceController::class, 'removeCounterPlace'])->name('place-remove-place-counter');
 
 
 Route::get('/user/{id}', [UserController::class, 'user'])->name('user');

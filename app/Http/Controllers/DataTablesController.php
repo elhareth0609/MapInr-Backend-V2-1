@@ -186,7 +186,7 @@ class DataTablesController extends Controller {
             <div class="modal-body text-center">
               <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
               <div class="row justify-content-center text-wrap">
-                '. __("Do You Really Want To Remove This Wokrker From Place.") .'
+                '. __("Do You Really Want To Remove This Worker From Place.") .'
               </div>
             </div>
             <div class="modal-footer">
@@ -195,9 +195,9 @@ class DataTablesController extends Controller {
             </div>
           </div>
         </div>
+        </div>
+        </div>
       </div>
-    </div>
-    </div>
         ';
     })
       ->rawColumns(['actions','status'])
@@ -243,37 +243,64 @@ class DataTablesController extends Controller {
       ->editColumn('created_at', function($counter) {
         return $counter->created_at->format('Y-m-d');
       })
-      ->addColumn('actions', function($counter) {
+      ->addColumn('actions', function($counter) use ($id) {
         $workers = Worker_Counter::where('counter_id', $counter->id)->pluck('worker_id');
         $allworkers = User::pluck('id', 'fullname');
         $html = '
         <a href="javascript:void(0);" data-counter-id="' . $counter->id . '" data-bs-toggle="modal" data-bs-target="#addWorkerCounter-' . $counter->id . '"><icon class="mdi mdi-plus-outline"></icon></a>
         <div class="modal fade" class="addWorkerCounterModale" id="addWorkerCounter-' . $counter->id . '" data-counter-id="' . $counter->id . '" data-bs-backdrop="static" tabindex="-1">
-        <div class="modal-dialog">
-          <form class="modal-content" dir="ltr" id="addCounterWorker-' . $counter->id . '" action="' . route("add.counter.worker") .  '" method="POST" enctype="multipart/form-data">';
-          $html .= csrf_field();
-          $html .= '  <div class="modal-header">
-              <h4 class="modal-title" id="backDropModalTitle">' . __("Add Worker") . '</h4>
+          <div class="modal-dialog">
+            <form class="modal-content" dir="ltr" id="addCounterWorker-' . $counter->id . '" action="' . route("add.counter.worker") .  '" method="POST" enctype="multipart/form-data">';
+            $html .= csrf_field();
+            $html .= '  <div class="modal-header">
+                <h4 class="modal-title" id="backDropModalTitle">' . __("Add Worker") . '</h4>
+              </div>
+              <div class="modal-body">
+                <select class="select-mult" id="select-' . $counter->id . '" multiple="" data-placeholder="Choose Places ..." name="selectedWorkers[]">';
+
+                  foreach ($allworkers as $workerName => $workerId) {
+                      $html .= '
+                      <option
+                      value="' .  $workerId . '" ' . (in_array($workerId, $workers->toArray()) ? 'selected' : '') . '>' . $workerName . '</option>
+
+                      ';
+                  }
+
+                $html .= '</select>
+              <input type="hidden" id="counter_id" name="counter_id" value="' . $counter->id . '">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __('Close') . '</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">' . __('Submit') . '</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+
+                <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#place-counter-remove-modal-' . $counter->id . '" data-worker-id="' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+      <!-- Modal -->
+      <div class="modal fade" id="place-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
             </div>
-            <div class="modal-body">
-              <select class="select-mult" id="select-' . $counter->id . '" multiple="" data-placeholder="Choose Places ..." name="selectedWorkers[]">';
-
-                foreach ($allworkers as $workerName => $workerId) {
-                    $html .= '
-                    <option
-                    value="' .  $workerId . '" ' . (in_array($workerId, $workers->toArray()) ? 'selected' : '') . '>' . $workerName . '</option>
-
-                    ';
-                }
-
-              $html .= '</select>
-            <input type="hidden" id="counter_id" name="counter_id" value="' . $counter->id . '">
+            <div class="modal-body text-center">
+              <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
+              <div class="row justify-content-center text-wrap">
+                '. __("Do You Really Want To Remove This Counter From Place.") .'
+              </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . __('Close') . '</button>
-              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submitFormAddUser">' . __('Submit') . '</button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterPlace(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
             </div>
-          </form>
+          </div>
+        </div>
+        </div>
         </div>
       </div>
         ';

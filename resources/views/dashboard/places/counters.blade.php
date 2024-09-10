@@ -426,6 +426,33 @@
 <script>
 
 var lang = "{{ app()->getLocale() }}"
+var placeCountersDataTable;
+
+    function submitRemoveCounterPlace(placeid, counterid) {
+
+      $.ajax({
+          type: 'GET',
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: '/place/remove-counter/' + placeid + '/' + counterid,
+          success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+              });
+              placeCountersDataTable.ajax.reload();
+          },
+          error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Validation Error',
+                  text: error.responseJSON.error,
+              });
+          }
+      });
+    }
 
     // for play single audio
     function togglePlay(counterId) {
@@ -560,8 +587,6 @@ var lang = "{{ app()->getLocale() }}"
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
-
-      var placeCountersDataTable;
 
       $(document).on('submit', '[id^="addCounterWorker-"]', function(e) {
             e.preventDefault(); // Prevent the default form submission

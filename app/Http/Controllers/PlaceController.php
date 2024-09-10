@@ -168,6 +168,35 @@ class PlaceController extends Controller
     return view('dashboard.places.counters')->with('place', $place);
   }
 
+  public function removeCounterPlace($id, $counterId) {
+
+    if ($counterId == 0) {
+      return response()->json([
+          'status' => 0,
+          'message' => __('Validation failed'),
+          'error' => __("Place Id Should Be Not 0."),
+      ], 422);
+    }
+
+    try {
+      $counter = Counter::where('place_id', $id)->where('counter_id', $counterId)->first();
+      if ($counter) {
+        $counter->delete();
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Remove Counter From Place Successfully."),
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500);
+    }
+
+  }
+
   public function destroy(Request $request,$id) {
 
     $validator = Validator::make($request->all(), [
