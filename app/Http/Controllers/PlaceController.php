@@ -170,7 +170,7 @@ class PlaceController extends Controller
 
   public function removeCounterPlace($id, $counterId) {
 
-    if ($counterId == 0) {
+    if ($counterId == 0 && $id == 0) {
       return response()->json([
           'status' => 0,
           'message' => __('Validation failed'),
@@ -179,7 +179,7 @@ class PlaceController extends Controller
     }
 
     try {
-      $counter = Counter::where('place_id', $id)->where('counter_id', $counterId)->first();
+      $counter = Counter::find($counterId);
       if ($counter) {
         $counter->delete();
       }
