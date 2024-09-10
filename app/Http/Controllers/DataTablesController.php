@@ -44,7 +44,7 @@ class DataTablesController extends Controller {
         }
       })
       ->editColumn('created_at', function($user) {
-          return $user->created_at->format('Y-m-d H:i:s');
+          return $user->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($user) {
         return '
@@ -75,7 +75,7 @@ class DataTablesController extends Controller {
         return $place->workers->count();
       })
       ->editColumn('created_at', function($place) {
-          return $place->created_at->format('Y-m-d H:i:s');
+          return $place->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($place) {
           return '
@@ -118,7 +118,7 @@ class DataTablesController extends Controller {
         return $counter->phone;
       })
       ->editColumn('created_at', function($counter) {
-          return $counter->created_at->format('Y-m-d H:i:s');
+          return $counter->created_at->format('Y-m-d');
       })
       ->editColumn('audio', function($counter) {
         if ($counter->audio) {
@@ -169,7 +169,7 @@ class DataTablesController extends Controller {
         }
       })
       ->editColumn('created_at', function($worker) {
-          return $worker->created_at->format('Y-m-d H:i:s');
+          return $worker->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($worker) use ($id) {
         return '
@@ -241,7 +241,7 @@ class DataTablesController extends Controller {
         }
       })
       ->editColumn('created_at', function($counter) {
-        return $counter->created_at->format('Y-m-d H:i:s');
+        return $counter->created_at->format('Y-m-d');
       })
       ->addColumn('actions', function($counter) {
         $workers = Worker_Counter::where('counter_id', $counter->id)->pluck('worker_id');
@@ -377,7 +377,7 @@ class DataTablesController extends Controller {
         }
       })
       ->editColumn('created_at', function($counter) {
-          return $counter->created_at->format('Y-m-d H:i:s');
+          return $counter->created_at->format('Y-m-d');
       })
       ->editColumn('audio', function($counter) {
         if ($counter->audio) {
@@ -706,7 +706,7 @@ class DataTablesController extends Controller {
         ';
       })
       ->editColumn('created_at', function($wallet) {
-          return $wallet->created_at->format('Y-m-d H:i:s');
+          return $wallet->created_at->format('Y-m-d');
       })
       ->rawColumns(['actions','transaction_type','user_id','status'])
       ->make(true);
@@ -898,7 +898,7 @@ class DataTablesController extends Controller {
     })
 
       ->editColumn('created_at', function($wallet) {
-          return $wallet->created_at->format('Y-m-d H:i:s');
+          return $wallet->created_at->format('Y-m-d');
       })
       ->rawColumns(['actions','transaction_type','status'])
       ->make(true);
