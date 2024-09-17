@@ -206,12 +206,12 @@ class PhoneController extends Controller {
           $counter->phone = $phone->phone;
           $counter->save();
 
-          // $phone->delete();
-          // $audioPath = 'public/assets/audio/phones/' . $phone->audio;
+          $phone->delete();
+          $audioPath = 'public/assets/audio/phones/' . $phone->audio;
 
-          // if ($phone->audio && Storage::exists($audioPath)) {
-          //   Storage::delete($audioPath);
-          // }
+          if ($phone->audio && Storage::exists($audioPath)) {
+            Storage::delete($audioPath);
+          }
 
           return response()->json([
             'state' => __("Success"),
