@@ -222,6 +222,7 @@ class CounterController extends Controller {
       }
 
       $counter->name = $request->name;
+      $counter->counter_id = $request->name;
       $counter->longitude = $request->longitude;
       $counter->latitude = $request->latitude;
       $counter->picture = $uniqueName;
@@ -283,6 +284,7 @@ class CounterController extends Controller {
           }
 
           $counter->name = $data['name'];
+          $counter->counter_id = $data['name'];
           $counter->longitude = $data['longitude'];
           $counter->latitude = $data['latitude'];
           $counter->picture = $uniqueName;
