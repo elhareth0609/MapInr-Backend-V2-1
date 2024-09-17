@@ -145,7 +145,7 @@
         columns: [
           { data: 'mot', title: '{{__("Send To")}}' },
           { data: 'phone', title: '{{__("Phone")}}' },
-          { data: 'value', title: '{{__("Value")}}' },
+          { data: 'value', title: '{{__("Name")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'audio', title: '{{__("Audio")}}' }
         ],
