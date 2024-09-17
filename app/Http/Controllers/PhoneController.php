@@ -7,6 +7,7 @@ use App\Models\Municipality;
 use App\Models\Phone;
 use App\Models\Place;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PhoneController extends Controller {
@@ -204,6 +205,13 @@ class PhoneController extends Controller {
 
           $counter->phone = $phone->phone;
           $counter->save();
+
+          // $phone->delete();
+          // $audioPath = 'public/assets/audio/phones/' . $phone->audio;
+
+          // if ($phone->audio && Storage::exists($audioPath)) {
+          //   Storage::delete($audioPath);
+          // }
 
           return response()->json([
             'state' => __("Success"),

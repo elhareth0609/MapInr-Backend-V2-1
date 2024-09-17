@@ -541,7 +541,8 @@ class CounterController extends Controller {
 
     try {
       $counter = Counter::find($request->counter_id);
-      $counter->name = $request->number;
+      $counter->name = 'counter_' . $request->number;
+      $counter->counter_id = $request->number;
       $counter->save();
 
       return response()->json([

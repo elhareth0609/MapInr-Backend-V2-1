@@ -46,7 +46,7 @@
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Id')}}</th>
-                  <th>{{__('Name')}}</th>
+                  {{-- <th>{{__('Name')}}</th> --}}
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>
@@ -632,7 +632,7 @@ var placeCountersDataTable;
         ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
-          { data: 'name', title: '{{__("Name")}}' },
+          // { data: 'name', title: '{{__("Name")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'phone', title: '{{__("Phone")}}' },
@@ -641,7 +641,7 @@ var placeCountersDataTable;
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
-        "order": [[5, "desc"]],
+        "order": [[4, "desc"]],
         "drawCallback": function () {
           updateCustomPagination();
           initializeCustomSelects();
@@ -660,7 +660,7 @@ var placeCountersDataTable;
             var rowIdx = cell.index().row;
             var data = cell.data();
 
-            if (columnIdx === 4) {
+            if (columnIdx === 3) {
                 // Check if there's an already active editing cell
                 // if (currentlyEditing) {
                 //     // Revert the previous cell to its original value

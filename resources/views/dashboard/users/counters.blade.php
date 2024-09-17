@@ -216,7 +216,8 @@
         ajax: '{{ route("worker-counters-table", ["id" => $user->id]) }}',
         columns: [
           { data: 'id', title: '{{__("Id")}}' },
-          { data: 'name', title: '{{__("Name")}}' },
+          { data: 'counter_id', title: '{{__("Counter Id")}}' },
+          // { data: 'name', title: '{{__("Name")}}' },
           { data: 'name',
             title: '{{__("Send To")}}',
             className: 'editable',
