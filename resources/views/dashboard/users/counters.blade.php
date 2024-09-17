@@ -263,7 +263,7 @@
             var data = cell.data();
 
             // Check if the double-clicked cell is in the 'name' column (index 1)
-            if (columnIdx === 2) {
+            if (columnIdx === 1) {
 
                 if (currentlyEditing) {
                     if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
