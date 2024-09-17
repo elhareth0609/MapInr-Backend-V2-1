@@ -41,7 +41,7 @@
           <tr class="text-nowrap">
             <th>{{__('Send To')}}</th>
             <th>{{ __('Phone') }}</th>
-            <th>{{ __('Value') }}</th>
+            <th>{{ __('Name') }}</th>
             <th>{{__('Created At')}}</th>
             <th>{{ __('Audio') }}</th>
           </tr>
