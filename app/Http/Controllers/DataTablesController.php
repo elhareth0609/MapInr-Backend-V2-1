@@ -1001,34 +1001,35 @@ class DataTablesController extends Controller {
         return '
           <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#phone-delete-modal-' . $phone->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
-          <!-- Delete Modal -->
-          <div class="modal fade" id="phone-delete-modal-' . $phone->id . '" tabindex="-1" data-bs-backdrop="static" >
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <form class="modal-content" id="deletePhone' . $phone->id . '">
-                <div class="modal-header">
-                  <h4 class="modal-title">' .  __("Phone Delete") . '</h4>
-                </div>
-                <div class="modal-body text-center">
-                  <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
-                  <div class="row justify-content-center text-wrap">
-                    '. __("Do You Really want to delete This Phone.") .'
+            <!-- delete Modal -->
+
+            <div class="modal fade" id="phone-delete-modal-' . $phone->id . '" tabindex="-1" data-bs-backdrop="static" >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <form class="modal-content" id="deletePhone' . $phone->id . '">
+                  <div class="modal-header">
+                    <h4 class="modal-title">' .  __("Phone Delete") . '</h4>
                   </div>
-                  <div class="row">
-                    <div class="col mb-4 mt-2">
-                      <div class="input-group" dir="ltr">
-                        <input type="password" class="form-control" id="show-password-phone-' . $phone->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $phone->id . '" name="password-' . $phone->id . '" required />
-                        <span class="input-group-text cursor-pointer show-password" data-phone-id="' . $phone->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do You Really want to delete This Phone.") .'
+                    </div>
+                    <div class="row">
+                      <div class="col mb-4 mt-2">
+                        <div class="input-group" dir="ltr">
+                          <input type="password" class="form-control" id="show-password-phone-' . $phone->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-phone-' . $phone->id . '" name="password-' . $phone->id . '" required />
+                          <span class="input-group-text cursor-pointer show-password" data-phone-id="' . $phone->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyPhone(' . $phone->id . ')">'. __("Submit") .'</button>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
-                </div>
-              </form>
-            </div>
-          </div>';
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyPhone(' . $phone->id . ')">'. __("Submit") .'</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                  </div>
+                </form>
+              </div>
+            </div>';
       })
       ->rawColumns(['action','audio'])
       ->make(true);
