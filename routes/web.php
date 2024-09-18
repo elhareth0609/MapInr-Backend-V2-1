@@ -172,6 +172,9 @@ Route::post('remove-all-transitions', [UserController::class, 'removeallTransiti
 
 Route::post('/phones/save-phone-counter', [PhoneController::class, 'savePhoneCounter'])->name('counter.save.phone.counter'); // for counter in phones table
 Route::post('/phones/save-audio-value', [PhoneController::class, 'saveAudioValue'])->name('phone.save.audio.value'); // for audio in counters table
+Route::delete('phones/{id}/delete', [PhoneController::class, 'delete'])->name('phone.delete');
+
+
 Route::post('/counters/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number'); // for audio in counters table
 Route::post('/counters/save-counter-phone', [CounterController::class, 'saveCounterPhone'])->name('counter.save.counter.phone'); // for phone in counters table
 Route::post('/counters/save-counter-place', [CounterController::class, 'saveCounterPlace'])->name('counter.save.counter.place');

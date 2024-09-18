@@ -616,6 +616,7 @@ class CounterController extends Controller {
 
                   $newCounter->place_id = $place->id;
                   $newCounter->status = 1;
+                  $newCounter->worker_id = null;
 
                   if ($counter->photo && Storage::exists("public/assets/img/counters/{$counter->photo}")) {
                     $timeName      = time();
@@ -629,6 +630,7 @@ class CounterController extends Controller {
                   }
 
                   $newCounter->save();
+                  $counter->delete();
                 }
               }
           }

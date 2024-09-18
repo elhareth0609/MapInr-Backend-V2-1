@@ -6,7 +6,10 @@ use App\Models\Counter;
 use App\Models\Municipality;
 use App\Models\Phone;
 use App\Models\Place;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -206,13 +209,6 @@ class PhoneController extends Controller {
           $counter->phone = $phone->phone;
           $counter->save();
 
-          $phone->delete();
-          $audioPath = 'public/assets/audio/phones/' . $phone->audio;
-
-          if ($phone->audio && Storage::exists($audioPath)) {
-            Storage::delete($audioPath);
-          }
-
           return response()->json([
             'state' => __("Success"),
             'message' => __("Mot Saved Successfully")
@@ -228,4 +224,54 @@ class PhoneController extends Controller {
       ]);
     }
   }
+
+  public function delete(Request $request,$id) {
+    $validator = Validator::make($request->all(), [
+      'password' => 'required|string|in:10',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+      $admin = User::find(Auth::user()->id);
+      if ($admin && Hash::check($request->password, $admin->password)) {
+
+        $phone = Phone::find($id);
+        if($phone) {
+          $phone->delete();
+        }
+        $audioPath = 'public/assets/audio/phones/' . $phone->audio;
+
+        if ($phone->audio && Storage::exists($audioPath)) {
+          Storage::delete($audioPath);
+        }
+
+        return response()->json([
+          'state' => __('Success'),
+          'message' => __('Phone deleted successfully.'),
+        ]);
+      } else {
+        // Password is incorrect
+        return response()->json([
+            'status' => 1,
+            'message' => __('Error'),
+            'errors' => __('Password Incorrect')
+        ], 422);
+      }
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
+
 }

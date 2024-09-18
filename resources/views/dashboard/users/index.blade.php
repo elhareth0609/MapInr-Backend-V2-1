@@ -68,7 +68,7 @@
       </div>
       <!-- /Account -->
     </div>
-    {{-- <div class="card">
+    <div class="card">
       <h5 class="card-header fw-normal">{{ __('Logout Account') }}</h5>
       <div class="card-body">
         <div class="mb-3 col-12 mb-0">
@@ -81,7 +81,7 @@
           <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user-logout-modal">{{ __('Logout Account') }}</button>
         </div>
       </div>
-    </div> --}}
+    </div>
     <div class="card">
       <h5 class="card-header fw-normal">{{ __('Delete Account') }}</h5>
       <div class="card-body">
@@ -173,34 +173,34 @@
 <script type="text/javascript">
 
 
-  // function submitLogoutUser(id) {
-  //   var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
+  function submitLogoutUser(id) {
+    var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
 
-  //     $.ajax({
-  //         type: 'DELETE',
-  //         headers: {
-  //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //         },
-  //         data: {
-  //           password: password
-  //         },
-  //         url: '/user/logout/' + id,
-  //         success: function (response) {
-  //             Swal.fire({
-  //                 icon: 'success',
-  //                 title: response.state,
-  //                 text: response.message,
-  //               });
-  //         },
-  //         error: function (error) {
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 title: error.responseJSON.status,
-  //                 text: error.responseJSON.errors,
-  //             });
-  //         }
-  //     });
-  // }
+      $.ajax({
+          type: 'DELETE',
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            password: password
+          },
+          url: '/user/logout/' + id,
+          success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+                });
+          },
+          error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.status,
+                  text: error.responseJSON.errors,
+              });
+          }
+      });
+  }
 
   function submitDistroyUser(id) {
     var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID

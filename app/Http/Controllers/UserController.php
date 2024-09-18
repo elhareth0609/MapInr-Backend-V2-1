@@ -84,47 +84,47 @@ class UserController extends Controller
     ]);
   }
 
-  // public function logout(Request $request,$id) {
-
-  //   $validator = Validator::make($request->all(), [
-  //     'password' => 'required|string|in:10',
-  //   ]);
-
-  //   // Check if validation fails
-  //   if ($validator->fails()) {
-  //       return response()->json([
-  //           'status' => 0,
-  //           'message' => __('Validation failed'),
-  //           'errors' => $validator->errors()->first(),
-  //       ], 422);
-  //   }
-
-  //   try {
-  //     $user = User::find($id);
-  //     if ($user) {
-  //         $user->delete();
-
-  //         return response()->json([
-  //           'state' => __('Success'),
-  //           'message' => __('User deleted successfully.'),
-  //         ]);
-  //     } else {
-  //         return response()->json([
-  //           'status' => __('Success'),
-  //           'message' => __('Sorry,'),
-  //           'errors' => __('There Is No User To Deleted.'),
-  //         ],401);
-  //     }
-  //   } catch (\Exception $e) {
-  //     return response()->json([
-  //         'status' => 1,
-  //         'message' => __('Error'),
-  //         'errors' => $e->getMessage()
-  //     ], 422);
-  //   }
-  // }
-
   public function destroy(Request $request,$id) {
+
+    $validator = Validator::make($request->all(), [
+      'password' => 'required|string|in:10',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 0,
+            'message' => __('Validation failed'),
+            'errors' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    try {
+      $user = User::find($id);
+      if ($user) {
+          $user->delete();
+
+          return response()->json([
+            'state' => __('Success'),
+            'message' => __('User deleted successfully.'),
+          ]);
+      } else {
+          return response()->json([
+            'status' => __('Success'),
+            'message' => __('Sorry,'),
+            'errors' => __('There Is No User To Deleted.'),
+          ],401);
+      }
+    } catch (\Exception $e) {
+      return response()->json([
+          'status' => 1,
+          'message' => __('Error'),
+          'errors' => $e->getMessage()
+      ], 422);
+    }
+  }
+
+  public function logout(Request $request,$id) {
 
     $validator = Validator::make($request->all(), [
       'password' => 'required|string|in:10',
@@ -147,13 +147,13 @@ class UserController extends Controller
 
           return response()->json([
             'state' => __('Success'),
-            'message' => __('User deleted successfully.'),
+            'message' => __('User Log Outed successfully.'),
           ]);
       } else {
           return response()->json([
             'status' => __('Success'),
             'message' => __('Sorry,'),
-            'errors' => __('There Is No User To Deleted.'),
+            'errors' => __('There Is No User To Log Outed.'),
           ],401);
       }
     } catch (\Exception $e) {

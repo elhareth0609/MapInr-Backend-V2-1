@@ -263,7 +263,7 @@ class WalletController extends Controller
         if ($photo->photo && Storage::exists($photoPath)) {
             Storage::delete($photoPath);
         }
-  
+
         $photo->delete();
       }
 
@@ -273,13 +273,13 @@ class WalletController extends Controller
       'message' => __("Deleted Successfully.")
     ]);
 
-  } catch (\Exception $e) {
-    return response()->json([
-      'icon' => 'error',
-      'state' => __("Error"),
-      'message' => $e->getMessage(),
-    ]);
-  }
+    } catch (\Exception $e) {
+      return response()->json([
+        'icon' => 'error',
+        'state' => __("Error"),
+        'message' => $e->getMessage(),
+      ]);
+    }
 
   }
 

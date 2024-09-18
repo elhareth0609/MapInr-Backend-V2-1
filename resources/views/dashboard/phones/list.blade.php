@@ -44,6 +44,7 @@
             <th>{{ __('Name') }}</th>
             <th>{{__('Created At')}}</th>
             <th>{{ __('Audio') }}</th>
+            <th>{{ __('Action') }}</th>
           </tr>
         </thead>
       </table>
@@ -120,6 +121,36 @@ var lang = "{{ app()->getLocale() }}"
         }
     }
 
+    function submitDistroyPhone(id) {
+      var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
+
+      $.ajax({
+          type: 'DELETE',
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            password: password
+          },
+          url: '/phones/' + id + '/delete',
+          success: function (response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: response.state,
+                  text: response.message,
+              });
+              dataTable.ajax.reload();
+          },
+          error: function (error) {
+              Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.message,
+                  text: error.responseJSON.errors,
+              });
+          }
+      });
+    }
+
 $(document).ready( function () {
 
     $.noConflict();
@@ -137,7 +168,8 @@ $(document).ready( function () {
         { data: 'phone', title: '{{__("Phone")}}' },
         { data: 'value', title: '{{__("Name")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' },
-        { data: 'audio', title: '{{__("Audio")}}' }
+        { data: 'audio', title: '{{__("Audio")}}' },
+        { data: 'action', title: '{{__("Action")}}' }
       ],
       "order": [[3, "desc"]],
       "drawCallback": function () {

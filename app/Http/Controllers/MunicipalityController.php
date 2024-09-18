@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class MunicipalityController extends Controller
-{
+class MunicipalityController extends Controller {
 
   public function create(Request $request) {
 
@@ -100,7 +99,6 @@ class MunicipalityController extends Controller
         ], 422);
     }
   }
-
 
   public function update(Request $request) {
 
