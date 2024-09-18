@@ -630,7 +630,7 @@ class CounterController extends Controller {
                   }
 
                   $newCounter->save();
-                  $counter->delete();
+                  // $counter->delete();
                 }
               }
           }
