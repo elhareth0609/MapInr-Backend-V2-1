@@ -44,7 +44,7 @@
             <th>{{ __('Name') }}</th>
             <th>{{__('Created At')}}</th>
             <th>{{ __('Audio') }}</th>
-            <th>{{ __('Action') }}</th>
+            <th>{{ __('Actions') }}</th>
           </tr>
         </thead>
       </table>
@@ -169,7 +169,7 @@ $(document).ready( function () {
         { data: 'value', title: '{{__("Name")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' },
         { data: 'audio', title: '{{__("Audio")}}' },
-        { data: 'action', title: '{{__("Action")}}' }
+        { data: 'action', title: '{{__("Actions")}}' }
       ],
       "order": [[3, "desc"]],
       "drawCallback": function () {
