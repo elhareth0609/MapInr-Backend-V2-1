@@ -999,26 +999,26 @@ class DataTablesController extends Controller {
       })
       ->addColumn('action', function($phone) {
         return '
-            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#transaction-delete-modal-' . $phone->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
+          <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#phone-delete-modal-' . $phone->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
 
             <!-- delete Modal -->
 
-            <div class="modal fade" id="transaction-delete-modal-' . $phone->id . '" tabindex="-1" data-bs-backdrop="static" >
+            <div class="modal fade" id="phone-delete-modal-' . $phone->id . '" tabindex="-1" data-bs-backdrop="static" >
               <div class="modal-dialog modal-dialog-centered" role="document">
-                <form class="modal-content" id="deleteTransaction' . $phone->id . '">
+                <form class="modal-content" id="deletePhone' . $phone->id . '">
                   <div class="modal-header">
-                    <h4 class="modal-title">' .  __("Transaction Delete") . '</h4>
+                    <h4 class="modal-title">' .  __("Phone Delete") . '</h4>
                   </div>
                   <div class="modal-body text-center">
                     <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
                     <div class="row justify-content-center text-wrap">
-                      '. __("Do You Really want to delete This Transaction.") .'
+                      '. __("Do You Really want to delete This Phone.") .'
                     </div>
                     <div class="row">
                       <div class="col mb-4 mt-2">
                         <div class="input-group" dir="ltr">
-                          <input type="password" class="form-control" id="show-password-transaction-' . $phone->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $phone->id . '" name="password-' . $phone->id . '" required />
-                          <span class="input-group-text cursor-pointer show-password" data-transition-id="' . $phone->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                          <input type="password" class="form-control w-75" id="show-password-phone-' . $phone->id . '" placeholder="············" aria-describedby="show-password-phone-' . $phone->id . '" name="password-' . $phone->id . '" required="" />
+                          <span class="input-group-text cursor-pointer show-password" data-phone-id="' . $phone->id . '"><i class="mdi mdi-lock-outline"></i></span>
                         </div>
                       </div>
                     </div>
@@ -1029,8 +1029,7 @@ class DataTablesController extends Controller {
                   </div>
                 </form>
               </div>
-            </div>
-            ';
+            </div>';
       })
       ->rawColumns(['action','audio'])
       ->make(true);
