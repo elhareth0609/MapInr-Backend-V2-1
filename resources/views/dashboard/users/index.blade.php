@@ -68,7 +68,7 @@
       </div>
       <!-- /Account -->
     </div>
-    <div class="card">
+    <div class="card mb-3">
       <h5 class="card-header fw-normal">{{ __('Logout Account') }}</h5>
       <div class="card-body">
         <div class="mb-3 col-12 mb-0">
@@ -107,7 +107,7 @@
   }
 </style>
 
-<!-- Modal -->
+<!-- Delete Modal -->
 <div class="modal fade" id="user-delete-modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -156,7 +156,7 @@
             <div class="col mb-4 mt-2">
               <div class="input-group" dir="ltr">
                 {{-- <input type="password" class="form-control" id="show-password-municipality-' . $user->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $user->id . '" name="password-' . $user->id . '" required /> --}}
-                <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password" required />
+                <input type="password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" name="confirm_password2" required />
                 <span class="input-group-text cursor-pointer show-password" ><i class="mdi mdi-lock-outline"></i></span>
               </div>
             </div>
@@ -174,7 +174,7 @@
 
 
   function submitLogoutUser(id) {
-    var password = $('input[name="confirm_password"]').val(); // Dynamically select the password input based on the modal ID
+    var password = $('input[name="confirm_password2"]').val(); // Dynamically select the password input based on the modal ID
 
       $.ajax({
           type: 'DELETE',
