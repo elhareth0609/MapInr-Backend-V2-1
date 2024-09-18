@@ -240,8 +240,8 @@ class PhoneController extends Controller {
     }
 
     try {
-      $admin = User::find(Auth::user()->id);
-      if ($admin && Hash::check($request->password, $admin->password)) {
+      // $admin = User::find(Auth::user()->id);
+      // if ($admin && Hash::check($request->password, $admin->password)) {
 
         $phone = Phone::find($id);
         if($phone) {
@@ -257,14 +257,14 @@ class PhoneController extends Controller {
           'state' => __('Success'),
           'message' => __('Phone deleted successfully.'),
         ]);
-      } else {
-        // Password is incorrect
-        return response()->json([
-            'status' => 1,
-            'message' => __('Error'),
-            'errors' => __('Password Incorrect')
-        ], 422);
-      }
+      // } else {
+      //   // Password is incorrect
+      //   return response()->json([
+      //       'status' => 1,
+      //       'message' => __('Error'),
+      //       'errors' => __('Password Incorrect')
+      //   ], 422);
+      // }
 
     } catch (\Exception $e) {
       return response()->json([

@@ -333,9 +333,9 @@ class WalletController extends Controller
     }
 
     try {
-          // Check if the password is correct
-          $admin = User::find(Auth::user()->id);
-        if ($admin && Hash::check($request->password, $admin->password)) {
+        // Check if the password is correct
+        // $admin = User::find(Auth::user()->id);
+        // if ($admin && Hash::check($request->password, $admin->password)) {
 
           $transaction = Wallet::find($id);
           $transaction->delete();
@@ -343,14 +343,14 @@ class WalletController extends Controller
             'state' => __("Success"),
             'message' => __("Deleted Successfully"),
           ], 200);
-        } else {
-          // Password is incorrect
-          return response()->json([
-              'status' => 1,
-              'message' => __('Error'),
-              'errors' => __('Password Incorrect')
-          ], 422);
-      }
+      //   } else {
+      //     // Password is incorrect
+      //     return response()->json([
+      //         'status' => 1,
+      //         'message' => __('Error'),
+      //         'errors' => __('Password Incorrect')
+      //     ], 422);
+      // }
     } catch (\Exception $e) {
         // Handle any other exceptions
         return response()->json([

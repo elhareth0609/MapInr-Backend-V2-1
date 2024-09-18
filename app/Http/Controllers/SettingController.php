@@ -102,10 +102,11 @@ class SettingController extends Controller
         ]);
 
     }
-  } catch (\Exception $e) {
-      return response()->json([
-        'status' => 0,
-        'error' => $e->getMessage(),
-      ],401);
-  }  }
+    } catch (\Exception $e) {
+        return response()->json([
+          'status' => 0,
+          'error' => $e->getMessage(),
+        ],401);
+    }
+  }
 }

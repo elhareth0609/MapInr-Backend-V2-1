@@ -65,8 +65,8 @@ class MunicipalityController extends Controller {
 
     try {
         // Check if the password is correct
-        $admin = User::find(Auth::user()->id);
-        if ($admin && Hash::check($request->password, $admin->password)) {
+        // $admin = User::find(Auth::user()->id);
+        // if ($admin && Hash::check($request->password, $admin->password)) {
             // Password is correct, proceed with deleting the municipality
             $municipality = Municipality::find($id);
             if ($municipality) {
@@ -82,14 +82,14 @@ class MunicipalityController extends Controller {
                     'message' => __('Sorry, the municipality does not exist.'),
                 ], 404);
             }
-        } else {
-            // Password is incorrect
-            return response()->json([
-                'status' => 1,
-                'message' => __('Error'),
-                'errors' => __('Password Incorrect')
-            ], 422);
-        }
+        // } else {
+        //     // Password is incorrect
+        //     return response()->json([
+        //         'status' => 1,
+        //         'message' => __('Error'),
+        //         'errors' => __('Password Incorrect')
+        //     ], 422);
+        // }
     } catch (\Exception $e) {
         // Handle any other exceptions
         return response()->json([

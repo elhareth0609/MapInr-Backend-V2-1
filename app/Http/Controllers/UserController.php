@@ -530,19 +530,19 @@ class UserController extends Controller
     }
 
     try {
-      $admin = User::find(Auth::user()->id);
-      if ($admin && Hash::check($request->password, $admin->password)) {
+      // $admin = User::find(Auth::user()->id);
+      // if ($admin && Hash::check($request->password, $admin->password)) {
         return response()->json([
           'state' => __('Success'),
           'message' => __('Checked successfully')
         ]);
-      } else {
-        return response()->json([
-          'status' => 1,
-          'message' => __('Error'),
-          'errors' => __('Password Incorrect')
-        ], 422);
-      }
+      // } else {
+      //   return response()->json([
+      //     'status' => 1,
+      //     'message' => __('Error'),
+      //     'errors' => __('Password Incorrect')
+      //   ], 422);
+      // }
 
 
     } catch (\Exception $e) {
