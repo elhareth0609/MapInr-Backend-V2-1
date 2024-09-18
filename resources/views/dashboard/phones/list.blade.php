@@ -449,6 +449,20 @@ $(document).ready( function () {
         });
     });
 
+    $('.show-password').on('click', function() {
+      var phoneId = $(this).data('phone-id');
+      var passwordInput = $('#show-password-phone-' + phoneId);
+
+      // Toggle between password and text type
+      if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        $(this).find('i').removeClass('mdi-lock-outline').addClass('mdi-lock-open-outline');
+      } else {
+        passwordInput.attr('type', 'password');
+        $(this).find('i').removeClass('mdi-lock-open-outline').addClass('mdi-lock-outline');
+      }
+    });
+
   });
 </script>
 @endsection
