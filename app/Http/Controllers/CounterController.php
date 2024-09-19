@@ -611,7 +611,15 @@ class CounterController extends Controller {
                 ->first();
 
                 if ($place) {
+                  $checkCounter = Counter::where('counter_id', $counter->counter_id)->where('place_id', $place->id)->first();
 
+                  if ($checkCounter) {
+                    continue;
+                    // return response()->json([
+                    //     'title' => __('Exsits Before.'),
+                    //     'error' => __('Counter Id Existing Before.')
+                    //   ], 404);
+                  }
                   $newCounter = $counter->replicate();
 
                   $newCounter->place_id = $place->id;
