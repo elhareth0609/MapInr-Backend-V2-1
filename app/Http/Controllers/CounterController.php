@@ -596,7 +596,7 @@ class CounterController extends Controller {
 
     try {
       $editedData = $request->input('editedData');
-      $exists = '';
+
       foreach ($editedData as $data) {
           $counter = Counter::find($data['counter']);
           if ($counter && strlen($data['send_to']) > 2) {
@@ -613,24 +613,18 @@ class CounterController extends Controller {
                 if ($place) {
                   $checkCounter = Counter::where('counter_id', $counter->counter_id)->where('place_id', $place->id)->first();
 
-                  $newCounter = $counter->replicate();
-
                   if ($checkCounter) {
-                    $exists .= $checkCounter->counter_id . ',';
+                    continue;
                     // return response()->json([
                     //     'title' => __('Exsits Before.'),
                     //     'error' => __('Counter Id Existing Before.')
                     //   ], 404);
                   }
-
+                  $newCounter = $counter->replicate();
 
                   $newCounter->place_id = $place->id;
-                  $newCounter->latitude = $place->latitude;
-                  $newCounter->longitude = $place->longitude;
-                  $newCounter->phone = $place->phone;
                   $newCounter->status = 1;
                   $newCounter->worker_id = null;
-                  $newCounter->created_at = now();
 
                   if ($counter->photo && Storage::exists("public/assets/img/counters/{$counter->photo}")) {
                     $timeName      = time();
@@ -644,9 +638,6 @@ class CounterController extends Controller {
                   }
 
                   $newCounter->save();
-                  if ($checkCounter) {
-                    $checkCounter->delete();
-                  }
                   // $counter->delete();
                 }
               }
@@ -655,7 +646,7 @@ class CounterController extends Controller {
 
       return response()->json([
           'state' => __("Success"),
-          'message' => __("Updated successfully") . $exists
+          'message' => __("Updated successfully")
       ]);
     } catch (\Exception $e) {
       return response()->json([
