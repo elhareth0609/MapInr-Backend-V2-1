@@ -513,48 +513,47 @@ class CounterController extends Controller {
             $share->user_id = $worker->id;
             $share->save();
           }
-
-      }
-      } else {
-        $counters = Counter::where('worker_id',Auth::user()->id)->get();
-        foreach ($counters as $counter) {
-          $newCounter = $counter->replicate();
-          if($counter->picture) {
-
-            $timeName = time();
-            $originalName = pathinfo($counter->picture, PATHINFO_FILENAME);
-            $fileExtension = pathinfo($counter->picture, PATHINFO_EXTENSION);
-            $uniqueName = "{$timeName}_{$originalName}.{$fileExtension}";
-
-            $sourcePath = storage_path('app/public/assets/img/counters/' . $counter->picture);
-            $destinationPath = storage_path('app/public/assets/img/counters/' . $uniqueName);
-            copy($sourcePath, $destinationPath);
-
-            $newCounter->picture = $uniqueName;
-          }
-
-          if($counter->audio) {
-            $audiotimeName = time();
-            $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
-            $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
-            $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
-
-            $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
-            $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
-            copy($audiosourcePath, $audiodestinationPath);
-
-            $newCounter->audio = $audiouniqueName;
-          }
-
-          $newCounter->worker_id = $worker->id;
-          $newCounter->status = '0';
-          $newCounter->save();
-
-          $share = new Shared();
-          $share->counter_id = $newCounter->id;
-          $share->user_id = $worker->id;
-          $share->save();
         }
+      // } else {
+      //   $counters = Counter::where('worker_id',Auth::user()->id)->get();
+      //   foreach ($counters as $counter) {
+      //     $newCounter = $counter->replicate();
+      //     if($counter->picture) {
+
+      //       $timeName = time();
+      //       $originalName = pathinfo($counter->picture, PATHINFO_FILENAME);
+      //       $fileExtension = pathinfo($counter->picture, PATHINFO_EXTENSION);
+      //       $uniqueName = "{$timeName}_{$originalName}.{$fileExtension}";
+
+      //       $sourcePath = storage_path('app/public/assets/img/counters/' . $counter->picture);
+      //       $destinationPath = storage_path('app/public/assets/img/counters/' . $uniqueName);
+      //       copy($sourcePath, $destinationPath);
+
+      //       $newCounter->picture = $uniqueName;
+      //     }
+
+      //     if($counter->audio) {
+      //       $audiotimeName = time();
+      //       $audiooriginalName = pathinfo($counter->audio, PATHINFO_FILENAME);
+      //       $audiofileExtension = pathinfo($counter->audio, PATHINFO_EXTENSION);
+      //       $audiouniqueName = "{$audiotimeName}_{$audiooriginalName}.{$audiofileExtension}";
+
+      //       $audiosourcePath = storage_path('app/public/assets/audio/counters/' . $counter->audio);
+      //       $audiodestinationPath = storage_path('app/public/assets/audio/counters/' . $audiouniqueName);
+      //       copy($audiosourcePath, $audiodestinationPath);
+
+      //       $newCounter->audio = $audiouniqueName;
+      //     }
+
+      //     $newCounter->worker_id = $worker->id;
+      //     $newCounter->status = '0';
+      //     $newCounter->save();
+
+      //     $share = new Shared();
+      //     $share->counter_id = $newCounter->id;
+      //     $share->user_id = $worker->id;
+      //     $share->save();
+      //   }
 
       }
 
