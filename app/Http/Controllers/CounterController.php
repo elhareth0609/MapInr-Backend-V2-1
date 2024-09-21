@@ -617,7 +617,6 @@ class CounterController extends Controller {
 
                   if ($checkCounter) {
                     $exists .= $checkCounter->counter_id . ',';
-                    // continue;
                     // return response()->json([
                     //     'title' => __('Exsits Before.'),
                     //     'error' => __('Counter Id Existing Before.')
@@ -629,9 +628,9 @@ class CounterController extends Controller {
                   $newCounter->latitude = $place->latitude;
                   $newCounter->longitude = $place->longitude;
                   $newCounter->phone = $place->phone;
-                  $newCounter->created_at = now();
                   $newCounter->status = 1;
                   $newCounter->worker_id = null;
+                  $newCounter->created_at = now();
 
                   if ($counter->photo && Storage::exists("public/assets/img/counters/{$counter->photo}")) {
                     $timeName      = time();
@@ -645,6 +644,9 @@ class CounterController extends Controller {
                   }
 
                   $newCounter->save();
+                  if ($checkCounter) {
+                    $checkCounter->delete();
+                  }
                   // $counter->delete();
                 }
               }
