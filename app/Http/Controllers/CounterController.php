@@ -629,6 +629,7 @@ class CounterController extends Controller {
                   $newCounter->latitude = $place->latitude;
                   $newCounter->longitude = $place->longitude;
                   $newCounter->phone = $place->phone;
+                  $newCounter->created_at = now();
                   $newCounter->status = 1;
                   $newCounter->worker_id = null;
 
