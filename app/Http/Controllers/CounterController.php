@@ -596,7 +596,7 @@ class CounterController extends Controller {
 
     try {
       $editedData = $request->input('editedData');
-
+      $exists = '';
       foreach ($editedData as $data) {
           $counter = Counter::find($data['counter']);
           if ($counter && strlen($data['send_to']) > 2) {
@@ -614,15 +614,20 @@ class CounterController extends Controller {
                   $checkCounter = Counter::where('counter_id', $counter->counter_id)->where('place_id', $place->id)->first();
 
                   if ($checkCounter) {
-                    continue;
+                    $exists .= $checkCounter->counter_id . ',';
+                    // continue;
                     // return response()->json([
                     //     'title' => __('Exsits Before.'),
                     //     'error' => __('Counter Id Existing Before.')
                     //   ], 404);
                   }
+
                   $newCounter = $counter->replicate();
 
                   $newCounter->place_id = $place->id;
+                  $newCounter->latitude = $place->latitude;
+                  $newCounter->longitude = $place->longitude;
+                  $newCounter->phone = $place->phone;
                   $newCounter->status = 1;
                   $newCounter->worker_id = null;
 
@@ -646,7 +651,7 @@ class CounterController extends Controller {
 
       return response()->json([
           'state' => __("Success"),
-          'message' => __("Updated successfully")
+          'message' => __("Updated successfully") . $exists
       ]);
     } catch (\Exception $e) {
       return response()->json([
