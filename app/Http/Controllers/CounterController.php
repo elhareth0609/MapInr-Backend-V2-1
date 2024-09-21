@@ -613,6 +613,8 @@ class CounterController extends Controller {
                 if ($place) {
                   $checkCounter = Counter::where('counter_id', $counter->counter_id)->where('place_id', $place->id)->first();
 
+                  $newCounter = $counter->replicate();
+
                   if ($checkCounter) {
                     $exists .= $checkCounter->counter_id . ',';
                     // continue;
@@ -622,7 +624,6 @@ class CounterController extends Controller {
                     //   ], 404);
                   }
 
-                  $newCounter = $counter->replicate();
 
                   $newCounter->place_id = $place->id;
                   $newCounter->latitude = $place->latitude;
