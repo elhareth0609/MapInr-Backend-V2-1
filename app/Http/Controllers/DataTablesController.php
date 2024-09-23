@@ -208,15 +208,12 @@ class DataTablesController extends Controller {
   }
 
   public function place_counters($id,Request $request) {
-    $counters = Counter::where('place_id', $id)->get();
+    $counters = Counter::where('place_id', $id)->where('copy','no')->get();
 
-        if ($request->ajax()) {
+    if ($request->ajax()) {
       return DataTables::of($counters)
       ->editColumn('counter_id', function($counter) {
         return (string) $counter->counter_id;
-      })
-      ->editColumn('name', function($counter) {
-        return $counter->name;
       })
       ->editColumn('longitude', function($counter) {
           return $counter->longitude;
@@ -226,19 +223,6 @@ class DataTablesController extends Controller {
       })
       ->editColumn('phone', function($counter) {
         return $counter->phone;
-      })
-      ->addColumn('value', function($counter) {
-        return $counter->myPhone? $counter->myPhone->value : '';
-      })
-      ->addColumn('audio', function($counter) {
-        if ($counter->myPhone && $counter->myPhone->audio) {
-          return '<a type="button" onclick="togglePlay(' . $counter->myPhone->id . ')">
-            <i class="mdi mdi-play-circle-outline" id="play-icon-' . $counter->myPhone->id . '"></i>
-          </a>
-          <audio id="audio-' . $counter->myPhone->id . '">
-            <source src="' . asset('storage/assets/audio/phones/' . $counter->myPhone->audio) . '" type="audio/mpeg">
-          </audio>';
-        }
       })
       ->editColumn('created_at', function($counter) {
         return $counter->created_at->format('Y-m-d');
@@ -281,35 +265,33 @@ class DataTablesController extends Controller {
 
                 <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#place-counter-remove-modal-' . $counter->id . '" data-worker-id="' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
 
-      <!-- Modal -->
-      <div class="modal fade" id="place-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
-            </div>
-            <div class="modal-body text-center">
-              <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
-              <div class="row justify-content-center text-wrap">
-                '. __("Do You Really Want To Remove This Counter From Place.") .'
+          <!-- Modal -->
+          <div class="modal fade" id="place-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
+                  <div class="row justify-content-center text-wrap">
+                    '. __("Do You Really Want To Remove This Counter From Place.") .'
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterPlace(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
+                </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterPlace(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
+            </div>
             </div>
           </div>
-        </div>
-        </div>
-        </div>
-      </div>
         ';
         return $html;
-    })
-
-    ->rawColumns(['actions','audio'])
-    ->make(true);
-
+      })
+      ->rawColumns(['actions'])
+      ->make(true);
 
     }
     return view('dashboard.places.counters');
@@ -1037,5 +1019,81 @@ class DataTablesController extends Controller {
     }
       return view('dashboard.phones.list');
 
+  }
+
+  public function place_copied($id,Request $request) {
+    $duplicateCounterIds = Counter::select('counter_id')
+    ->where('place_id', $id)
+    ->groupBy('counter_id')
+    ->havingRaw('COUNT(*) > 1')
+    ->pluck('counter_id')
+    ->reject(function ($value) {
+        return $value == 0;
+    });
+
+    $counters = Counter::whereIn('counter_id', $duplicateCounterIds)
+    ->where('place_id', $id)
+    ->get();
+
+    if ($request->ajax()) {
+      return DataTables::of($counters)
+      ->editColumn('counter_id', function($counter) {
+        return (string) $counter->counter_id;
+      })
+      ->editColumn('longitude', function($counter) {
+          return $counter->longitude;
+      })
+      ->editColumn('latitude', function($counter) {
+          return $counter->latitude;
+      })
+      ->editColumn('phone', function($counter) {
+        return $counter->phone;
+      })
+      ->editColumn('copy', function($counter) {
+        if ($counter->copy === 'no') {
+          return '<span class="badge rounded-pill bg-label-info me-1">' . __("No"). '</span>';
+        } else if ($counter->copy === 'yes') {
+          return '<span class="badge rounded-pill bg-label-success me-1">' . __("Yes"). '</span>';
+        }
+      })
+      ->editColumn('created_at', function($counter) {
+        return $counter->created_at->format('Y-m-d');
+      })
+      ->addColumn('actions', function($counter) use ($id) {
+        $html = '
+
+                <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#place-counter-remove-modal-' . $counter->id . '" data-worker-id="' . $counter->id . '"><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="place-counter-remove-modal-' . $counter->id . '" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modalCenterTitle">' .  __("Counter Remove") . '</h4>
+                </div>
+                <div class="modal-body text-center">
+                  <span class="mdi mdi-alert-circle-outline delete-alert-span"></span>
+                  <div class="row justify-content-center text-wrap">
+                    '. __("Do You Really Want To Remove This Counter From Place.") .'
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" >'. __("Close") .'</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitRemoveCounterPlace(' . $id .',' . $counter->id . ')">'. __("Submit") .'</button>
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+          </div>
+        ';
+        return $html;
+      })
+      ->rawColumns(['actions','copy'])
+      ->make(true);
+
+
+    }
+    return view('dashboard.places.copied');
   }
 }

@@ -245,14 +245,14 @@ class PhoneController extends Controller {
 
         $phone = Phone::find($id);
         if($phone) {
+          $audioPath = 'public/assets/audio/phones/' . $phone->audio;
+
+          if ($phone->audio && Storage::exists($audioPath)) {
+            Storage::delete($audioPath);
+          }
+
           $phone->delete();
         }
-        $audioPath = 'public/assets/audio/phones/' . $phone->audio;
-
-        if ($phone->audio && Storage::exists($audioPath)) {
-          Storage::delete($audioPath);
-        }
-
         return response()->json([
           'state' => __('Success'),
           'message' => __('Phone deleted successfully.'),
@@ -271,6 +271,41 @@ class PhoneController extends Controller {
         'state' => __("Error"),
         'message' => $e->getMessage(),
       ]);
+    }
+  }
+
+  public function deleteAll(Request $request) {
+    try {
+      if(empty($request->ids)) {
+        return response()->json([
+        'state' => __("Error"),
+        'message' => __("There Is No Selected Rows."),
+        ], 401);
+      }
+
+      foreach ($request->ids as $id) {
+        $phone = Phone::find($id);
+        if ($phone) {
+          $audioPath = 'public/assets/audio/phones/' . $phone->audio;
+
+          if ($phone->audio && Storage::exists($audioPath)) {
+            Storage::delete($audioPath);
+          }
+
+          $phone->delete();
+        }
+      }
+
+      return response()->json([
+        'state' => __("Success"),
+        'message' => __("Phones Removed successfully!"),
+      ]);
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 0,
+        'error' => $e->getMessage(),
+      ], 500);
     }
   }
 

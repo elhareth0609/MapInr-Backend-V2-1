@@ -18,8 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 
-class UserController extends Controller
-{
+class UserController extends Controller {
   public function user($id) {
     $user = User::find($id);
     return view('dashboard.users.index')
@@ -307,12 +306,15 @@ class UserController extends Controller
 
   public function removeCounterWorker($id, $counterId) {
     try {
-      $is = Counter::find($counterId)->status;
-      if ($is == '1') {
+      $counter = Counter::find($counterId);
+      if ($counter->status == '1') {
         $counterWorker = Worker_Counter::where('worker_id', $id)->where('counter_id', $counterId)->first();
+        $counter->worker_id = null;
+        $counter->save();
       } else {
         $counterWorker = Counter::find($counterId);
       }
+
       if ($counterWorker) {
         $counterWorker->delete();
       } else {
@@ -423,11 +425,12 @@ class UserController extends Controller
       }
 
       foreach ($request->ids as $id) {
-        $is = Counter::find($id);
-        if ($is) {
-          $is = $is->status;
-          if ($is == '1') {
+        $counter = Counter::find($id);
+        if ($counter) {
+          if ($counter->status == '1') {
             $counterWorker = Worker_Counter::where('worker_id', $request->uid)->where('counter_id', $id)->first();
+            $counter->worker_id = null;
+            $counter->save();
           } else {
             $counterWorker = Counter::find($id);
           }
@@ -498,7 +501,23 @@ class UserController extends Controller
       foreach ($request->ids as $id) {
         $transition = Wallet::find($id);
         if ($transition) {
-            $transition->delete();
+          foreach ($transition->photoTransactions as $photo) {
+            $photoPath = 'public/assets/img/wallets/' . $photo->photo;
+
+            if ($photo->photo && Storage::exists($photoPath)) {
+              Storage::delete($photoPath);
+            }
+          }
+
+          foreach ($transition->audioTransactions as $audio) {
+            $audioPath = 'public/assets/audio/wallets/' . $audio->audio;
+
+            if ($audio->audio && Storage::exists($audioPath)) {
+              Storage::delete($audioPath);
+            }
+          }
+
+          $transition->delete();
         }
       }
 

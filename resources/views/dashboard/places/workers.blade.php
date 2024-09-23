@@ -51,6 +51,7 @@
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/counters')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/copied')}}"><i class="mdi mdi-map-outline mdi-20px me-1"></i>{{ __('Copied')}}</a></li>
     </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Workers')}}</h4> --}}

@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class WalletController extends Controller
-{
+class WalletController extends Controller {
   public function add(Request $request) {
 
     $validator = Validator::make($request->all(), [
@@ -338,7 +337,25 @@ class WalletController extends Controller
         // if ($admin && Hash::check($request->password, $admin->password)) {
 
           $transaction = Wallet::find($id);
-          $transaction->delete();
+          if ($transaction) {
+            foreach ($transaction->photoTransactions as $photo) {
+              $photoPath = 'public/assets/img/wallets/' . $photo->photo;
+
+              if ($photo->photo && Storage::exists($photoPath)) {
+                Storage::delete($photoPath);
+              }
+            }
+
+            foreach ($transaction->audioTransactions as $audio) {
+              $audioPath = 'public/assets/audio/wallets/' . $audio->audio;
+
+              if ($audio->audio && Storage::exists($audioPath)) {
+                Storage::delete($audioPath);
+              }
+            }
+
+            $transaction->delete();
+          }
           return response()->json([
             'state' => __("Success"),
             'message' => __("Deleted Successfully"),

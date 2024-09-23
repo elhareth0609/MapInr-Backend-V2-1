@@ -168,6 +168,12 @@ class PlaceController extends Controller
     return view('dashboard.places.counters')->with('place', $place);
   }
 
+  public function place_copied($id, Request $request) {
+    $place = Place::where('id', $id)->first();
+
+    return view('dashboard.places.copied')->with('place', $place);
+  }
+
   public function removeCounterPlace($id, $counterId) {
 
     if ($counterId == 0 && $id == 0) {

@@ -312,8 +312,6 @@
 <script>
     var dataTable;
 
-
-
     function submitTransaction(id) {
         var amount = $('input[name="amount-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
         var description = $('textarea[name="description-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
@@ -608,7 +606,7 @@ $(document).ready( function () {
               });
           }
         });
-      });
+    });
 
 
       $(document).on('click', '.trash-button', function(event) {

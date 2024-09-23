@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', ' Place - Counters')
+@section('title', ' Place - Copied')
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
@@ -8,16 +8,16 @@
 
 @section('content')
 <h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">{{ __('Place Settings') }} /</span> {{ $place->name }}
+  <span class="text-muted fw-light">{{ __('Place Copied') }} /</span> {{ $place->name }}
 </h4>
 
 <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
-      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/counters')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/workers')}}"><i class="mdi mdi-link mdi-20px me-1"></i>{{ __('Workers')}}</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url('place/'. $place->id . '/copied')}}"><i class="mdi mdi-map-outline mdi-20px me-1"></i>{{ __('Copied')}}</a></li>
+      <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-map-outline mdi-20px me-1"></i>{{ __('Copied')}}</a></li>
     </ul>
     <div class="card mb-4">
       {{-- <h4 class="card-header">{{ __('Counters')}}</h4> --}}
@@ -40,19 +40,17 @@
                 <option value="100">100</option>
               </select>
             </div>
-            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Counters')}}</h5>
+            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Copied')}}</h5>
           </div>
           <div class="table-responsive text-nowrap">
-            <table class="table table-striped w-100" id="placeCounters" dir="rtl">
+            <table class="table table-striped w-100" id="placeCopied" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
                   <th>{{__('Counter Id')}}</th>
-                  {{-- <th>{{__('Name')}}</th> --}}
                   <th>{{__('Longitude')}}</th>
                   <th>{{__('Latitude')}}</th>
                   <th>{{__('Phone')}}</th>
-                  {{-- <th>{{__('Value')}}</th> --}}
-                  {{-- <th>{{__('Audio')}}</th> --}}
+                  <th>{{__('Copy')}}</th>
                   <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
                 </tr>
@@ -75,18 +73,18 @@
 
         <!--/ Responsive Table -->
         <style>
-        #placeCounters_length {
+        #placeCopied_length {
           display: none;
         }
 
-        #placeCounters_filter {
+        #placeCopied_filter {
           display: none;
         }
 
-        #placeCounters_paginate {
+        #placeCopied_paginate {
           display: none;
         }
-        #placeCounters_info {
+        #placeCopied_info {
           display: none;
         }
         .delete-alert-span::before {
@@ -427,7 +425,7 @@
 <script>
 
 var lang = "{{ app()->getLocale() }}"
-var placeCountersDataTable;
+var placeCopiedDataTable;
 
     function submitRemoveCounterPlace(placeid, counterid) {
 
@@ -443,7 +441,7 @@ var placeCountersDataTable;
                   title: response.state,
                   text: response.message,
               });
-              placeCountersDataTable.ajax.reload();
+              placeCopiedDataTable.ajax.reload();
           },
           error: function (error) {
               Swal.fire({
@@ -605,7 +603,7 @@ var placeCountersDataTable;
                     title: response.state,
                     text: response.message,
                 });
-                placeCountersDataTable.ajax.reload();
+                placeCopiedDataTable.ajax.reload();
             },
             error: function (error) {
                 Swal.fire({
@@ -621,7 +619,7 @@ var placeCountersDataTable;
       $.noConflict();
 
 
-      placeCountersDataTable = $('#placeCounters').DataTable({
+      placeCopiedDataTable = $('#placeCopied').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
@@ -630,15 +628,13 @@ var placeCountersDataTable;
         language: {
           info: "_START_-_END_ of _TOTAL_",
         },
-        ajax: '{{ route("place-counters-table", ["id" => $place->id]) }}',
+        ajax: '{{ route("place-copied-table", ["id" => $place->id]) }}',
         columns: [
           { data: 'counter_id', title: '{{__("Counter Id")}}' },
-          // { data: 'name', title: '{{__("Name")}}' },
           { data: 'longitude', title: '{{__("Longitude")}}',"searchable": false },
           { data: 'latitude', title: '{{__("Latitude")}}',"searchable": false },
           { data: 'phone', title: '{{__("Phone")}}' },
-          // { data: 'value', title: '{{__("Value")}}' },
-          // { data: 'audio', title: '{{__("Audio")}}' },
+          { data: 'copy', title: '{{__("Copy")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
@@ -655,8 +651,8 @@ var placeCountersDataTable;
           var currentlyEditing = null;
         var originalValue = null;
 
-        $('#placeCounters tbody').on('dblclick', 'td', function() {
-            var cell = placeCountersDataTable.cell(this);
+        $('#placeCopied tbody').on('dblclick', 'td', function() {
+            var cell = placeCopiedDataTable.cell(this);
             var columnIdx = cell.index().column;
             var rowIdx = cell.index().row;
             var data = cell.data();
@@ -665,7 +661,7 @@ var placeCountersDataTable;
                 // Check if there's an already active editing cell
                 // if (currentlyEditing) {
                 //     // Revert the previous cell to its original value
-                //     var prevCell = placeCountersDataTable.cell(currentlyEditing);
+                //     var prevCell = placeCopiedDataTable.cell(currentlyEditing);
                 //     $(currentlyEditing.node()).html(originalValue);
                 // }
 
@@ -675,7 +671,7 @@ var placeCountersDataTable;
                         return;
                     } else {
                         // Revert the previous cell to its original value
-                        var prevCell = placeCountersDataTable.cell(currentlyEditing);
+                        var prevCell = placeCopiedDataTable.cell(currentlyEditing);
                         $(currentlyEditing.node()).html(originalValue);
                     }
                 }
@@ -691,7 +687,7 @@ var placeCountersDataTable;
                 $('input[name="phone"]').on('keypress', function(e) {
                     if (e.which == 13) { // Enter key pressed
                         var newValue = $(this).val();
-                        var rowData = placeCountersDataTable.row(rowIdx).data();
+                        var rowData = placeCopiedDataTable.row(rowIdx).data();
                         var rowId = rowData.id; // Assuming the row has a 'counter_id' field
 
                         // Send AJAX request to update the value
@@ -728,7 +724,7 @@ var placeCountersDataTable;
                               toast.show();
 
 
-                              placeCountersDataTable.ajax.reload();
+                              placeCopiedDataTable.ajax.reload();
                             },
                             error: function (error) {
                               var justNowLabel = __("Just Now",lang);
@@ -761,10 +757,10 @@ var placeCountersDataTable;
         },
       });
       $('#customSearch').on('keyup', function () {
-        placeCountersDataTable.search(this.value).draw();
+        placeCopiedDataTable.search(this.value).draw();
       });
       $('#RowSelect').on('change', function () {
-        placeCountersDataTable.page.len(this.value).draw();
+        placeCopiedDataTable.page.len(this.value).draw();
       });
 
       updateCustomPagination();
@@ -772,7 +768,7 @@ var placeCountersDataTable;
       // Function to update custom pagination
       function updateCustomPagination() {
           var customPaginationContainer = $('#custom-pagination');
-          var pageInfo = placeCountersDataTable.page.info();
+          var pageInfo = placeCopiedDataTable.page.info();
 
           // Clear existing pagination items
           customPaginationContainer.empty();
@@ -803,7 +799,7 @@ var placeCountersDataTable;
 
       // Function to handle page change
       window.changePage = function (page) {
-        placeCountersDataTable.page(page).draw(false);
+        placeCopiedDataTable.page(page).draw(false);
       };
 
     });

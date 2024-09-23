@@ -48,6 +48,7 @@
             <table class="table table-striped w-100" id="phones" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
+                  <th>{{__('Id')}}</th>
                   <th>{{__('Send To')}}</th>
                   <th>{{ __('Phone') }}</th>
                   <th>{{ __('Name') }}</th>
@@ -58,6 +59,9 @@
               </thead>
             </table>
             <div class="row w-100 d-flex align-items-baseline justify-content-end ">
+              <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+                <icon class="mdi mdi-trash-can-outline"></icon>
+              </button>
               <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
               <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
                 <ul class="pagination pagination-rounded pagination-outline-primary" id="custom-pagination">
@@ -104,6 +108,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable/1.3.3/jquery.editable.min.js"></script>
+<script type="text/javascript" src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.14/js/dataTables.checkboxes.min.js" ></script>
 
 <script>
   var dataTable;
@@ -174,6 +179,7 @@
         },
         ajax: '{{ route("worker-phones-table", ["id" => $user->id]) }}',
         columns: [
+          { data: 'id', title: '{{__("Id")}}' },
           { data: 'mot', title: '{{__("Send To")}}' },
           { data: 'phone', title: '{{__("Phone")}}' },
           { data: 'value', title: '{{__("Name")}}' },
@@ -181,7 +187,17 @@
           { data: 'audio', title: '{{__("Audio")}}' },
           { data: 'action', title: '{{__("Actions")}}' }
         ],
-        "order": [[3, "desc"]],
+        "order": [[4, "desc"]],
+        select: {
+          style: 'multi',
+        },
+        columnDefs: [{
+          targets: 0,
+          checkboxes: {
+            selectRow: true
+          }
+        }],
+
         "drawCallback": function () {
           updateCustomPagination();
           var pageInfo = this.api().page.info();
@@ -197,7 +213,7 @@
               var rowIdx = cell.index().row;
               var data = cell.data();
 
-              if (columnIdx === 2) {
+              if (columnIdx === 3) {
 
                   if (currentlyEditing) {
                       if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
@@ -283,7 +299,7 @@
                               });
                           }
                   });
-              } else if (columnIdx === 0) {
+              } else if (columnIdx === 1) {
 
                 if (currentlyEditing) {
                       if (currentlyEditing.index().row === rowIdx && currentlyEditing.index().column === columnIdx) {
@@ -459,6 +475,52 @@
           });
       });
 
+
+
+
+      $('#delete-button').on('click', function() {
+        var selectedRowsIds = [];
+
+        dataTable.rows().every(function () {
+            var rowNode = this.node(); // Get the row node
+            var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
+            var isChecked = checkbox.prop('checked');
+
+            if (isChecked) {
+                selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
+                // console.log('Checkbox in this row is checked',this.data().id);
+            } else {
+                // console.log('Checkbox in this row is not checked');
+            }
+        });
+
+
+        var requestData = {
+            _token: '{{ csrf_token() }}',
+            ids: selectedRowsIds
+        };
+
+        $.ajax({
+          url: '{{ route("phone.delete.all") }}',
+          type: 'POST',
+          data: requestData,
+          success: function (response) {
+          Swal.fire({
+              icon: 'success',
+              title: response.state,
+              text: response.message,
+          });
+          dataTable.ajax.reload();
+          },
+          error: function (error) {
+            Swal.fire({
+                  icon: 'error',
+                  title: error.responseJSON.message,
+                  text: error.responseJSON.error,
+              });
+          }
+        });
+    });
     });
   </script>
 

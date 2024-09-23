@@ -100,6 +100,7 @@ Route::get('/worker-phones/{id}', [DataTablesController::class, 'worker_phones']
 Route::get('/places', [DataTablesController::class, 'places'])->name('places-table');
 Route::get('/place-workers/{id}', [DataTablesController::class, 'place_workers'])->name('place-workers-table');
 Route::get('/place-counters/{id}', [DataTablesController::class, 'place_counters'])->name('place-counters-table');
+Route::get('/place-copied/{id}', [DataTablesController::class, 'place_copied'])->name('place-copied-table');
 
 Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
 
@@ -114,6 +115,7 @@ Route::get('/municipality/{id}/places', [DataTablesController::class, 'municipal
 Route::get('/place/{id}', [PlaceController::class, 'place'])->name('place');
 Route::get('/place/{id}/workers', [PlaceController::class, 'place_workers'])->name('place_users');
 Route::get('/place/{id}/counters', [PlaceController::class, 'place_counters'])->name('place_counters');
+Route::get('/place/{id}/copied', [PlaceController::class, 'place_copied'])->name('place_copied');
 Route::delete('/place/destroy/{id}', [PlaceController::class, 'destroy'])->name('place.destroy');
 Route::get('place/remove-counter/{id}/{counterId}', [PlaceController::class, 'removeCounterPlace'])->name('place-remove-place-counter');
 
@@ -173,6 +175,7 @@ Route::post('remove-all-transitions', [UserController::class, 'removeallTransiti
 Route::post('/phones/save-phone-counter', [PhoneController::class, 'savePhoneCounter'])->name('counter.save.phone.counter'); // for counter in phones table
 Route::post('/phones/save-audio-value', [PhoneController::class, 'saveAudioValue'])->name('phone.save.audio.value'); // for audio in counters table
 Route::delete('phones/{id}/delete', [PhoneController::class, 'delete'])->name('phone.delete');
+Route::post('remove-all-phones', [PhoneController::class, 'deleteAll'])->name('phone.delete.all');
 
 
 Route::post('/counters/save-audio-number', [CounterController::class, 'saveAudioNumber'])->name('counter.save.audio.number'); // for audio in counters table
