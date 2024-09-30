@@ -24,7 +24,7 @@ class YourExcelImport implements ToCollection
       $fileNameWithoutExtension = pathinfo($this->fileName, PATHINFO_FILENAME);
       $placeId = (int)$fileNameWithoutExtension; // Assuming place_id is an integer
 
-      $search = Place::where('place_id',$placeId)->first();
+      $search = Place::where('municipality_id',$this->id)->where('place_id',$placeId)->first();
       if ($search) {
         if ($search->place_id == 0) {
             return response()->json([
