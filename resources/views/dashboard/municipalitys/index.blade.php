@@ -24,14 +24,23 @@
       <div class="card-body pt-2 mt-1">
         <form id="updateInformtion" method="POST" action="{{ route('municipality.update')}}">
             <input class="form-control" type="hidden" name="id" value="{{ $municipality->id }}" required>
-
-            <div class="col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input class="form-control" type="text" name="name" value="{{ $municipality->name }}" placeholder="{{ __('Enter Your Municipality Name')}}" required>
-                <label for="lastName">{{ __('Municipality Name')}}</label>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                  <input class="form-control" type="text" name="name" value="{{ $municipality->name }}" placeholder="{{ __('Enter Your Municipality Name')}}" required>
+                  <label for="name">{{ __('Municipality Name')}}</label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-floating form-floating-outline">
+                  <input class="form-control" type="text" name="code" value="{{ $municipality->code }}" placeholder="{{ __('Enter Code')}}">
+                  <label for="code">{{ __('Code')}}</label>
+                </div>
               </div>
             </div>
-
+              
           <div class="mt-4">
             <button type="submit" class="btn btn-primary me-2">{{ __('Save Changes')}}</button>
           </div>
@@ -152,7 +161,7 @@ function submitDistroyMunicipality(id) {
               $(this).find('i').removeClass('mdi-lock-open-variant-outline').addClass('mdi-lock-outline');
           }
       });
-      
+
   $('#updateUser').submit(function (e) {
           e.preventDefault();
 

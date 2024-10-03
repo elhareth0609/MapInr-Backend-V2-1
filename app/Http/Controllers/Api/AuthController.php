@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
     /**
      * Display a listing of the resource.
      */
-  public function login(Request $request)
-  {
+  public function login(Request $request) {
       // Validate the request
       $validator = Validator::make($request->all(), [
         'code' => 'required|string'
@@ -37,6 +35,7 @@ class AuthController extends Controller
               $user->update([
                 'password' => null
               ]);
+              $user->tokens()->delete();
 
               $token = $user->createToken('auth_token')->plainTextToken;
 
