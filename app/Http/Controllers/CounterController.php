@@ -713,7 +713,7 @@ class CounterController extends Controller {
         $municapiltyChar = substr($request->mot, 0, 2);
         $municapilty = Municipality::where('code', $municapiltyChar)->first();
         if ($municapilty) {
-          if (strlen($pcid) == 2) {
+          if (strlen($pcid) == 2) { // get counters from place
             $place = Place::where('place_id',$pcid)->where('municipality_id',$municapilty->id)->first();
             if ($place) {
               $counters = Counter::where('place_id',$pcid)->get();
@@ -721,9 +721,9 @@ class CounterController extends Controller {
                 $counter->phone = $counter->myPhone? $counter->myPhone->phone : $counter->phone;
               }
             }
-          } else {
+          } else {  // strlen($pcid) > 2
             $pid = substr($pcid, 0, 2);
-            $place = Place::where('place_id',$pid)->first();
+            $place = Place::where('place_id',$pid)->where('municipality_id',$municapilty->id)->first();
             if ($place) {
               $cid = substr($pcid, 2);
               $counters = Counter::where('place_id',$place->id)->where('counter_id', 'like', "{$cid}%")->get();
