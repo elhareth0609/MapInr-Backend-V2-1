@@ -27,12 +27,12 @@ class BillController extends Controller {
     try {
 
       $counter = Counter::find($request->counter_id);
-      if($counter) [
+      if($counter) {
         $bill = new Bill();
         $bill->counter_id = $counter->id;
         $bill->amount = $request->amount;
         $bill->save();
-        ]
+      }
 
       return response()->json([
           'status' => 1,
