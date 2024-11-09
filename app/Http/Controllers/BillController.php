@@ -27,11 +27,7 @@ class BillController extends Controller {
     try {
 
       
-      if (str_starts_with($request->counter_id, 'new_')) {
         $counter = Counter::where('counter_id', $request->counter_id)->first();
-      } else {
-        $counter = Counter::find($request->counter_id);
-      }
 
       if($counter) {
         $bill = new Bill();
@@ -41,12 +37,10 @@ class BillController extends Controller {
       }
 
       // rewrite counter without starting new_
-      if (str_starts_with($request->counter_id, 'new_')) {
-        $counter = Counter::where('counter_id', $request->counter_id)->first();
-        if ($counter) {
-          $counter->counter_id = str_replace('new_','', $counter->counter_id);
-          $counter->save();
-        }
+      $counters = Counter::where('counter_id', 'like', 'new_%')->get();
+      foreach ($counters as $counter) {
+        $counter->counter_id = str_replace('new_','', $counter->counter_id);
+        $counter->save();
       }
 
       return response()->json([
@@ -78,11 +72,14 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
 
-          if (str_starts_with($data['counter_id'], 'new_')) {
+          if ((str_starts_with($data['counter_id'], 'new_'))) {
             $counter = Counter::where('counter_id', $data['counter_id'])->first();
-          } else {
-            $counter = Counter::find($data['counter_id']);
           }
+
+          //  else 
+          // if (str_starts_with($data['counter_id'], 'new_')) {
+          //   $counter = Counter::find($data['counter_id']);
+          // }
 
           if($counter) {
             $bill = new Bill();
@@ -91,14 +88,12 @@ class BillController extends Controller {
             $bill->save();
           }
 
-          // rewrite counter without starting new_
-          if (str_starts_with($data['counter_id'], 'new_')) {
-            $counter = Counter::where('counter_id', $data['counter_id'])->first();
-            if ($counter) {
-              $counter->counter_id = str_replace('new_','', $counter->counter_id);
-              $counter->save();
-            }
-          }
+        }
+
+        $counters = Counter::where('counter_id', 'like', 'new_%')->get();
+        foreach ($counters as $counter) {
+          $counter->counter_id = str_replace('new_','', $counter->counter_id);
+          $counter->save();
         }
 
         return response()->json([
