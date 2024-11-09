@@ -26,8 +26,7 @@ class BillController extends Controller {
 
     try {
 
-      
-        $counter = Counter::where('counter_id', $request->counter_id)->first();
+      $counter = Counter::where('counter_id', $request->counter_id)->first();
 
       if($counter) {
         $bill = new Bill();
@@ -72,14 +71,7 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
 
-          if ((str_starts_with($data['counter_id'], 'new_'))) {
             $counter = Counter::where('counter_id', $data['counter_id'])->first();
-          }
-
-          //  else 
-          // if (str_starts_with($data['counter_id'], 'new_')) {
-          //   $counter = Counter::find($data['counter_id']);
-          // }
 
           if($counter) {
             $bill = new Bill();
