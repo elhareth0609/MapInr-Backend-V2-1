@@ -31,8 +31,7 @@ class Counter extends Model
         });
     }
 
-    public function place()
-    {
+    public function place() {
         return $this->belongsTo(Place::class);
     }
 
@@ -40,14 +39,12 @@ class Counter extends Model
       return $this->hasOne(Phone::class);
     }
 
-    public function worker()
-    {
+    public function worker() {
         return $this->belongsTo(User::class);
     }
 
 
-    public function workers()
-    {
+    public function workers() {
         return $this->hasMany(Worker_Counter::class);
     }
 
@@ -55,4 +52,7 @@ class Counter extends Model
       return $this->hasOne(Shared::class,'counter_id');
     }
 
+    public function bills() {
+        return $this->hasMany(Bill::class);
+    }
 }

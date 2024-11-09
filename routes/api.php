@@ -1,13 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\BillController;
+
+use App\Http\Controllers\CounterController;
+use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\CounterController;
-use App\Http\Controllers\PhoneController;
-use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +44,7 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/phones/create', [PhoneController::class, 'create'])->name('phones.create');
   Route::post('/v1/phones/create-lot', [PhoneController::class, 'create_lot'])->name('phones.create.lot');
 
+  Route::get('/v1/bills/all', [BillController::class, 'all'])->name('bills.all');
+  Route::post('/v1/bills/create', [BillController::class, 'create'])->name('bills.create');
+  Route::post('/v1/bills/create-lot', [BillController::class, 'create_lot'])->name('bills.create.lot');
 });

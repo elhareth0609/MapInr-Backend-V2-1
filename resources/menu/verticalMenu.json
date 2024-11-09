@@ -31,6 +31,12 @@
       "url": "/phones"
     },
     {
+      "name": "Bills",
+      "icon": "menu-icon tf-icons mdi mdi-file-document-outline",
+      "slug": "bills-table",
+      "url": "/bills"
+    },
+    {
       "name": "Settings",
       "icon": "menu-icon tf-icons mdi mdi-cog-outline",
       "slug": "settings",

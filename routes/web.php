@@ -3,6 +3,7 @@
 use App\Http\Controllers\authentications\ForgotPasswordBasic;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\cards\CardBasic;
 use App\Http\Controllers\CounterController;
 use App\Http\Controllers\dashboard\Analytics;
@@ -60,6 +61,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 // Main Page Route
 Route::get('/', [HomeController::class, 'index'])->name('home-page');
 Route::get('/ddd', [HomeController::class, 'ddd'])->name('delte-everything');
@@ -103,10 +105,9 @@ Route::get('/place-counters/{id}', [DataTablesController::class, 'place_counters
 Route::get('/place-copied/{id}', [DataTablesController::class, 'place_copied'])->name('place-copied-table');
 
 Route::get('/counters', [DataTablesController::class, 'counters'])->name('counters-table');
-
 Route::get('/phones', [DataTablesController::class, 'phones'])->name('phones-table');
-
 Route::get('/wallets', [DataTablesController::class, 'wallets'])->name('wallets-table');
+Route::get('/bills', [DataTablesController::class, 'bills'])->name('bills-table');
 
 
 Route::get('/municipalitys', [DataTablesController::class, 'municipalitys'])->name('municipalitys');
@@ -183,6 +184,8 @@ Route::post('/counters/save-counter-phone', [CounterController::class, 'saveCoun
 Route::post('/counters/save-counter-place', [CounterController::class, 'saveCounterPlace'])->name('counter.save.counter.place');
 
 
+Route::delete('bills/{id}/delete', [BillController::class, 'delete'])->name('bill.delete');
+Route::post('remove-all-bills', [BillController::class, 'deleteAll'])->name('bill.delete.all');
 
 
 

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Counter;
+use App\Models\Bill;
 
+use App\Models\Counter;
 use App\Models\Municipality;
 use App\Models\Phone;
 use App\Models\Place;
@@ -1095,5 +1096,60 @@ class DataTablesController extends Controller {
 
     }
     return view('dashboard.places.copied');
+  }
+
+  public function bills(Request $request) {
+
+    $bills = Bill::all();
+    if ($request->ajax()) {
+      return DataTables::of($bills)
+      ->editColumn('counter_id', function($bill) {
+        return (string) $bill->counter_id;
+      })
+      ->editColumn('amount', function($bill) {
+        return $bill->amount;
+      })
+      ->editColumn('created_at', function($bill) {
+          return $bill->created_at->format('Y-m-d H:i');
+      })
+      ->addColumn('action', function($bill) {
+        return '
+          <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#bill-delete-modal-' . $bill->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+            <!-- delete Modal -->
+
+            <div class="modal fade" id="bill-delete-modal-' . $bill->id . '" tabindex="-1" data-bs-backdrop="static" >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <form class="modal-content" id="deleteBill' . $bill->id . '">
+                  <div class="modal-header">
+                    <h4 class="modal-title">' .  __("Bill Delete") . '</h4>
+                  </div>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do You Really want to delete This Bill.") .'
+                    </div>
+                    <div class="row">
+                      <div class="col mb-4 mt-2">
+                        <div class="input-group" dir="ltr">
+                          <input type="password" class="form-control w-75" id="show-password-bill-' . $bill->id . '" placeholder="············" aria-describedby="show-password-bill-' . $bill->id . '" name="password-' . $bill->id . '" required="" />
+                          <span class="input-group-text cursor-pointer show-password" data-bill-id="' . $bill->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyBill(' . $bill->id . ')">'. __("Submit") .'</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                  </div>
+                </form>
+              </div>
+            </div>';
+      })
+      ->make(true);
+
+    }
+      return view('dashboard.bills.list');
+
   }
 }
