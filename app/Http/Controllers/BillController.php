@@ -27,10 +27,12 @@ class BillController extends Controller {
     try {
 
       $counter = Counter::find($request->counter_id);
-      $bill = new Bill();
-      $bill->counter_id = $counter->id;
-      $bill->amount = $request->amount;
-      $bill->save();
+      if($counter) [
+        $bill = new Bill();
+        $bill->counter_id = $counter->id;
+        $bill->amount = $request->amount;
+        $bill->save();
+        ]
 
       return response()->json([
           'status' => 1,
@@ -61,10 +63,12 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
             $counter = Counter::find($data['counter_id']);
-            $bill = new Bill();
-            $bill->counter_id = $counter->id;
-            $bill->amount = $data['amount'];
-            $bill->save();
+            if($counter) {
+              $bill = new Bill();
+              $bill->counter_id = $counter->id;
+              $bill->amount = $data['amount'];
+              $bill->save();
+            }
         }
 
         return response()->json([
