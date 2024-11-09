@@ -38,9 +38,9 @@ class BillController extends Controller {
 
       // rewrite counter without starting new_
       $counters = Counter::where('counter_id', 'like', 'new_%')->get();
-      foreach ($counters as $counter) {
-        $counter->counter_id = str_replace('new_','', $counter->counter_id);
-        $counter->save();
+      foreach ($counters as $oneCounter) {
+        $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
+        $oneCounter->save();
       }
 
       return response()->json([
@@ -91,9 +91,9 @@ class BillController extends Controller {
         }
 
         $counters = Counter::where('counter_id', 'like', 'new_%')->get();
-        foreach ($counters as $counter) {
-          $counter->counter_id = str_replace('new_','', $counter->counter_id);
-          $counter->save();
+        foreach ($counters as $oneCounter) {
+          $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
+          $oneCounter->save();
         }
 
         return response()->json([
