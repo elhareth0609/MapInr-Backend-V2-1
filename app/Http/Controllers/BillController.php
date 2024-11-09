@@ -84,11 +84,7 @@ class BillController extends Controller {
           } else {
             $counter = Counter::find($data['counter_id']);
           }
-    
 
-    
-
-    
             $counter = Counter::find($data['counter_id']);
             if($counter) {
               $bill = new Bill();
