@@ -110,7 +110,6 @@ class BillController extends Controller {
         $counters1 = Counter::where('counter_id', 'like', 'new_%')->get();
         foreach ($counters1 as $oneCounter) {
           $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
-          $oneCounter->name = str_replace('new_','', $oneCounter->name);
           $oneCounter->save();
         }
 
