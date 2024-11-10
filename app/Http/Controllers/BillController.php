@@ -14,6 +14,7 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         'amount'      => 'required',
         'counter_id'      => 'required',
+        'id'      => 'sometimes'
     ]);
 
     if ($validator->fails()) {
@@ -26,7 +27,11 @@ class BillController extends Controller {
 
     try {
 
-      $counter = Counter::where('counter_id', $request->counter_id)->first();
+      if ($request->id) {
+        $counter = Counter::find($request->id);
+      } else {
+        $counter = Counter::where('counter_id', $request->counter_id)->first();
+      }
 
       if($counter) {
         $bill = new Bill();
@@ -41,12 +46,18 @@ class BillController extends Controller {
       }
 
       // rewrite counter without starting new_
-      $counters = Counter::where('counter_id', 'like', 'new_%')->get();
-      foreach ($counters as $oneCounter) {
+      $counters1 = Counter::where('counter_id', 'like', 'new_%')->get();
+      foreach ($counters1 as $oneCounter) {
         $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
+        $oneCounter->save();
+      }
+
+      $counters2 = Counter::where('name', 'like', 'new_%')->get();
+      foreach ($counters2 as $oneCounter) {
         $oneCounter->name = str_replace('new_','', $oneCounter->name);
         $oneCounter->save();
       }
+
 
       return response()->json([
           'status' => 1,
@@ -64,6 +75,7 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         '*.amount'      => 'required',
         '*.counter_id'      => 'required',
+        '*.id'      => 'sometimes',
     ]);
 
     if ($validator->fails()) {
@@ -77,8 +89,11 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
 
-          $counter = Counter::where('counter_id', $data['counter_id'])->first();
-
+          if ( $data['id']) {
+            $counter = Counter::find($request->id);
+          } else {
+            $counter = Counter::where('counter_id', $data['counter_id'])->first();
+          }
           if($counter) {
             $bill = new Bill();
             $bill->counter_id = $counter->id;
@@ -93,9 +108,15 @@ class BillController extends Controller {
 
         }
 
-        $counters = Counter::where('counter_id', 'like', 'new_%')->get();
-        foreach ($counters as $oneCounter) {
+        $counters1 = Counter::where('counter_id', 'like', 'new_%')->get();
+        foreach ($counters1 as $oneCounter) {
           $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
+          $oneCounter->name = str_replace('new_','', $oneCounter->name);
+          $oneCounter->save();
+        }
+
+        $counters2 = Counter::where('name', 'like', 'new_%')->get();
+        foreach ($counters2 as $oneCounter) {
           $oneCounter->name = str_replace('new_','', $oneCounter->name);
           $oneCounter->save();
         }
@@ -114,13 +135,12 @@ class BillController extends Controller {
   }
 
   public function all(Request $request) {
-    $bills = Bill::select('id','counter_id', 'amount')
-            ->get();
+    $bills = Bill::select('id','counter_id', 'amount')->get();
 
-            foreach ($bills as $bill) {
-              $counter = Counter::find($bill->counter_id);
-              $bill->counter_id = $counter->name;
-            }
+    foreach ($bills as $bill) {
+      $counter = Counter::find($bill->counter_id);
+      $bill->counter_id = $counter->name;
+    }
 
     return response()->json([
       'bills' => $bills
