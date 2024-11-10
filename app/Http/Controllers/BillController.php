@@ -89,7 +89,7 @@ class BillController extends Controller {
         foreach ($request->all() as $data) {
 
           if (strpos($data['counter_id'], 'new_') !== false) {
-            $counter = Counter::where('counter_id', $data['counter_id'])->first();
+            $counter = Counter::where('counter_id',$data['counter_id'])->first();
           } else {
             $counter = Counter::find($request->id);
           }
@@ -101,10 +101,11 @@ class BillController extends Controller {
             $bill->save();
             $bills[] = $bill;
           } else {
-            return response()->json([
-              'status' => 0,
-              'message' => 'Counter not found'
-            ]);
+            $bill = new Bill();
+            $bill->counter_id = 'not found' . $data['counter_id'];
+            $bill->amount = $data['amount'];
+            $bill->save();
+            $bills[] = $bill;
           }
 
         }
