@@ -114,7 +114,13 @@ class BillController extends Controller {
   }
 
   public function all(Request $request) {
-    $bills = Bill::select('id','counter_id', 'amount') ->get();
+    $bills = Bill::select('id','counter_id', 'amount')
+            ->get();
+
+            foreach ($bills as $bill) {
+              $counter = Counter::find($bill->counter_id);
+              $bill->counter_id = $counter->name;
+            }
 
     return response()->json([
       'bills' => $bills
