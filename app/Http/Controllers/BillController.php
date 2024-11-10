@@ -39,6 +39,7 @@ class BillController extends Controller {
           'message' => 'Counter not found',
         ]);
       }
+
       // rewrite counter without starting new_
       $counters = Counter::where('counter_id', 'like', 'new_%')->get();
       foreach ($counters as $oneCounter) {
@@ -82,6 +83,11 @@ class BillController extends Controller {
             $bill->counter_id = $counter->id;
             $bill->amount = $data['amount'];
             $bill->save();
+          } else {
+            return response()->json([
+              'status' => 0,
+              'message' => 'Counter not found'
+            ]);
           }
 
         }

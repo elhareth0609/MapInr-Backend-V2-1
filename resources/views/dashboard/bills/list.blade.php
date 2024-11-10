@@ -47,8 +47,8 @@
           </tr>
         </thead>
       </table>
-      <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-        <button type="button" class="btn btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
+      <div class="row w-100 d-flex align-items-baseline justify-content-end mb-2">
+        <button type="button" class="btn btn-outline-primary btn-icon" id="delete-button">
           <icon class="mdi mdi-trash-can-outline"></icon>
         </button>
         <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
