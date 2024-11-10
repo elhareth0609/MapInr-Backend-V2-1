@@ -88,9 +88,9 @@ class BillController extends Controller {
         foreach ($request->all() as $data) {
 
           if (strpos($data['counter_id'], 'new_') !== false) {
-            $counter = Counter::find($request->id);
-          } else {
             $counter = Counter::where('counter_id', $data['counter_id'])->first();
+          } else {
+            $counter = Counter::find($request->id);
           }
 
           if($counter) {
