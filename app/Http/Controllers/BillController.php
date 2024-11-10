@@ -76,7 +76,7 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
 
-            $counter = Counter::where('counter_id', $data['counter_id'])->first();
+          $counter = Counter::where('counter_id', $data['counter_id'])->first();
 
           if($counter) {
             $bill = new Bill();
