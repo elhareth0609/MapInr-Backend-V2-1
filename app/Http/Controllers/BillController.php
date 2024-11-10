@@ -85,7 +85,6 @@ class BillController extends Controller {
     }
 
     try {
-      $bills = [];
         foreach ($request->all() as $data) {
 
           if (strpos($data['counter_id'], 'new_') !== false) {
@@ -99,13 +98,11 @@ class BillController extends Controller {
             $bill->counter_id = $counter->id;
             $bill->amount = $data['amount'];
             $bill->save();
-            $bills[] = $bill;
           } else {
             $bill = new Bill();
             $bill->counter_id = 'not found' . $data['counter_id'];
             $bill->amount = $data['amount'];
             $bill->save();
-            $bills[] = $bill;
           }
 
         }
@@ -123,7 +120,6 @@ class BillController extends Controller {
           $oneCounter->save();
         }
 
-        return response()->json(['bills' => $bills]);
         return response()->json([
             'status' => 1,
             'message' => 'Created successfully' ,
