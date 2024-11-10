@@ -14,7 +14,6 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         'amount'      => 'required',
         'counter_id'      => 'required',
-        'id'      => 'sometimes'
     ]);
 
     if ($validator->fails()) {
@@ -27,7 +26,7 @@ class BillController extends Controller {
 
     try {
 
-      if ($request->id) {
+      if (strpos($request->counter_id, 'new_') !== false) {
         $counter = Counter::find($request->id);
       } else {
         $counter = Counter::where('counter_id', $request->counter_id)->first();
@@ -75,7 +74,6 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         '*.amount'      => 'required',
         '*.counter_id'      => 'required',
-        '*.id'      => 'sometimes',
     ]);
 
     if ($validator->fails()) {
@@ -89,11 +87,12 @@ class BillController extends Controller {
     try {
         foreach ($request->all() as $data) {
 
-          if ( $data['id']) {
+          if (strpos($data['counter_id'], 'new_') !== false) {
             $counter = Counter::find($request->id);
           } else {
             $counter = Counter::where('counter_id', $data['counter_id'])->first();
           }
+
           if($counter) {
             $bill = new Bill();
             $bill->counter_id = $counter->id;
