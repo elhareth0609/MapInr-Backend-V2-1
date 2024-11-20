@@ -77,7 +77,6 @@ Route::get('/ddd', [HomeController::class, 'ddd'])->name('delte-everything');
 Route::middleware(['guest'])->group(function () {
   Route::post('/auth/login', [LoginBasic::class, 'login'])->name('auth-login');
   Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
-
 });
 
 

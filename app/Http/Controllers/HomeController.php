@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
   public function index(){
-    return redirect()->route('auth-login-basic');
-
+    return redirect()->route('dashboard-analytics');
   }
 
   public function ddd(){

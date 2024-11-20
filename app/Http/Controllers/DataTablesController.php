@@ -1104,7 +1104,8 @@ class DataTablesController extends Controller {
     if ($request->ajax()) {
       return DataTables::of($bills)
       ->editColumn('counter_id', function($bill) {
-        return (string) $bill->counter_id;
+        // return (string) $bill->counter_id;
+        return $this->getCode($bill->counter_id);
       })
       ->editColumn('amount', function($bill) {
         return $bill->amount;

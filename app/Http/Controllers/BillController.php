@@ -14,6 +14,7 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         'amount'      => 'required',
         'counter_id'      => 'required',
+        'created_at'      => 'required|date',
     ]);
 
     if ($validator->fails()) {
@@ -29,13 +30,14 @@ class BillController extends Controller {
       if (strpos($request->counter_id, 'new_') !== false) {
         $counter = Counter::where('counter_id', $request->counter_id)->first();
       } else {
-        $counter = Counter::find($request->id);
+        $counter = Counter::find($request->counter_id);
       }
 
       if($counter) {
         $bill = new Bill();
         $bill->counter_id = $counter->id;
         $bill->amount = $request->amount;
+        $bill->created_at = $request->created_at;
         $bill->save();
       } else {
         return response()->json([
@@ -70,10 +72,14 @@ class BillController extends Controller {
     }
   }
 
+  // [{"counter_id":"109413","counter_name":"410 [79]","amount":"10200801"},
+  //  {"counter_id":"new_waypoint 54","counter_name":"waypoint 54","amount":"1000069"}]
+
   public function create_lot(Request $request) {
     $validator = Validator::make($request->all(), [
         '*.amount'      => 'required',
         '*.counter_id'      => 'required',
+        '*.created_at' => 'required|date',
     ]);
 
     if ($validator->fails()) {
@@ -90,20 +96,22 @@ class BillController extends Controller {
           if (strpos($data['counter_id'], 'new_') !== false) {
             $counter = Counter::where('counter_id',$data['counter_id'])->first();
           } else {
-            $counter = Counter::find($request->id);
+            $counter = Counter::find($data['counter_id']);
           }
 
           if($counter) {
             $bill = new Bill();
             $bill->counter_id = $counter->id;
             $bill->amount = $data['amount'];
-            $bill->save();
-          } else {
-            $bill = new Bill();
-            $bill->counter_id = 'not found' . $data['counter_id'];
-            $bill->amount = $data['amount'];
+            $bill->created_at = $data['created_at'];
             $bill->save();
           }
+          // else {
+          //   $bill = new Bill();
+          //   $bill->counter_id = 'not found' . $data['counter_id'];
+          //   $bill->amount = $data['amount'];
+          //   $bill->save();
+          // }
 
         }
 
@@ -133,7 +141,7 @@ class BillController extends Controller {
   }
 
   public function all(Request $request) {
-    $bills = Bill::select('id','counter_id', 'amount')->get();
+    $bills = Bill::select('id','counter_id','amount')->get();
 
     foreach ($bills as $bill) {
       $counter = Counter::find($bill->counter_id);
@@ -160,10 +168,9 @@ class BillController extends Controller {
     }
 
     try {
-        $bill = Bill::find($id);
-        if($bill) {
-          $bill->delete();
-        }
+        $bill = Bill::findOrFail($id);
+        $bill->delete();
+
         return response()->json([
           'state' => __('Success'),
           'message' => __('Bill deleted successfully.'),
