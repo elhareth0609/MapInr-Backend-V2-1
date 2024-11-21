@@ -109,12 +109,12 @@ class BillController extends Controller {
             $bill->created_at = $data['created_at'] ?? now(); // Use the current timestamp if not provided
             $bill->save();
           }
-          // else {
-          //   $bill = new Bill();
-          //   $bill->counter_id = 'not found' . $data['counter_id'];
-          //   $bill->amount = $data['amount'];
-          //   $bill->save();
-          // }
+          else {
+            $bill = new Bill();
+            $bill->counter_id = 'not found' . $data['counter_id'];
+            $bill->amount = $data['amount'];
+            $bill->save();
+          }
 
         }
 

@@ -12,9 +12,13 @@ class Controller extends BaseController {
 
     public function getCode($counter_id) {
         $counter = Counter::find($counter_id);
-        $counter_code = $counter->counter_id;
-        $place_code = $counter->place->place_id;
-        $municipality_code = $counter->place->municipality->code;
-        return $municipality_code . $place_code . $counter_code;
+        if ($counter) {
+            $counter_code = $counter->counter_id;
+            $place_code = $counter->place->place_id;
+            $municipality_code = $counter->place->municipality->code;
+            return $municipality_code . $place_code . $counter_code;
+        } else {
+            return $counter_id;
+        }
     }
 }
