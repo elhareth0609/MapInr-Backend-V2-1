@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use App\Models\Counter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BillController extends Controller {
@@ -36,6 +37,7 @@ class BillController extends Controller {
       if($counter) {
         $bill = new Bill();
         $bill->counter_id = $counter->id;
+        $bill->user_id = $request->user()->id;
         $bill->amount = $request->amount;
         $bill->created_at = $request->created_at ?? now();
         $bill->save();
@@ -102,6 +104,7 @@ class BillController extends Controller {
           if($counter) {
             $bill = new Bill();
             $bill->counter_id = $counter->id;
+            $bill->user_id = $request->user()->id;
             $bill->amount = $data['amount'];
             $bill->created_at = $data['created_at'] ?? now(); // Use the current timestamp if not provided
             $bill->save();
@@ -141,7 +144,7 @@ class BillController extends Controller {
   }
 
   public function all(Request $request) {
-    $bills = Bill::select('id','counter_id','amount')->get();
+    $bills = Bill::select('id','counter_id','user_id','amount')->where('user_id', $request->user()->id)->get();
 
     foreach ($bills as $bill) {
       $counter = Counter::find($bill->counter_id);

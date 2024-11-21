@@ -41,6 +41,7 @@
           <tr class="text-nowrap">
             <th>{{__('Id')}}</th>
             <th>{{__('Counter Id')}}</th>
+            <th>{{__('Worker')}}</th>
             <th>{{__('Amount')}}</th>
             <th>{{__('Created At')}}</th>
             <th>{{ __('Actions') }}</th>
@@ -141,11 +142,12 @@ $(document).ready( function () {
       columns: [
         { data: 'id', title: '{{__("Id")}}' },
         { data: 'counter_id', title: '{{__("Counter Id")}}' },
+        { data: 'user_id', title: '{{__("Worker")}}' },
         { data: 'amount', title: '{{__("Amount")}}' },
         { data: 'created_at', title: '{{__("Created At")}}' },
         { data: 'action', title: '{{__("Actions")}}' }
       ],
-      "order": [[3, "desc"]],
+      "order": [[4, "desc"]],
       select: {
         style: 'multi',
       },
