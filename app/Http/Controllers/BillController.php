@@ -14,7 +14,7 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         'amount'      => 'required',
         'counter_id'      => 'required',
-        'created_at'      => 'required|date',
+        'created_at'      => 'sometimes|date',
     ]);
 
     if ($validator->fails()) {
@@ -37,7 +37,7 @@ class BillController extends Controller {
         $bill = new Bill();
         $bill->counter_id = $counter->id;
         $bill->amount = $request->amount;
-        $bill->created_at = $request->created_at;
+        $bill->created_at = $request->created_at ?? now();
         $bill->save();
       } else {
         return response()->json([
@@ -79,7 +79,7 @@ class BillController extends Controller {
     $validator = Validator::make($request->all(), [
         '*.amount'      => 'required',
         '*.counter_id'      => 'required',
-        '*.created_at' => 'required|date',
+        '*.created_at' => 'sometimes|date',
     ]);
 
     if ($validator->fails()) {
@@ -103,7 +103,7 @@ class BillController extends Controller {
             $bill = new Bill();
             $bill->counter_id = $counter->id;
             $bill->amount = $data['amount'];
-            $bill->created_at = $data['created_at'];
+            $bill->created_at = $data['created_at'] ?? now(); // Use the current timestamp if not provided
             $bill->save();
           }
           // else {
