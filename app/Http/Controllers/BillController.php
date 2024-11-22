@@ -119,15 +119,15 @@ class BillController extends Controller {
         }
 
         $counters1 = Counter::where('counter_id', 'like', 'new_%')->get();
-        foreach ($counters1 as $oneCounter) {
-          $oneCounter->counter_id = str_replace('new_','', $oneCounter->counter_id);
-          $oneCounter->save();
+        foreach ($counters1 as $oneCounter1) {
+          $oneCounter1->counter_id = str_replace('new_','', $oneCounter1->counter_id);
+          $oneCounter1->save();
         }
 
         $counters2 = Counter::where('name', 'like', 'new_%')->get();
-        foreach ($counters2 as $oneCounter) {
-          $oneCounter->name = str_replace('new_','', $oneCounter->name);
-          $oneCounter->save();
+        foreach ($counters2 as $oneCounter2) {
+          $oneCounter2->name = str_replace('new_','', $oneCounter2->name);
+          $oneCounter2->save();
         }
 
         return response()->json([
