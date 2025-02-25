@@ -7,7 +7,7 @@ $containerNav = ($containerNav ?? 'container-xxl');
 $isNavbar = ($isNavbar ?? true);
 $isMenu = ($isMenu ?? true);
 $isFlex = ($isFlex ?? false);
-// $isFooter = ($isFooter ?? true);
+$isFooter = ($isFooter ?? true);
 
 /* HTML Classes */
 $navbarDetached = 'navbar-detached';
@@ -51,9 +51,9 @@ $container = ($container ?? 'container-xxl');
           <!-- / Content -->
 
           <!-- Footer -->
-          {{-- @if ($isFooter)
+          @if ($isFooter)
           @include('layouts/sections/footer/footer')
-          @endif --}}
+          @endif
           <!-- / Footer -->
           <div class="content-backdrop fade"></div>
         </div>
