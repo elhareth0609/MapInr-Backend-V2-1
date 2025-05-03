@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\Counter;
+use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +42,19 @@ class BillController extends Controller {
         $bill->amount = $request->amount;
         $bill->created_at = $request->created_at ?? now();
         $bill->save();
+
+        $wallet = new Reaction();
+        $wallet->user_id = $request->user()->id;
+        $wallet->counter_id = $counter->id;
+        $wallet->action = 'd';
+        $wallet->save();
+
+        $wallet = new Reaction();
+        $wallet->user_id = $request->user()->id;
+        $wallet->counter_id = $counter->id;
+        $wallet->action = 'r';
+        $wallet->save();
+
       } else {
         return response()->json([
           'status' => 0,
@@ -108,8 +122,19 @@ class BillController extends Controller {
             $bill->amount = $data['amount'];
             $bill->created_at = $data['created_at'] ?? now(); // Use the current timestamp if not provided
             $bill->save();
-          }
-          else {
+
+            $wallet = new Reaction();
+            $wallet->user_id = $request->user()->id;
+            $wallet->counter_id = $counter->id;
+            $wallet->action = 'd';
+            $wallet->save();
+    
+            $wallet = new Reaction();
+            $wallet->user_id = $request->user()->id;
+            $wallet->counter_id = $counter->id;
+            $wallet->action = 'r';
+            $wallet->save();
+          } else {
             $bill = new Bill();
             $bill->counter_id = 'not found' . $data['counter_id'];
             $bill->amount = $data['amount'];
