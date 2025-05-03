@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', ' User - Transitions')
+@section('title', ' User - Reactions')
 
 @section('page-script')
 <script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
@@ -21,10 +21,9 @@
               <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-list-box-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/places')}}"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
-              <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/transitions')}}"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url('worker-phones/'. $user->id)}}"><i class="mdi mdi-phone-outline  mdi-20px me-1"></i>{{ __('Phones') }}</a></li>
-              <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id. '/reactions')}}"><i class="mdi mdi-swap-horizontal  mdi-20px me-1"></i>{{ __('Reactions') }}</a></li>
-
+              <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-swap-horizontal  mdi-20px me-1"></i>{{ __('Reactions') }}</a></li>
             </ul>
 
             <div class="row float-end">
@@ -37,17 +36,13 @@
                   <div class="card-body p-4">
                     <div class="row">
                       <div class="col-8">
-                        <h5 class="card-title widget-card-title mb-3">{{ __('Pending') }}</h5>
-                        @if ($data->pending > 0)
-                          <h4 class="card-subtitle text-success m-0">{{ $data->pending }} د.ج</h4>
-                        @else
-                          <h4 class="card-subtitle text-danger m-0">{{ $data->pending * -1 }} د.ج</h4>
-                        @endif
+                        <h5 class="card-title widget-card-title mb-3">{{ __('C') }}</h5>
+                        <h4 class="card-subtitle text-success m-0">{{ $data->c }}</h4>
                       </div>
                       <div class="col-4">
                         <div class="d-flex justify-content-end">
                           <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                            <i class="mdi mdi-clock-time-eight-outline fs-4"></i>
+                            <i class="mdi mdi-plus-outline fs-4"></i>
                           </div>
                         </div>
                       </div>
@@ -60,17 +55,13 @@
                   <div class="card-body p-4">
                     <div class="row">
                       <div class="col-8">
-                        <h5 class="card-title widget-card-title mb-3">{{ __('Completed') }}</h5>
-                        @if ($data->completed > 0)
-                          <h4 class="card-subtitle text-success m-0">{{ $data->completed }} د.ج</h4>
-                        @else
-                          <h4 class="card-subtitle text-danger m-0">{{ $data->completed * -1 }} د.ج</h4>
-                        @endif
+                        <h5 class="card-title widget-card-title mb-3">{{ __('D') }}</h5>
+                        <h4 class="card-subtitle text-danger m-0">{{ $data->d }}</h4>
                       </div>
                       <div class="col-4">
                         <div class="d-flex justify-content-end">
                           <div class="lh-1 text-white bg-primary rounded-circle p-3 d-flex align-items-center justify-content-center">
-                            <i class="mdi mdi-check-all fs-4"></i>
+                            <i class="mdi mdi-trash-can-outline fs-4"></i>
                           </div>
                         </div>
                       </div>
@@ -83,12 +74,8 @@
                   <div class="card-body p-4">
                     <div class="row">
                       <div class="col-8">
-                        <h5 class="card-title widget-card-title mb-3">{{ __('Rejected') }}</h5>
-                        @if ($data->rejected > 0)
-                          <h4 class="card-subtitle text-success m-0">{{ $data->rejected }} د.ج</h4>
-                        @else
-                          <h4 class="card-subtitle text-danger m-0">{{ $data->rejected * -1 }} د.ج</h4>
-                        @endif
+                        <h5 class="card-title widget-card-title mb-3">{{ __('R') }}</h5>
+                        <h4 class="card-subtitle text-info m-0">{{ $data->r }}</h4>
                       </div>
                       <div class="col-4">
                         <div class="d-flex justify-content-end">
@@ -106,12 +93,8 @@
                   <div class="card-body p-4">
                     <div class="row">
                       <div class="col-8">
-                        <h5 class="card-title widget-card-title mb-3">{{ __('Hidden') }}</h5>
-                        @if ($data->hidden > 0)
-                        <h4 class="card-subtitle text-success m-0">{{ $data->hidden }} د.ج</h4>
-                        @else
-                        <h4 class="card-subtitle text-danger m-0">{{ $data->hidden * -1 }} د.ج</h4>
-                        @endif
+                        <h5 class="card-title widget-card-title mb-3">{{ __('P') }}</h5>
+                        <h4 class="card-subtitle text-warning m-0">{{ $data->p }}</h4>
                       </div>
                       <div class="col-4">
                         <div class="d-flex justify-content-end">
@@ -148,44 +131,33 @@
               </select>
             </div>
             <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
-              <select id="statusFilter" class="form-select form-select-lg">
+              <select id="actionFilter" class="form-select form-select-lg">
                 <option value="">{{ __('All') }}</option>
-                <option value="pending">{{ __('Pending') }}</option>
-                <option value="completed">{{ __('Completed') }}</option>
-                <option value="rejected">{{ __('Rejected') }}</option>
-                <option value="hidden">{{ __('Hidden') }}</option>
+                <option value="p">{{ __('P') }}</option>
+                <option value="c">{{ __('C') }}</option>
+                <option value="r">{{ __('R') }}</option>
+                <option value="d">{{ __('D') }}</option>
               </select>
             </div>
-            <div class="card-header col-sm-3 col-lg-2 col-xl-2 col-5">
-              <select id="typeFilter" class="form-select form-select-lg">
-                <option value="">{{ __('All') }}</option>
-                <option value="credit">{{ __('Credit') }}</option>
-                <option value="debit">{{ __('Debit') }}</option>
-              </select>
-            </div>
-            <button type="button" class="btn btn-icon btn-outline-primary my-auto" data-bs-toggle="modal" data-bs-target="#transaction-add-modal">
+            {{-- <button type="button" class="btn btn-icon btn-outline-primary my-auto" data-bs-toggle="modal" data-bs-target="#transaction-add-modal">
               <span class="tf-icons mdi mdi-plus-outline"></span>
-            </button>
-            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Transitions')}}</h5>
+            </button> --}}
+            <h5 class="card-header col-sm-5 col-lg-3 col-xl-3 d-flex align-items-center ms-auto" dir="rtl">{{__('All Reactions')}}</h5>
           </div>
           <div class="table-responsive text-nowrap">
-            <table class="table table-striped w-100" id="userTransitions" dir="rtl">
+            <table class="table table-striped w-100" id="userReactions" dir="rtl">
               <thead>
                 <tr class="text-nowrap">
                   <th>#</th>
-                  <th>{{__('Transaction Type')}}</th>
-                  <th>{{__('Status')}}</th>
-                  <th>{{__('Amount')}}</th>
-                  <th>{{__('Description')}}</th>
+                  <th>{{__('Counter Id')}}</th>
+                  <th>{{__('Action')}}</th>
+                  <th>{{__('Note')}}</th>
                   <th>{{__('Created At')}}</th>
                   <th>{{__('Actions')}}</th>
-                      </tr>
+                </tr>
               </thead>
             </table>
             <div class="row w-100 d-flex align-items-baseline justify-content-end ">
-              <button type="button" class="btn btn-icon btn-outline-primary col-lg-1 col-xl-1 col-md-1 col-sm-1 col-1" id="delete-button">
-                <icon class="mdi mdi-trash-can-outline"></icon>
-              </button>
 
               <p class="card-header col-lg-3" id="infoTable" style="width: fit-content;"> </p>
               <nav class="card-header col-lg-3" aria-label="Page navigation" style="width: fit-content;">
@@ -198,64 +170,21 @@
           {{-- </div> --}}
         </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="transaction-add-modal" tabindex="-1" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                          <form class="modal-content" id="addTransactionForm" action="{{ route('transitions.add') }}" method="POST">
-                            <div class="modal-header">
-                              <h4 class="modal-title" >{{ __("Add Transaction") }}</h4>
-                            </div>
-                            <div class="modal-body text-center">
-                              @csrf
-                              <input type="hidden" name="id" value="{{ $user->id }}" />
-                              <div class="row">
-                                <div class="col mb-4 mt-2">
-                                <div class="form-floating form-floating-outline mb-4">
-                                  <input class="form-control" type="number" placeholder="18" name="amount" min="0"  />
-                                  <label for="html5-number-input">{{ __("Amount") }}</label>
-                                </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col mb-4 mt-2">
-                                  <div class="form-floating form-floating-outline mb-4">
-                                    <textarea class="form-control h-px-100" id="exampleFormControlTextarea" name="description" placeholder="{{   __('Comments here...') }}"></textarea>
-                                    <label for="exampleFormControlTextarea1">{{  __('Description') }}</label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <select class="form-select form-select-lg" name="type">
-                                  <option value="credit" selected>{{  __('Credit') }}</option>
-                                  <option value="debit">{{ __('Debit') }}</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Submit') }}</button>
-                              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{  __('Close') }}</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-
         <!--/ Responsive Table -->
         <style>
-        #userTransitions_length {
+        #userReactions_length {
           display: none;
         }
 
-        #userTransitions_filter {
+        #userReactions_filter {
           display: none;
         }
 
-        #userTransitions_paginate {
+        #userReactions_paginate {
           display: none;
         }
 
-        #userTransitions_info {
+        #userReactions_info {
           display: none;
         }
 
@@ -301,92 +230,6 @@
 <script>
 
       var dataTable;
-
-    function acceptTransaction(id) {
-        var amount = $('input[name="amount-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
-        var description = $('textarea[name="description-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
-        var type = $('select[name="type-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
-
-          $.ajax({
-              type: 'POST',
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              data: {
-                amount: amount,
-                description: description,
-                type: type
-              },
-              url: '/wallets/' + id + '/accept',
-              success: function (response) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: response.state,
-                      text: response.message,
-                  });
-                  dataTable.ajax.reload();
-              },
-              error: function (error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: error.responseJSON.state,
-                      text: error.responseJSON.message,
-                  });
-              }
-          });
-    }
-
-    function rejectTransaction(id) {
-
-          $.ajax({
-              type: 'GET',
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              url: '/wallets/' + id + '/reject',
-              success: function (response) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: response.state,
-                      text: response.message,
-                  });
-                  dataTable.ajax.reload();
-              },
-              error: function (error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: error.responseJSON.status,
-                      text: error.responseJSON.errors,
-                  });
-              }
-          });
-    }
-
-    function hideTransaction(id) {
-
-        $.ajax({
-            type: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/wallets/' + id + '/hide',
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: response.state,
-                    text: response.message,
-                });
-                dataTable.ajax.reload();
-            },
-            error: function (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: error.responseJSON.status,
-                    text: error.responseJSON.errors,
-                });
-            }
-        });
-    }
 
     function submitDistroyTransaction(id) {
         var password = $('input[name="password-' + id + '"]').val(); // Dynamically select the password input based on the modal ID
@@ -454,7 +297,7 @@
         });
 
       $.noConflict();
-      dataTable = $('#userTransitions').DataTable({
+      dataTable = $('#userReactions').DataTable({
         processing: true,
         serverSide: true,
         pageLength: 25,
@@ -463,32 +306,30 @@
           info: "_START_-_END_ of _TOTAL_",
         },
         ajax: {
-          url: '{{ url("user/" . $user->id . "/transitions") }}',
+          url: '{{ url("user/" . $user->id . "/reactions") }}',
           data: function(d) {
-              d.status = $('#statusFilter').val();
-              d.type = $('#typeFilter').val();
+              d.action = $('#actionFilter').val();
           }
         },
 
         columns: [
           { data: 'id', title: '#' },
-          { data: 'transaction_type', title: '{{__("Transaction Type")}}' },
-          { data: 'amount', title: '{{__("Amount")}}' },
-          { data: 'status', title: '{{__("Status")}}' },
-          { data: 'description', title: '{{__("Description")}}' },
+          { data: 'counter_id', title: '{{__("Counter Id")}}' },
+          { data: 'action', title: '{{__("Action")}}' },
+          { data: 'notes', title: '{{__("Note")}}' },
           { data: 'created_at', title: '{{__("Created At")}}' },
           { data: 'actions', title: '{{__("Actions")}}' }
         ],
-        "order": [[6, "desc"]],
-        select: {
-          style: 'multi',
-        },
-        columnDefs: [{
-          targets: 0,
-          checkboxes: {
-            selectRow: true
-          }
-        }],
+        "order": [[5, "desc"]],
+        // select: {
+        //   style: 'multi',
+        // },
+        // columnDefs: [{
+        //   targets: 0,
+        //   checkboxes: {
+        //     selectRow: true
+        //   }
+        // }],
 
         "drawCallback": function () {
           updateCustomPagination();
@@ -512,7 +353,7 @@
       $('#RowSelect').on('change', function () {
         dataTable.page.len(this.value).draw();
       });
-      $('#statusFilter').on('change', function() {
+      $('#actionFilter').on('change', function() {
         dataTable.ajax.reload();
       });
 
@@ -559,51 +400,6 @@
         dataTable.page(page).draw(false);
       };
 
-      $('#delete-button').on('click', function() {
-        var userId = {{ $user->id }};
-        var selectedRowsIds = [];
-
-        dataTable.rows().every(function () {
-            var rowNode = this.node(); // Get the row node
-            var checkbox = $(rowNode).find('td:eq(0) input[type="checkbox"]'); // Assuming the checkboxes are in the first column (index 0)
-            var isChecked = checkbox.prop('checked');
-
-            if (isChecked) {
-                selectedRowsIds.push(this.data().id); // Assuming you have a method to get the ID of each row (replace with your actual method)
-                // console.log('Checkbox in this row is checked',this.data().id);
-            } else {
-                // console.log('Checkbox in this row is not checked');
-            }
-        });
-
-
-        var requestData = {
-            _token: '{{ csrf_token() }}',
-            ids: selectedRowsIds,
-            uid: userId
-        };
-
-        $.ajax({
-          url: '{{ route("user.delete.transitions.all") }}',
-          type: 'POST',
-          data: requestData,
-          success: function (response) {
-          Swal.fire({
-              icon: 'success',
-              title: response.state,
-              text: response.message,
-          });
-          dataTable.ajax.reload();
-          },
-          error: function (error) {
-            Swal.fire({
-                  icon: 'error',
-                  title: error.responseJSON.message,
-                  text: error.responseJSON.error,
-              });
-          }
-        });
-      });
 
       $(document).on('click', '.trash-button', function(event) {
         var id = $(this).data('photo-id') || $(this).data('audio-id');

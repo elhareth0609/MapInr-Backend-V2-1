@@ -6,8 +6,8 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\CounterController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\WalletController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,6 +39,11 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/wallets/create', [WalletController::class, 'create'])->name('wallet.create');
   Route::post('/v1/wallets/create-lot', [WalletController::class, 'create_lot'])->name('wallet.create.lot');
   Route::get('/v1/wallets/get', [WalletController::class, 'get'])->name('wallet.get');
+
+
+  Route::post('/v1/reactions/create', [ReactionController::class, 'create'])->name('reactions.create');
+  Route::post('/v1/reactions/create-lot', [ReactionController::class, 'create_lot'])->name('reactions.create.lot');
+  Route::get('/v1/reactions/get', [ReactionController::class, 'get'])->name('reactions.get');
 
   Route::get('/v1/phones/all', [PhoneController::class, 'all'])->name('phones.all');
   Route::post('/v1/phones/create', [PhoneController::class, 'create'])->name('phones.create');

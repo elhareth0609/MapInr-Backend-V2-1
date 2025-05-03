@@ -30,11 +30,6 @@
               <div class="modal-body">
 
                 <select class="select-mult" multiple data-placeholder="Choose Places ..." name="selectedPlaces[]">
-                  {{-- @foreach ($allplaces as $placeName => $placeId)
-                      <option value="{{ $placeId }}" {{ in_array($placeId, $places->toArray()) ? 'selected' : '' }}>
-                          {{ $placeName }}
-                      </option>
-                  @endforeach --}}
                   @foreach ($allplaces as $place)
                       <option value="{{ $place['id'] }}" {{ in_array($place['id'], $places->toArray()) ? 'selected' : '' }}>
                           {{ $place['name'] }}
@@ -54,11 +49,12 @@
         <div class="row">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
-      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id)}}"><i class="mdi mdi-list-box-outline mdi-20px me-1"></i>{{ __('Information')}}</a></li>
       <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-bell-outline mdi-20px me-1"></i>{{ __('Places') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/counters')}}"><i class="mdi mdi-map-marker-outline mdi-20px me-1"></i>{{ __('Counters') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id . '/transitions')}}"><i class="mdi mdi-transition  mdi-20px me-1"></i>{{ __('Transitions') }}</a></li>
       <li class="nav-item"><a class="nav-link" href="{{url('worker-phones/'. $user->id)}}"><i class="mdi mdi-phone-outline  mdi-20px me-1"></i>{{ __('Phones') }}</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url('user/'. $user->id. '/reactions')}}"><i class="mdi mdi-swap-horizontal  mdi-20px me-1"></i>{{ __('Reactions') }}</a></li>
 
     </ul>
     <div class="card mb-4">

@@ -9,6 +9,7 @@ use App\Models\Municipality;
 use App\Models\Phone;
 use App\Models\Place;
 use App\Models\Place_Worker;
+use App\Models\Reaction;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Worker_Counter;
@@ -948,6 +949,98 @@ class DataTablesController extends Controller {
 
     }
       return view('dashboard.users.transitions')
+      ->with('user',$user)
+      ->with('data',$data);
+
+  }
+
+  public function user_reactions(Request $request,$id) {
+    $reactions = Reaction::where('user_id', $id);
+    $user = User::find($id);
+
+    $action = $request->input('action');
+    $actions = clone $reactions;
+
+    if ($action) {
+      $reactions->where('action', $action);
+    }
+
+    // $reactions->orderBy('created_at', 'desc');
+
+    if ($request->ajax()) {
+      return DataTables::of($reactions)
+      ->editColumn('counter_id', function($reaction) {
+        return $this->getCode($reaction->counter_id);
+      })
+      ->editColumn('id', function($reaction) {
+        return (string) $reaction->id;
+      })
+      ->editColumn('action', function($reaction) {
+          if ($reaction->action === 'c') {
+            return '<span class="badge rounded-pill bg-label-success me-1">' . __("C"). '</span>';
+          } else if ($reaction->action === 'd') {
+            return '<span class="badge rounded-pill bg-label-danger me-1">' . __("D"). '</span>';
+          } else if ($reaction->action === 'r') {
+            return '<span class="badge rounded-pill bg-label-info me-1">' . __("R"). '</span>';
+          } else if ($reaction->action === 'p') {
+            return '<span class="badge rounded-pill bg-label-warning me-1">' . __("P"). '</span>';
+          }
+        })
+      ->editColumn('notes', function($reaction) {
+          return $reaction->notes;
+      })
+      ->addColumn('actions', function($reaction) {
+        return '
+            <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#reaction-delete-modal-' . $reaction->id . '" ><icon class="mdi mdi-trash-can-outline"></icon></a>
+
+
+            <!-- delete Modal -->
+
+            <div class="modal fade" id="reaction-delete-modal-' . $reaction->id . '" tabindex="-1" data-bs-backdrop="static" >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <form class="modal-content" id="deleteReaction' . $reaction->id . '">
+                  <div class="modal-header">
+                    <h4 class="modal-title">' .  __("Reaction Delete") . '</h4>
+                  </div>
+                  <div class="modal-body text-center">
+                    <span class="mdi mdi-alert-circle-outline delete-alert-span text-danger"></span>
+                    <div class="row justify-content-center text-wrap">
+                      '. __("Do You Really want to delete This Reaction.") .'
+                    </div>
+                    <div class="row">
+                      <div class="col mb-4 mt-2">
+                        <div class="input-group" dir="ltr">
+                          <input type="password" class="form-control" id="show-password-reaction-' . $reaction->id . '" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="show-password-municipality-' . $reaction->id . '" name="password-' . $reaction->id . '" required />
+                          <span class="input-group-text cursor-pointer show-password" data-reaction-id="' . $reaction->id . '"><i class="mdi mdi-lock-outline"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDistroyTransaction(' . $reaction->id . ')">'. __("Submit") .'</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">'. __("Close") .'</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+        ';
+    })
+
+      ->editColumn('created_at', function($wallet) {
+          return $wallet->created_at->format('Y-m-d');
+      })
+      ->rawColumns(['actions','action'])
+      ->make(true);
+
+    }
+
+      $data = new \stdClass();
+      $data->p = Reaction::where('user_id', $request->id)->where('action','p')->count();
+      $data->c = Reaction::where('user_id', $request->id)->where('action','c')->count();
+      $data->r = Reaction::where('user_id', $request->id)->where('action','r')->count();
+      $data->d = Reaction::where('user_id', $request->id)->where('action','d')->count();
+
+      return view('dashboard.users.reactions')
       ->with('user',$user)
       ->with('data',$data);
 
