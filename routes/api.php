@@ -44,7 +44,7 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
   Route::post('/v1/reactions/create', [ReactionController::class, 'create'])->name('reactions.create');
   Route::post('/v1/reactions/create-lot', [ReactionController::class, 'create_lot'])->name('reactions.create.lot');
   Route::get('/v1/reactions/get', [ReactionController::class, 'get'])->name('reactions.get');
-  Route::get('/v1/reactions/filter', [ReactionController::class, 'filter'])->name('reactions.filter');
+  Route::post('/v1/reactions/filter', [ReactionController::class, 'filter'])->name('reactions.filter');
 
   Route::get('/v1/phones/all', [PhoneController::class, 'all'])->name('phones.all');
   Route::post('/v1/phones/create', [PhoneController::class, 'create'])->name('phones.create');
