@@ -125,6 +125,46 @@ class ReactionController extends Controller {
         ]);
     }
 
+    public function filter(Request $request) {
+
+        $query = Reaction::with('counter') // Eager load counter relationship if needed
+        ->where('user_id', $request->user()->id);
+    
+        if ($request->day) {
+            $query->whereDate('created_at', $request->day);
+        } 
+        else if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [
+                $request->start_date, 
+                $request->end_date
+            ]);
+        } 
+        else if ($request->place_id) {
+            $query->whereHas('counter', function($q) use ($request) {
+                $q->where('place_id', $request->place_id);
+            });
+        }
+        
+        // Clone the query for getting counts to avoid modifying the original
+        $countQuery = clone $query;
+        
+        $totalActions = new \stdClass();
+        $totalActions->c = $countQuery->where('action', 'c')->count();
+        $totalActions->r = $countQuery->where('action', 'r')->count();
+        $totalActions->d = $countQuery->where('action', 'd')->count();
+        $totalActions->p = $countQuery->where('action', 'p')->count();
+        
+        // Get the actual reactions data
+        $reactions = $query->get(['id', 'counter_id', 'action', 'notes', 'created_at']);
+        
+        return response()->json([
+            'status' => 1,
+            'totalActions' => $totalActions,
+            'reactions' => $reactions,
+        ]);
+    }
+
+
     public function delete(Request $request,$id) {
         $validator = Validator::make($request->all(), [
             'password' => 'required|string|in:10',

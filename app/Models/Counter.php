@@ -43,7 +43,6 @@ class Counter extends Model
         return $this->belongsTo(User::class);
     }
 
-
     public function workers() {
         return $this->hasMany(Worker_Counter::class);
     }
