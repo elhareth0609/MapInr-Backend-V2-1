@@ -126,7 +126,6 @@ class ReactionController extends Controller {
     }
 
     public function filter(Request $request) {
-
         $query = Reaction::with('counter') // Eager load counter relationship if needed
         ->where('user_id', $request->user()->id);
     

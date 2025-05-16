@@ -14,4 +14,9 @@ class Reaction extends Model {
         'action',
         'notes'
     ];
+
+
+    public function counter() {
+        return $this->belongsTo(Counter::class);
+    }
 }
