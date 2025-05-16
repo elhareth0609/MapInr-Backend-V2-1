@@ -75,7 +75,7 @@ class ReactionController extends Controller {
                 $reaction->user_id = $request->user()->id;
                 $reaction->counter_id = $data['counter_id'];
                 $reaction->action = $data['action'];
-                $reaction->notes = $data['notes'];
+                $reaction->notes = $data['notes']?? null;
                 $reaction->save();
             }
 
