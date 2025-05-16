@@ -33,12 +33,12 @@ class ReactionController extends Controller {
 
         try {
 
-        $wallet = new Reaction();
-        $wallet->user_id = $request->user()->id;
-        $wallet->counter_id = $request->counter_id;
-        $wallet->action = $request->action;
-        $wallet->notes = $request->notes;
-        $wallet->save();
+        $reaction = new Reaction();
+        $reaction->user_id = $request->user()->id;
+        $reaction->counter_id = $request->counter_id;
+        $reaction->action = $request->action;
+        $reaction->notes = $request->notes;
+        $reaction->save();
 
         return response()->json([
             'status' => 1,
@@ -71,12 +71,12 @@ class ReactionController extends Controller {
         try {
 
             foreach ($request->all() as $data) {
-                $wallet = new Reaction();
-                $wallet->user_id = $request->user()->id;
-                $wallet->counter_id = $data['counter_id'];
-                $wallet->action = $data['action'];
-                $wallet->notes = $data['notes'];
-                $wallet->save();
+                $reaction = new Reaction();
+                $reaction->user_id = $request->user()->id;
+                $reaction->counter_id = $data['counter_id'];
+                $reaction->action = $data['action'];
+                $reaction->notes = $data['notes'];
+                $reaction->save();
             }
 
         return response()->json([
@@ -137,7 +137,7 @@ class ReactionController extends Controller {
                 $request->start_date, 
                 $request->end_date
             ]);
-        } 
+        }
         else if ($request->place_id) {
             $query->whereHas('counter', function($q) use ($request) {
                 $q->where('place_id', $request->place_id);
@@ -166,8 +166,8 @@ class ReactionController extends Controller {
     public function destroy(Request $request){
         try {
         // $counter = Counter::where('counter_id', $request->id)->where('place_id','0')->first();
-        $Reaction = Reaction::find($request->id);
-        if (!$Reaction) {
+        $reaction = Reaction::find($request->id);
+        if (!$reaction) {
             return response()->json([
             'status' => 0,
             'message' => 'There is no counter with this id. ',
@@ -175,7 +175,7 @@ class ReactionController extends Controller {
         }
 
 
-        $Reaction->delete();
+        $reaction->delete();
         return response()->json([
             'status' => 1,
             'message' => 'Deleted successfully.',
@@ -190,11 +190,12 @@ class ReactionController extends Controller {
 
     public function destroy_lot(Request $request){
         try {
-        foreach ($request->all() as $data) {
-        $Reaction = Reaction::find($data['id']);
-
-        $Reaction->delete();
-        }
+            foreach ($request->all() as $data) {
+                $reaction = Reaction::find($data['id']);
+                if ($reaction) {
+                    $reaction->delete();
+                }
+            }
         return response()->json([
             'status' => 1,
             'message' => 'Deleted successfully.',
