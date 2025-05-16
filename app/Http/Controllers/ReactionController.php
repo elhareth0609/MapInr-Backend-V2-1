@@ -163,6 +163,49 @@ class ReactionController extends Controller {
         ]);
     }
 
+    public function destroy(Request $request){
+        try {
+        // $counter = Counter::where('counter_id', $request->id)->where('place_id','0')->first();
+        $Reaction = Reaction::find($request->id);
+        if (!$Reaction) {
+            return response()->json([
+            'status' => 0,
+            'message' => 'There is no counter with this id. ',
+            ],422);
+        }
+
+
+        $Reaction->delete();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Deleted successfully.',
+        ]);
+        } catch (\Exception $e) {
+        return response()->json([
+            'status' => 0,
+            'message' => $e->getMessage(),
+        ]);
+        }
+    }
+
+    public function destroy_lot(Request $request){
+        try {
+        foreach ($request->all() as $data) {
+        $Reaction = Reaction::find($data['id']);
+
+        $Reaction->delete();
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Deleted successfully.',
+        ]);
+        } catch (\Exception $e) {
+        return response()->json([
+            'status' => 0,
+            'message' => $e->getMessage(),
+        ]);
+        }
+    }
 
     public function delete(Request $request,$id) {
         $validator = Validator::make($request->all(), [

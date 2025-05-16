@@ -43,6 +43,8 @@ Route::middleware(['bearer.token','auth:sanctum'])->group(function () {
 
   Route::post('/v1/reactions/create', [ReactionController::class, 'create'])->name('reactions.create');
   Route::post('/v1/reactions/create-lot', [ReactionController::class, 'create_lot'])->name('reactions.create.lot');
+  Route::post('/v1/reactions/destroy', [CounterController::class, 'destroy'])->name('counter.destroy');
+  Route::post('/v1/reactions/destroy-lot', [CounterController::class, 'destroy_lot'])->name('counter.destroy.lot');
   Route::get('/v1/reactions/get', [ReactionController::class, 'get'])->name('reactions.get');
   Route::post('/v1/reactions/filter', [ReactionController::class, 'filter'])->name('reactions.filter');
 
