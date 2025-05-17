@@ -40,6 +40,17 @@ class ReactionController extends Controller {
         $reaction->notes = $request->notes;
         $reaction->save();
 
+        $getIfExists = Reaction::where('counter_id', $request->counter_id)->get();
+        if ($getIfExists->count() > 0) {
+            foreach ($getIfExists as $item) {
+                if ($item->action == $request->action) {
+                    $item->notes .= ', ' . $item->worker->fullname;
+                    $item->user_id = $request->user()->id;
+                    $item->save();
+                }
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Created successfully',
@@ -77,6 +88,17 @@ class ReactionController extends Controller {
                 $reaction->action = $data['action'];
                 $reaction->notes = $data['notes']?? null;
                 $reaction->save();
+
+                $getIfExists = Reaction::where('counter_id', $data['counter_id'])->get();
+                if ($getIfExists->count() > 0) {
+                    foreach ($getIfExists as $item) {
+                        if ($item->action == $data['action']) {
+                            $item->notes .= ', ' . $item->worker->fullname;
+                            $item->user_id = $request->user()->id;
+                            $item->save();
+                        }
+                    }
+                }
             }
 
         return response()->json([

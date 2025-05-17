@@ -19,4 +19,9 @@ class Reaction extends Model {
     public function counter() {
         return $this->belongsTo(Counter::class);
     }
+
+
+        public function worker() {
+        return $this->belongsTo(User::class);
+    }
 }
