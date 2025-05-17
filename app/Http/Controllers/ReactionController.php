@@ -20,7 +20,7 @@ class ReactionController extends Controller {
         $validator = Validator::make($request->all(), [
             'counter_id' => 'required|numeric',
             'action' => 'required|string|in:c,r,d,p',
-            'notes' => 'nullable|string',
+            // 'notes' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -68,7 +68,7 @@ class ReactionController extends Controller {
         $validator = Validator::make($request->all(), [
             '*.counter_id' => 'required|numeric',
             '*.action' => 'required|string|in:c,r,d,p',
-            '*.notes' => 'nullable|string',
+            // '*.notes' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
