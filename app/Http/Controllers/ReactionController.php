@@ -33,23 +33,21 @@ class ReactionController extends Controller {
 
         try {
 
-        $getIfExists = Reaction::where('counter_id', $request->counter_id);
-        if ($getIfExists->count() > 0) {
-            foreach ($getIfExists->get() as $item) {
-                if ($item->action == $request->action) {
-                    if ($item->user_id != $request->user()->id) {
-                        $item->notes .= ', ' . $item->worker->fullname;
-                        $item->user_id = $request->user()->id;
-                        $item->save();
-                    }
-                } else {
-                    $reaction = new Reaction();
-                    $reaction->user_id = $request->user()->id;
-                    $reaction->counter_id = $request->counter_id;
-                    $reaction->action = $request->action;
-                    $reaction->notes = $request->notes;
-                    $reaction->save();
+        $item = Reaction::where('counter_id', $request->counter_id)->where('action', $request->action)->first();
+        if ($item) {
+            if ($item->action == $request->action) {
+                if ($item->user_id != $request->user()->id) {
+                    $item->notes .= ', ' . $item->worker->fullname;
+                    $item->user_id = $request->user()->id;
+                    $item->save();
                 }
+            } else {
+                $reaction = new Reaction();
+                $reaction->user_id = $request->user()->id;
+                $reaction->counter_id = $request->counter_id;
+                $reaction->action = $request->action;
+                $reaction->notes = $request->notes;
+                $reaction->save();
             }
         }
 
@@ -84,24 +82,20 @@ class ReactionController extends Controller {
         try {
 
             foreach ($request->all() as $data) {
-                $getIfExists = Reaction::where('counter_id', $data['counter_id']);
-                if ($getIfExists->count() > 0) {
-                    foreach ($getIfExists->get() as $item) {
-                        if ($item->action == $data['action']) {
-                            if ($item->user_id != $request->user()->id) {
-                                $item->notes .= ', ' . $item->worker->fullname;
-                                $item->user_id = $request->user()->id;
-                                $item->save();
-                            }
-                        } else {
-                            $reaction = new Reaction();
-                            $reaction->user_id = $request->user()->id;
-                            $reaction->counter_id = $data['counter_id'];
-                            $reaction->action = $data['action'];
-                            $reaction->notes = $data['notes']?? null;
-                            $reaction->save();
-                        }
+                $item = Reaction::where('counter_id', $data['counter_id'])->where('action', $data['action'])->first();
+                if ($item) {
+                    if ($item->user_id != $request->user()->id) {
+                        $item->notes .= ', ' . $item->worker->fullname;
+                        $item->user_id = $request->user()->id;
+                        $item->save();
                     }
+                } else {
+                    $reaction = new Reaction();
+                    $reaction->user_id = $request->user()->id;
+                    $reaction->counter_id = $data['counter_id'];
+                    $reaction->action = $data['action'];
+                    $reaction->notes = $data['notes']?? null;
+                    $reaction->save();
                 }
             }
 
