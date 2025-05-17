@@ -33,20 +33,22 @@ class ReactionController extends Controller {
 
         try {
 
-        $reaction = new Reaction();
-        $reaction->user_id = $request->user()->id;
-        $reaction->counter_id = $request->counter_id;
-        $reaction->action = $request->action;
-        $reaction->notes = $request->notes;
-        $reaction->save();
-
-        $getIfExists = Reaction::where('counter_id', $request->counter_id)->get();
+        $getIfExists = Reaction::where('counter_id', $request->counter_id);
         if ($getIfExists->count() > 0) {
-            foreach ($getIfExists as $item) {
+            foreach ($getIfExists->get() as $item) {
                 if ($item->action == $request->action) {
-                    $item->notes .= ', ' . $item->worker->fullname;
-                    $item->user_id = $request->user()->id;
-                    $item->save();
+                    if ($item->user_id != $request->user()->id) {
+                        $item->notes .= ', ' . $item->worker->fullname;
+                        $item->user_id = $request->user()->id;
+                        $item->save();
+                    }
+                } else {
+                    $reaction = new Reaction();
+                    $reaction->user_id = $request->user()->id;
+                    $reaction->counter_id = $request->counter_id;
+                    $reaction->action = $request->action;
+                    $reaction->notes = $request->notes;
+                    $reaction->save();
                 }
             }
         }
@@ -82,20 +84,22 @@ class ReactionController extends Controller {
         try {
 
             foreach ($request->all() as $data) {
-                $reaction = new Reaction();
-                $reaction->user_id = $request->user()->id;
-                $reaction->counter_id = $data['counter_id'];
-                $reaction->action = $data['action'];
-                $reaction->notes = $data['notes']?? null;
-                $reaction->save();
-
-                $getIfExists = Reaction::where('counter_id', $data['counter_id'])->get();
+                $getIfExists = Reaction::where('counter_id', $data['counter_id']);
                 if ($getIfExists->count() > 0) {
-                    foreach ($getIfExists as $item) {
+                    foreach ($getIfExists->get() as $item) {
                         if ($item->action == $data['action']) {
-                            $item->notes .= ', ' . $item->worker->fullname;
-                            $item->user_id = $request->user()->id;
-                            $item->save();
+                            if ($item->user_id != $request->user()->id) {
+                                $item->notes .= ', ' . $item->worker->fullname;
+                                $item->user_id = $request->user()->id;
+                                $item->save();
+                            }
+                        } else {
+                            $reaction = new Reaction();
+                            $reaction->user_id = $request->user()->id;
+                            $reaction->counter_id = $data['counter_id'];
+                            $reaction->action = $data['action'];
+                            $reaction->notes = $data['notes']?? null;
+                            $reaction->save();
                         }
                     }
                 }
