@@ -112,9 +112,8 @@ class ReactionController extends Controller {
     }
 
     public function get(Request $request) {
-        $reactions = Reaction::with('counter')
-        ->select('id', 'counter_id', 'action', 'notes', 'created_at')
-        // ->where('user_id', $request->user()->id)
+        $reactions = Reaction::select('id', 'counter_id', 'action', 'notes', 'created_at')
+        ->where('user_id', $request->user()->id)
         ->latest('created_at')
         ->get();
 
@@ -150,6 +149,7 @@ class ReactionController extends Controller {
         $query = Reaction::with('counter') // Eager load counter relationship if needed
         ->where('user_id', $request->user()->id);
     
+
         if ($request->day) {
             $query->whereDate('created_at', $request->day);
         } 
@@ -177,6 +177,19 @@ class ReactionController extends Controller {
         // Get the actual reactions data
         $reactions = $query->get(['id', 'counter_id', 'action', 'notes', 'created_at']);
         
+
+        // Add place_name instead of place_id
+        $reactions = $reactions->map(function ($reaction) {
+            return [
+                'id' => $reaction->id,
+                'counter_id' => $reaction->counter_id,
+                'place_id' => $reaction->counter->place->place_id,
+                'action' => $reaction->action,
+                'notes' => $reaction->notes,
+                'created_at' => $reaction->created_at,
+            ];
+        });
+
         return response()->json([
             'status' => 1,
             'totalActions' => $totalActions,
