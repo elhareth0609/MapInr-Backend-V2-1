@@ -112,7 +112,8 @@ class ReactionController extends Controller {
     }
 
     public function get(Request $request) {
-        $reactions = Reaction::select('id', 'counter_id', 'action', 'notes', 'created_at')
+        $reactions = Reaction::with('counter')
+        ->select('id', 'counter_id', 'action', 'notes', 'created_at')
         ->where('user_id', $request->user()->id)
         ->latest('created_at')
         ->get();
